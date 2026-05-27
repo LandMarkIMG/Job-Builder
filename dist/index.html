@@ -3,61 +3,466 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LV Remote PM Cockpit</title>
+<title>Chordal Resonance Interface</title>
 <style>
-:root{--navy:#14324a;--paper:#f4eee3;--panel:#fffaf1;--field:#fffdf8;--line:#d8c9b5;--ink:#263444;--muted:#77828d;--green:#2f8a57;--greenSoft:#dff2e5;--brown:#8a5b32;--brownSoft:#efe1d1;--purple:#7757a6;--purpleSoft:#e7def6;--gray:#4b5d70;--graySoft:#dfe8ee;--warn:#c88422;--red:#a7433a;--redSoft:#f7dedb;--shadow:0 10px 24px rgba(37,50,67,.09)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7f2ea,#ece4d7);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11px}button,select,input,textarea{font:inherit}button{cursor:pointer}.app{max-width:1360px;margin:0 auto;padding:0 8px 24px}
-.topbar{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:290px 1fr 310px;gap:10px;align-items:center;padding:9px 13px;background:var(--navy);color:#fff;border-radius:0 0 13px 13px;box-shadow:var(--shadow)}
-.kicker{letter-spacing:5px;font-size:9px;color:#cbd9d4;text-transform:uppercase}.brand{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:900}.logo{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#e9f3e8;color:var(--green);font-weight:950}
-.lensbar,.viewbar,.chips{display:flex;gap:4px;flex-wrap:wrap}.lensbar{justify-content:center}.pill,.lensbar button,.viewbar button,.chip{border:1px solid var(--line);background:#fffaf0;color:var(--ink);border-radius:999px;padding:4px 9px;font-weight:850;font-size:10px}.lensbar button.active[data-lens="PM"],.chip.install.active{background:var(--greenSoft);color:var(--green);border-color:var(--green)}.lensbar button.active[data-lens="Client"],.chip.access.active{background:var(--brownSoft);color:var(--brown);border-color:var(--brown)}.lensbar button.active[data-lens="Job"],.chip.blocked.active{background:var(--graySoft);color:var(--gray);border-color:#899aaa}.chip.property.active{background:var(--purpleSoft);color:var(--purple);border-color:var(--purple)}.viewbar button.active{background:#e8f4eb;color:var(--green);border-color:#a6cbb5}
-.header-stat{justify-self:end;width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:6px 8px;text-align:right}.header-stat strong{font-size:13px}.header-stat div:last-child{color:#d8e1e8;font-size:10px;margin-top:1px}
-.subbar{position:sticky;top:51px;z-index:45;display:grid;grid-template-columns:1.25fr .9fr .9fr .9fr .9fr 1fr;gap:8px;margin:7px 0 10px;padding:7px 11px;background:#fff8ec;border:1px solid var(--line);border-radius:11px;box-shadow:0 7px 15px rgba(37,50,67,.05);font-weight:760;color:#4b5566}.subbar strong{color:var(--ink)}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 305px;gap:12px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:10px;box-shadow:0 7px 18px rgba(37,50,67,.06)}.title{letter-spacing:3.2px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:9px;margin-bottom:8px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-bottom:8px}
-select,input,textarea{border:1px solid var(--line);border-radius:7px;background:var(--field);color:#4c5666;padding:5px 6px}select{font-size:10px;font-weight:850;min-width:125px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.statcard{border:1px solid var(--line);background:var(--field);border-radius:11px;padding:8px}.statcard b{display:block;font-size:15px;color:var(--navy);margin-bottom:2px}.statcard span{color:var(--muted);font-weight:800}
-.matrix-wrap{overflow:auto}.matrix{display:grid;grid-template-columns:105px repeat(7,minmax(54px,1fr));gap:3px;min-width:640px}.corner,.head,.rowhead,.cell{border:1px solid var(--line);border-radius:7px;min-height:25px;background:var(--field)}.head{display:grid;place-items:center;background:#f0e6d6;color:#667181;font-size:9px;font-weight:950}.rowhead{display:flex;align-items:center;justify-content:flex-end;text-align:right;padding:4px 6px;background:#fff9ee;font-weight:950;color:#334153}.cell{position:relative;display:grid;place-items:center;color:white;font-size:8px;font-weight:950}.cell.empty{color:#bac1c9;background:var(--field)}.cell.empty:before{content:"+";opacity:.35}.cell.install{background:var(--green);border-color:var(--green)}.cell.access{background:var(--brown);border-color:var(--brown)}.cell.property{background:var(--purple);border-color:var(--purple)}.cell.blocked{background:var(--redSoft);color:var(--red);border-color:#d49a95}.cell.selected{box-shadow:0 0 0 2px rgba(20,50,74,.34)}.cell.warn:after{content:"";position:absolute;inset:2px;border:2px solid rgba(200,132,34,.88);border-radius:5px;pointer-events:none}
-.legend{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.tag{border:1px solid var(--line);border-radius:999px;background:var(--field);padding:3px 7px;font-size:9px;font-weight:850;color:#596273}.tag.install{color:var(--green);border-color:#a6cbb5;background:#fbfffc}.tag.access{color:var(--brown);border-color:#cdb190;background:#fffaf5}.tag.property{color:var(--purple);border-color:#bca9db;background:#fdfbff}.tag.warn{color:var(--warn);border-color:#d6ae72;background:#fff4df}
-.lower{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.editor{border-left:4px solid var(--green)}.editor.client{border-left-color:var(--brown)}.editor.property{border-left-color:var(--purple)}.editor.blocked{border-left-color:var(--red)}.editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:7px}.editor-title{font-weight:950;color:#334153}.formgrid{display:grid;grid-template-columns:72px 1fr;gap:5px;align-items:start;margin-top:8px}.formgrid label{font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:1.8px;color:#7d8492;padding-top:6px;text-align:right}textarea{min-height:48px;resize:vertical}.hint{font-size:10px;color:#737d89;line-height:1.35;margin:7px 0 0}
-.table{width:100%;border-collapse:separate;border-spacing:0 5px}.table th{text-align:left;color:#87909a;font-size:9px;text-transform:uppercase;letter-spacing:2px;padding:0 5px}.table td{background:var(--field);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 5px;font-weight:760}.table td:first-child{border-left:1px solid var(--line);border-radius:8px 0 0 8px}.table td:last-child{border-right:1px solid var(--line);border-radius:0 8px 8px 0}.status{border-radius:999px;padding:3px 6px;font-size:9px;font-weight:950;display:inline-block}.ready{background:var(--greenSoft);color:var(--green)}.pending{background:#fff4df;color:var(--warn)}.blockedStatus{background:var(--redSoft);color:var(--red)}
-.right{position:sticky;top:106px;align-self:start;display:flex;flex-direction:column;gap:10px}.readout{text-align:center}.readout-main{font-size:10px;letter-spacing:3px;font-weight:950;color:var(--green);text-transform:uppercase}.line{border-top:1px solid var(--line);margin:7px 0;padding-top:6px}.label{letter-spacing:2.5px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:9px}.value{font-weight:900;margin-top:2px;overflow-wrap:anywhere}.railrow{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:5px 0;font-weight:760}.railrow strong{color:#26354a}.savegrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.savegrid button{border:0;border-radius:8px;padding:7px;color:white;font-weight:950;font-size:10px}.savegrid .green{background:var(--green)}.savegrid .brown{background:var(--brown)}.savegrid .purple{background:var(--purple)}.savegrid .navy{background:var(--navy)}
-.summary{font-size:11px;line-height:1.4}.summary p{margin:.45em 0}.cause{margin:7px 0 0;padding-left:14px}.cause li{margin:3px 0}.saved-list{display:flex;flex-direction:column;gap:5px;margin-top:6px}.saved-list button{border:1px solid var(--line);background:var(--field);border-radius:8px;padding:6px;text-align:left;font-weight:800;font-size:10px}
-@media(max-width:1050px){.topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.right{position:static}.lower,.grid3{grid-template-columns:1fr}}
+:root{
+  --night:#090b16;
+  --deep:#11172c;
+  --panel:rgba(255,255,255,.075);
+  --panel2:rgba(255,255,255,.105);
+  --line:rgba(255,255,255,.18);
+  --gold:#eacb7a;
+  --violet:#9b7cff;
+  --blue:#6fb7ff;
+  --rose:#ff8fb8;
+  --green:#8ee6aa;
+  --amber:#f4aa57;
+  --white:#fff7df;
+  --muted:#b8bdd0;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(155,124,255,.22),transparent 34%),
+    radial-gradient(circle at 80% 30%,rgba(111,183,255,.18),transparent 30%),
+    radial-gradient(circle at 50% 90%,rgba(234,203,122,.16),transparent 38%),
+    linear-gradient(180deg,#050611,var(--night));
+  color:var(--white);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button,input{font:inherit}
+.app{max-width:1280px;margin:0 auto;padding:18px}
+.header{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:16px;
+  align-items:center;
+  padding:18px 20px;
+  border:1px solid var(--line);
+  border-radius:26px;
+  background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+  backdrop-filter:blur(14px);
+}
+.kicker{
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:6px;
+  font-size:11px;
+  font-weight:800;
+}
+h1{
+  margin:6px 0 0;
+  font-size:clamp(28px,5vw,54px);
+  line-height:.95;
+  letter-spacing:-1.5px;
+}
+.subtitle{
+  color:var(--muted);
+  margin-top:10px;
+  max-width:760px;
+  line-height:1.55;
+}
+.mode{
+  text-align:right;
+  min-width:240px;
+}
+.chord-name{
+  font-size:24px;
+  font-weight:900;
+  color:var(--gold);
+}
+.chord-detail{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:13px;
+}
+.layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 330px;
+  gap:18px;
+  margin-top:18px;
+}
+.stage{
+  position:relative;
+  min-height:700px;
+  border:1px solid var(--line);
+  border-radius:30px;
+  background:
+    radial-gradient(circle at center,rgba(255,247,223,.08),transparent 22%),
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,.24);
+}
+.stage:before{
+  content:"";
+  position:absolute;
+  inset:52px;
+  border:1px solid rgba(234,203,122,.28);
+  border-radius:50%;
+  filter:drop-shadow(0 0 20px rgba(234,203,122,.18));
+}
+.stage:after{
+  content:"";
+  position:absolute;
+  inset:145px;
+  border:1px dashed rgba(255,255,255,.15);
+  border-radius:50%;
+}
+.center{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:168px;
+  height:168px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  border:1px solid rgba(234,203,122,.65);
+  background:
+    radial-gradient(circle,rgba(234,203,122,.28),rgba(155,124,255,.13) 48%,rgba(255,255,255,.04));
+  display:grid;
+  place-items:center;
+  text-align:center;
+  box-shadow:0 0 45px rgba(234,203,122,.25), inset 0 0 28px rgba(255,255,255,.08);
+  z-index:4;
+}
+.center strong{
+  display:block;
+  color:var(--gold);
+  font-size:22px;
+}
+.center span{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+}
+.node{
+  position:absolute;
+  width:148px;
+  min-height:116px;
+  margin:-58px 0 0 -74px;
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:rgba(8,10,24,.76);
+  backdrop-filter:blur(12px);
+  padding:13px;
+  box-shadow:0 16px 42px rgba(0,0,0,.26);
+  transition:.25s ease;
+  z-index:5;
+}
+.node:hover,.node.active{
+  transform:translateY(-3px) scale(1.025);
+  border-color:var(--gold);
+  box-shadow:0 18px 45px rgba(234,203,122,.16);
+}
+.node-title{
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+.node-tone{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+}
+.node input{
+  width:100%;
+  margin-top:10px;
+  accent-color:var(--gold);
+}
+.twin-line,.triad-line{
+  position:absolute;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(234,203,122,.72),transparent);
+  transform-origin:left center;
+  z-index:2;
+  pointer-events:none;
+  opacity:.65;
+}
+.triad-line{
+  background:linear-gradient(90deg,transparent,rgba(155,124,255,.46),transparent);
+  opacity:.45;
+}
+.rail{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.panel{
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));
+  backdrop-filter:blur(14px);
+  padding:16px;
+  box-shadow:0 18px 55px rgba(0,0,0,.20);
+}
+.panel-title{
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:4px;
+  font-size:11px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+.stat{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  padding:8px 0;
+  color:var(--muted);
+}
+.stat strong{color:var(--white)}
+.triad{
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:10px;
+  background:rgba(255,255,255,.045);
+}
+.triad h3{
+  margin:0 0 6px;
+  font-size:14px;
+  color:var(--white);
+}
+.triad p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.45;
+  font-size:12px;
+}
+button.action{
+  width:100%;
+  border:1px solid rgba(234,203,122,.55);
+  background:linear-gradient(135deg,rgba(234,203,122,.22),rgba(155,124,255,.12));
+  color:var(--white);
+  padding:11px 12px;
+  border-radius:16px;
+  font-weight:900;
+  margin-top:10px;
+}
+.poem{
+  color:var(--muted);
+  line-height:1.55;
+}
+.poem b{color:var(--gold)}
+@media(max-width:980px){
+  .header,.layout{grid-template-columns:1fr}
+  .mode{text-align:left}
+  .stage{min-height:820px}
+  .node{width:136px;margin-left:-68px}
+}
 </style>
 </head>
 <body>
 <div class="app">
-<header class="topbar">
-  <div><div class="kicker">Remote PM Command Surface</div><div class="brand"><span class="logo">LV</span>Remote PM Cockpit</div></div>
-  <div class="lensbar"><button class="active" data-lens="PM">PM</button><button data-lens="Client">Client</button><button data-lens="Job">Job</button></div>
-  <div class="header-stat"><strong>Today’s Access</strong><div id="headerStats">0 blocked · 0 photos missing · 0 unresolved</div></div>
-</header>
-<section class="subbar">
-  <div><strong>JOB</strong> <span contenteditable>Garden + High Rise Deployment</span></div><div><strong>STATE</strong> Multi-state</div><div><strong>UNITS</strong> 144</div><div><strong>VIEW</strong> <span id="viewRead">Access</span></div><div><strong>SAVES</strong> <span id="saveCount">0</span></div><div><strong>LENS</strong> <span id="lensRead">PM</span></div>
-</section>
-<div class="layout"><main>
-<section class="panel"><div class="toolbar"><div><div class="title">Remote PM Status Overview</div></div><div class="viewbar"><button class="active" data-view="Access">Access</button><button data-view="Photos">Photos</button><button data-view="IDF/Fiber">IDF/Fiber</button><button data-view="Client Update">Client Update</button></div><select><option>All buildings</option><option>High Rise A</option><option>Garden North</option></select></div><div class="grid3"><div class="statcard"><b id="readyUnits">0</b><span>Ready / complete units</span></div><div class="statcard"><b id="photoMissing">0</b><span>Photo deliverables missing</span></div><div class="statcard"><b id="blockedUnits">0</b><span>Blocked or unassigned</span></div></div></section>
-<section class="panel" style="margin-top:10px"><div class="toolbar"><div><div class="title">Two-Day Access / Operations Matrix</div></div><select><option>Current 2-day window</option><option>Next 2-day window</option><option>Week lookahead</option></select><button class="pill" id="addJotformBtn">Simulate Jotform Intake</button></div><div class="matrix-wrap"><div id="matrix" class="matrix"></div></div><div class="legend"><span class="tag access">Client access window</span><span class="tag install">Installer work</span><span class="tag property">Property/IDF condition</span><span class="tag warn">Amber = photo/status needed</span></div></section>
-<section class="lower"><section class="panel editor" id="editorCard"><div class="editor-head"><div><div class="title" style="margin-bottom:2px">Selected Unit / Workstream</div><div class="editor-title" id="selectedTitle">Select a cell</div></div><button class="pill" id="clearCellBtn">Clear</button></div><div class="chips"><button class="chip access" data-type="access">Access</button><button class="chip install" data-type="install">Install</button><button class="chip property" data-type="property">Property</button><button class="chip blocked" data-type="blocked">Blocked</button></div><div class="formgrid"><label>Unit</label><input id="unitInput" placeholder="A-1204 / G-22"/><label>IDF</label><input id="idfInput" placeholder="IDF-12 / IDF-GN2"/><label>SFP/Fiber</label><input id="fiberInput" placeholder="SFP tag / fiber pair / strand"/><label>Status</label><input id="statusInput" placeholder="installed, tested, activated"/><label>Photos</label><select id="photoInput"><option>Required</option><option>Received</option><option>Not required</option></select><label>Note</label><textarea id="noteInput" placeholder="Real-time installer/client/property note."></textarea></div><p class="hint">Forms/Jotform submissions should land here as unit-status updates, not as calendar decoration.</p></section>
-<section class="panel"><div class="editor-head"><div><div class="title" style="margin-bottom:2px">Unit Status Table</div><div class="editor-title">Remote deliverables</div></div><button class="pill" id="clientSummaryBtn">Client Summary</button></div><table class="table"><thead><tr><th>Unit</th><th>IDF</th><th>Status</th><th>Photos</th></tr></thead><tbody id="unitTable"></tbody></table></section></section>
-</main>
-<aside class="right"><section class="panel readout"><div class="readout-main">Now Selected</div><div class="line"><div class="label">Cell</div><div class="value" id="selectedCellRead">—</div></div><div class="line"><div class="label">Unit</div><div class="value" id="selectedUnitRead">—</div></div><div class="line"><div class="label">IDF / Fiber</div><div class="value" id="selectedFiberRead">—</div></div><div class="line"><div class="label">Photo</div><div class="value" id="selectedPhotoRead">—</div></div></section><section class="panel"><div class="title" style="color:var(--green)">What Matters Now</div><div class="railrow"><span>Two-day access</span><strong id="accessRead">0</strong></div><div class="railrow"><span>Photos missing</span><strong id="photoRead">0</strong></div><div class="railrow"><span>IDF/Fiber exceptions</span><strong id="fiberRead">0</strong></div><div class="railrow"><span>Client-ready updates</span><strong id="clientRead">0</strong></div><div class="savegrid"><button class="green" id="saveOps">Save Ops</button><button class="brown" id="saveClient">Save Client</button><button class="purple" id="saveExceptions">Save Exceptions</button><button class="navy" id="saveTotal">Save Total</button></div></section><section class="panel summary"><div class="title" style="color:var(--green)">Floating Summary / Saves</div><p id="summaryText"></p><ul class="cause" id="causeList"></ul><div class="saved-list" id="savedList"></div></section></aside></div></div>
+  <header class="header">
+    <div>
+      <div class="kicker">not a stack • a chord</div>
+      <h1>Chordal Resonance</h1>
+      <div class="subtitle">
+        Each center meets its twin independently. The triads do not climb; they tune.
+        When relation, embodiment, and knowing align, the one sounds through them without erasing their difference.
+      </div>
+    </div>
+    <div class="mode">
+      <div class="chord-name" id="chordName">Unstruck Major Ninth</div>
+      <div class="chord-detail" id="chordDetail">Coherence forming across paired centers.</div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage" id="stage">
+      <div class="center">
+        <div>
+          <strong>The One</strong>
+          <span>not above<br/>but through</span>
+        </div>
+      </div>
+    </section>
+
+    <aside class="rail">
+      <section class="panel">
+        <div class="panel-title">Right Rail Resonance</div>
+        <div class="stat"><span>Pair harmony</span><strong id="pairStat">0%</strong></div>
+        <div class="stat"><span>Triadic chord</span><strong id="triadStat">0%</strong></div>
+        <div class="stat"><span>The one</span><strong id="oneStat">quiet</strong></div>
+        <button class="action" id="harmonizeBtn">Harmonize Toward Chord</button>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">Triadic Meetings</div>
+        <div class="triad">
+          <h3>Root Triad</h3>
+          <p>Survival, voice, and vision meet: the body speaks what the sight can bear.</p>
+        </div>
+        <div class="triad">
+          <h3>Heart Triad</h3>
+          <p>Desire, heart, and crown meet: love becomes neither hunger nor abstraction, but coherence.</p>
+        </div>
+        <div class="triad">
+          <h3>Witness Triad</h3>
+          <p>Will, memory, and the one meet: action remembers why it began.</p>
+        </div>
+      </section>
+
+      <section class="panel poem">
+        <div class="panel-title">Reading</div>
+        <p id="reading">
+          <b>The chord is listening.</b><br/>
+          Adjust the centers. Let each twin answer without forcing ascent.
+        </p>
+      </section>
+    </aside>
+  </main>
+</div>
+
 <script>
-const cols=["Day 1 AM","Day 1 PM","Day 1 Eve","Day 2 AM","Day 2 PM","Day 2 Eve","Follow-up"], rows=["Access","OSP","MDF","IDF","Rough-in","Install","Activate","Test/Photos"];
-let state={lens:"PM",selected:null,cells:{},saved:[]};
-[{unit:"A-1204",idf:"IDF-12",fiber:"SFP-A12-04 / Pair 22",status:"Installed",photo:"Received",row:"Install",col:"Day 1 PM",type:"install",note:"Installer photo received."},{unit:"A-1210",idf:"IDF-12",fiber:"SFP-A12-10 / Pair 28",status:"Needs access",photo:"Required",row:"Access",col:"Day 1 AM",type:"access",note:"Client two-day window."},{unit:"GN-22",idf:"IDF-GN2",fiber:"SFP-GN2-22 / Strand 7",status:"IDF pending",photo:"Required",row:"IDF",col:"Day 2 AM",type:"property",note:"Patch panel labeling needed."},{unit:"B-806",idf:"IDF-08",fiber:"SFP-B08-06 / Pair 14",status:"Blocked",photo:"Required",row:"Test/Photos",col:"Follow-up",type:"blocked",note:"Testing blocked; missing activation photo."}].forEach(u=>state.cells[u.row+"|"+u.col]=u);
-function id(x){return document.getElementById(x)}function key(r,c){return r+"|"+c}function get(r,c){return state.cells[key(r,c)]}function set(r,c,d){if(!d||!d.type)delete state.cells[key(r,c)];else state.cells[key(r,c)]={row:r,col:c,...d}}
-function renderMatrix(){const m=id("matrix");m.innerHTML='<div class="corner"></div>'+cols.map(c=>`<div class="head">${c}</div>`).join("");rows.forEach(r=>{m.innerHTML+=`<button class="rowhead">${r}</button>`;cols.forEach(c=>{const d=get(r,c);let cls="cell "+(d?d.type:"empty");if(state.selected&&state.selected.row===r&&state.selected.col===c)cls+=" selected";if(d&&(d.photo==="Required"||/blocked|pending|missing/i.test(d.status+" "+d.note)))cls+=" warn";m.innerHTML+=`<button class="${cls}" data-r="${r}" data-c="${c}">${d?(d.type==="blocked"?"!":"●"):""}</button>`})});document.querySelectorAll(".cell,.rowhead").forEach(b=>b.onclick=()=>selectCell(b.dataset.r||b.textContent, b.dataset.c||cols[0]))}
-function selectCell(r,c){state.selected={row:r,col:c};const d=get(r,c)||{type:"install",unit:"",idf:"",fiber:"",status:"",photo:"Required",note:""};id("selectedTitle").textContent=r+" / "+c;["unit","idf","fiber","status","note"].forEach(k=>id(k+"Input").value=d[k]||"");id("photoInput").value=d.photo||"Required";setType(d.type);renderMatrix();updateReadout();updateStats()}
-function setType(t){document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.type===t));id("editorCard").className="panel editor "+(t==="access"?"client":t==="property"?"property":t==="blocked"?"blocked":"")}
-function activeType(){return document.querySelector(".chip.active")?.dataset.type||"install"}
-function saveEditor(){if(!state.selected)return;set(state.selected.row,state.selected.col,{type:activeType(),unit:id("unitInput").value.trim(),idf:id("idfInput").value.trim(),fiber:id("fiberInput").value.trim(),status:id("statusInput").value.trim(),photo:id("photoInput").value,note:id("noteInput").value.trim()});renderMatrix();renderTable();updateReadout();updateStats()}
-function clearCell(){if(!state.selected)return;set(state.selected.row,state.selected.col,null);renderMatrix();renderTable();updateReadout();updateStats()}
-function renderTable(){id("unitTable").innerHTML=Object.values(state.cells).filter(d=>d.unit).slice(0,8).map(d=>{let cls=/blocked/i.test(d.status)?"blockedStatus":/pending|needs/i.test(d.status)?"pending":"ready";return `<tr><td>${d.unit}</td><td>${d.idf||"—"}</td><td><span class="status ${cls}">${d.status||"Open"}</span></td><td>${d.photo||"—"}</td></tr>`}).join("")}
-function updateReadout(){if(!state.selected)return;const d=get(state.selected.row,state.selected.col)||{};id("selectedCellRead").textContent=state.selected.row+" / "+state.selected.col;id("selectedUnitRead").textContent=d.unit||"—";id("selectedFiberRead").textContent=[d.idf,d.fiber].filter(Boolean).join(" · ")||"—";id("selectedPhotoRead").textContent=d.photo||"—"}
-function updateStats(){const vals=Object.values(state.cells),photos=vals.filter(d=>d.photo==="Required").length,blocked=vals.filter(d=>d.type==="blocked"||/blocked|pending|missing/i.test(d.status+" "+d.note)).length,access=vals.filter(d=>d.type==="access").length,fiber=vals.filter(d=>/idf|sfp|fiber|strand|pair|patch/i.test(d.idf+" "+d.fiber+" "+d.note)&&(/pending|missing|blocked/i.test(d.status+" "+d.note)||d.type==="property")).length,complete=vals.filter(d=>/installed|tested|activated|complete/i.test(d.status)).length;id("readyUnits").textContent=complete;id("photoMissing").textContent=photos;id("blockedUnits").textContent=blocked;id("accessRead").textContent=access;id("photoRead").textContent=photos;id("fiberRead").textContent=fiber;id("clientRead").textContent=vals.filter(d=>d.unit&&d.status).length;id("headerStats").textContent=`${blocked} blocked · ${photos} photos missing · ${fiber} IDF/fiber exceptions`;id("summaryText").textContent=state.lens==="Client"?`Client view: ${vals.filter(d=>d.unit&&d.status).length} concise status updates are ready, with ${photos} photo deliverable(s) still required.`:state.lens==="Job"?`Job view: ${vals.length} active cells, ${blocked} blockers, ${fiber} IDF/fiber exception(s), and ${photos} missing photo deliverable(s).`:`PM view: focus the next touch on ${blocked?"blocked units and missing proof":"install flow and real-time proof collection"}.`;id("causeList").innerHTML=[photos?`${photos} unit/photo deliverable(s) require field proof.`:"",blocked?`${blocked} blocked/pending condition(s) need PM attention.`:"",fiber?`${fiber} IDF/fiber/SFP exception(s) need tracking.`:""].filter(Boolean).map(c=>`<li>${c}</li>`).join("")}
-function saveView(name){state.saved.unshift({name,time:new Date().toLocaleTimeString(),cells:JSON.parse(JSON.stringify(state.cells)),lens:state.lens});id("saveCount").textContent=state.saved.length;id("savedList").innerHTML=state.saved.slice(0,5).map((s,i)=>`<button data-i="${i}">${s.name} · ${s.time}</button>`).join("");document.querySelectorAll("#savedList button").forEach(b=>b.onclick=()=>{const s=state.saved[b.dataset.i];state.cells=JSON.parse(JSON.stringify(s.cells));state.lens=s.lens;render()})}
-function simulate(){const n=Object.keys(state.cells).length+1,r=["Access","Install","Test/Photos","IDF"][n%4],c=cols[n%cols.length],t=n%4===0?"property":n%3===0?"blocked":n%2===0?"install":"access";set(r,c,{type:t,unit:`NEW-${100+n}`,idf:`IDF-${n%12+1}`,fiber:`SFP-${n} / Pair ${n+20}`,status:n%3===0?"Blocked":"Jotform update",photo:"Required",note:"Simulated real-time form submission."});render()}
-function render(){renderMatrix();renderTable();updateReadout();updateStats()}
-document.querySelectorAll(".lensbar button").forEach(b=>b.onclick=()=>{state.lens=b.dataset.lens;document.querySelectorAll(".lensbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");id("lensRead").textContent=state.lens;updateStats()});document.querySelectorAll(".viewbar button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".viewbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");id("viewRead").textContent=b.dataset.view;updateStats()});document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{setType(b.dataset.type);saveEditor()});["unitInput","idfInput","fiberInput","statusInput","photoInput","noteInput"].forEach(n=>id(n).addEventListener("input",saveEditor));id("photoInput").addEventListener("change",saveEditor);id("clearCellBtn").onclick=clearCell;id("addJotformBtn").onclick=simulate;id("clientSummaryBtn").onclick=()=>saveView("Client Summary");id("saveOps").onclick=()=>saveView("Ops");id("saveClient").onclick=()=>saveView("Client");id("saveExceptions").onclick=()=>saveView("Exceptions");id("saveTotal").onclick=()=>saveView("Total");
-render();selectCell("Test/Photos","Follow-up");
+const centers = [
+  {id:"root", name:"Root", tone:"embodiment", color:"var(--green)", x:50, y:84, twin:"crown", triad:"Root Triad"},
+  {id:"sacral", name:"Sacral", tone:"desire / current", color:"var(--rose)", x:18, y:66, twin:"thirdEye", triad:"Heart Triad"},
+  {id:"solar", name:"Solar", tone:"will / fire", color:"var(--amber)", x:18, y:34, twin:"throat", triad:"Witness Triad"},
+  {id:"heart", name:"Heart", tone:"relation", color:"var(--gold)", x:50, y:16, twin:"one", triad:"Heart Triad"},
+  {id:"throat", name:"Throat", tone:"voice / truth", color:"var(--blue)", x:82, y:34, twin:"solar", triad:"Root Triad"},
+  {id:"thirdEye", name:"Third Eye", tone:"sight / pattern", color:"var(--violet)", x:82, y:66, twin:"sacral", triad:"Witness Triad"},
+  {id:"crown", name:"Crown", tone:"reception", color:"var(--white)", x:50, y:50, twin:"root", triad:"Heart Triad"}
+];
+
+let values = Object.fromEntries(centers.map(c => [c.id, 64]));
+
+const stage = document.getElementById("stage");
+
+function makeNode(c){
+  const n = document.createElement("div");
+  n.className = "node";
+  n.id = "node-" + c.id;
+  n.style.left = c.x + "%";
+  n.style.top = c.y + "%";
+  n.style.borderColor = "color-mix(in srgb, " + c.color + " 55%, rgba(255,255,255,.18))";
+  n.innerHTML = `
+    <div class="node-title" style="color:${c.color}">${c.name}</div>
+    <div class="node-tone">${c.tone}</div>
+    <input type="range" min="0" max="100" value="${values[c.id]}" data-id="${c.id}">
+  `;
+  n.addEventListener("mouseenter", () => highlight(c.id));
+  n.addEventListener("mouseleave", () => clearHighlight());
+  return n;
+}
+
+function drawLine(a,b,cls){
+  const ax = a.x / 100 * stage.clientWidth;
+  const ay = a.y / 100 * stage.clientHeight;
+  const bx = b.x / 100 * stage.clientWidth;
+  const by = b.y / 100 * stage.clientHeight;
+  const dx = bx - ax, dy = by - ay;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const angle = Math.atan2(dy,dx) * 180 / Math.PI;
+  const line = document.createElement("div");
+  line.className = cls;
+  line.style.left = ax + "px";
+  line.style.top = ay + "px";
+  line.style.width = len + "px";
+  line.style.transform = `rotate(${angle}deg)`;
+  return line;
+}
+
+function render(){
+  [...stage.querySelectorAll(".node,.twin-line,.triad-line")].forEach(e => e.remove());
+
+  const pairs = [["root","crown"],["sacral","thirdEye"],["solar","throat"]];
+  pairs.forEach(([a,b]) => {
+    stage.appendChild(drawLine(centers.find(c=>c.id===a), centers.find(c=>c.id===b), "twin-line"));
+  });
+
+  [["root","throat"],["throat","heart"],["heart","sacral"],["sacral","thirdEye"],["thirdEye","solar"],["solar","root"]].forEach(([a,b]) => {
+    stage.appendChild(drawLine(centers.find(c=>c.id===a), centers.find(c=>c.id===b), "triad-line"));
+  });
+
+  centers.forEach(c => stage.appendChild(makeNode(c)));
+
+  document.querySelectorAll("input[type=range]").forEach(input => {
+    input.addEventListener("input", e => {
+      values[e.target.dataset.id] = Number(e.target.value);
+      updateStats();
+    });
+  });
+
+  updateStats();
+}
+
+function pairHarmony(){
+  const pairs = [["root","crown"],["sacral","thirdEye"],["solar","throat"]];
+  const scores = pairs.map(([a,b]) => 100 - Math.abs(values[a] - values[b]));
+  return Math.round(scores.reduce((x,y)=>x+y,0) / scores.length);
+}
+
+function triadScore(){
+  const triads = [
+    ["root","throat","thirdEye"],
+    ["sacral","heart","crown"],
+    ["solar","heart","root"]
+  ];
+  const scores = triads.map(t => {
+    const avg = t.reduce((s,id)=>s+values[id],0)/3;
+    const variance = t.reduce((s,id)=>s+Math.abs(values[id]-avg),0)/3;
+    return Math.max(0,100-variance);
+  });
+  return Math.round(scores.reduce((x,y)=>x+y,0)/scores.length);
+}
+
+function updateStats(){
+  const p = pairHarmony();
+  const t = triadScore();
+  const one = Math.round((p+t)/2);
+  document.getElementById("pairStat").textContent = p + "%";
+  document.getElementById("triadStat").textContent = t + "%";
+  document.getElementById("oneStat").textContent =
+    one > 88 ? "singing" : one > 72 ? "warming" : one > 55 ? "listening" : "quiet";
+
+  const name =
+    one > 88 ? "Golden Suspended Ninth" :
+    one > 72 ? "Open Fifth with Crown" :
+    one > 55 ? "Searching Triad" :
+    "Unstruck Minor";
+
+  document.getElementById("chordName").textContent = name;
+  document.getElementById("chordDetail").textContent =
+    `Pair ${p}% · Triad ${t}% · One ${one}%`;
+
+  document.getElementById("reading").innerHTML =
+    one > 88
+      ? `<b>The chord sings.</b><br/>The centers keep their names, yet the one passes through them like light through a prism.`
+      : one > 72
+      ? `<b>The chord is warming.</b><br/>The twins are answering. Coherence is no longer imposed; it is beginning to choose itself.`
+      : one > 55
+      ? `<b>The chord is listening.</b><br/>A few centers still reach vertically. Invite them to meet across the circle.`
+      : `<b>The chord is unstruck.</b><br/>Do not climb. Tune one pair gently, then let the triad respond.`;
+}
+
+function highlight(id){
+  const c = centers.find(x=>x.id===id);
+  const twin = c.twin;
+  document.querySelectorAll(".node").forEach(n => {
+    n.classList.toggle("active", n.id === "node-"+id || n.id === "node-"+twin);
+  });
+}
+
+function clearHighlight(){
+  document.querySelectorAll(".node").forEach(n => n.classList.remove("active"));
+}
+
+document.getElementById("harmonizeBtn").addEventListener("click", () => {
+  const avg = Math.round(Object.values(values).reduce((a,b)=>a+b,0) / Object.values(values).length);
+  Object.keys(values).forEach(k => values[k] = Math.round(values[k]*.55 + avg*.45));
+  render();
+});
+
+window.addEventListener("resize", render);
+render();
 </script>
-</body></html>
+</body>
+</html>
