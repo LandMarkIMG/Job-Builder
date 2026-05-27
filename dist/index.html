@@ -1,485 +1,391 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>LV Job Builder</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>LV Job Builder V2</title>
 <style>
 :root{
-  --navy:#15324a; --navy2:#24465f;
-  --paper:#fbf7ef; --field:#fffdf8; --line:#d9ccb7; --soft:#efe7d8;
-  --ink:#253243; --muted:#7b8190;
-  --bidder:#2f8a57; --bidderSoft:#dff2e5;
-  --client:#8a5b32; --clientSoft:#efe1d1;
-  --property:#7757a6; --propertySoft:#e7def6;
-  --job:#15324a; --jobSoft:#dde8ef;
-  --warn:#c88422; --gray:#879fb0;
-  --shadow:0 12px 28px rgba(37,50,67,.10);
+  --navy:#15324a; --navy2:#24475f;
+  --paper:#f5efe4; --panel:#fffaf1; --field:#fffdf8; --line:#d7c9b4;
+  --ink:#263444; --muted:#7b8490;
+  --bidder:#2f8a57; --bidder-soft:#dff2e5;
+  --client:#8a5b32; --client-soft:#efe1d1;
+  --property:#7757a6; --property-soft:#e7def6;
+  --job:#46596b; --job-soft:#dde8ef;
+  --warn:#c88422; --danger:#a7433a;
+  --shadow:0 12px 30px rgba(37,50,67,.10);
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:linear-gradient(180deg,#f5f1e8,#eee8dc);
-  color:var(--ink);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-size:12px;
-}
-.app{max-width:1280px;margin:0 auto;padding:0 8px 28px}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7f2ea,#ece4d7);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:12px}
+button,select,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:1300px;margin:0 auto;padding:0 8px 28px}
 .topbar{
-  position:sticky;top:0;z-index:40;
-  display:grid;grid-template-columns:290px 1fr 280px;gap:14px;align-items:center;
-  background:var(--navy);color:white;border:1px solid #0e263b;border-top:0;
-  border-radius:0 0 14px 14px;padding:12px 16px;box-shadow:var(--shadow);
+  position:sticky;top:0;z-index:50;
+  display:grid;grid-template-columns:320px 1fr 315px;gap:14px;align-items:center;
+  padding:12px 16px;background:var(--navy);color:white;border-radius:0 0 15px 15px;box-shadow:var(--shadow)
 }
-.logo{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;background:#e9f3e8;color:var(--bidder);font-weight:900;margin-right:8px}
-.brandline{letter-spacing:6px;font-size:10px;color:#c9d8d2;text-transform:uppercase}
-.brand{font-weight:850;font-size:15px;letter-spacing:.4px}
-button,select,input,textarea{font-family:inherit}
-.modebar{text-align:center}
-.modebar button,.resbar button,.smallbtn,.savebtn{
+.brand-kicker{letter-spacing:6px;font-size:10px;color:#cad8d2;text-transform:uppercase}
+.brand{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900}
+.logo{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#e9f3e8;color:var(--bidder);font-weight:950}
+.lensbar,.resbar,.ownerbar,.chips{display:flex;gap:5px;flex-wrap:wrap}
+.lensbar{justify-content:center}
+.lensbar button,.resbar button,.ownerbar button,.chip,.smallbtn{
   border:1px solid var(--line);background:#fffaf0;color:var(--ink);
-  border-radius:18px;padding:5px 11px;font-weight:850;font-size:11px;cursor:pointer;
+  border-radius:999px;padding:5px 11px;font-weight:850;font-size:11px
 }
-.modebar button.active[data-mode="Team"]{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
-.modebar button.active[data-mode="Client"]{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
-.modebar button.active[data-mode="Job"]{background:var(--jobSoft);color:var(--job);border-color:#879fb0}
-.topstats{
-  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.20);
-  border-radius:10px;padding:8px 10px;text-align:right;
-}
-.bigwk{font-weight:950;font-size:14px}.multiline{font-size:11px;color:#d5dee8;margin-top:2px}
+.lensbar button.active[data-lens="Bidder"],.ownerbar button.active[data-owner="bidder"],.chip.bidder.active{background:var(--bidder-soft);color:var(--bidder);border-color:var(--bidder)}
+.lensbar button.active[data-lens="Client"],.ownerbar button.active[data-owner="client"],.chip.client.active{background:var(--client-soft);color:var(--client);border-color:var(--client)}
+.lensbar button.active[data-lens="Job"],.ownerbar button.active[data-owner="unassigned"],.chip.unassigned.active{background:var(--job-soft);color:var(--job);border-color:#879fb0}
+.ownerbar button.active[data-owner="property"],.chip.property.active{background:var(--property-soft);color:var(--property);border-color:var(--property)}
+.header-stat{justify-self:end;width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.20);border-radius:12px;padding:8px 10px;text-align:right}
+.header-stat strong{font-size:15px}
+.header-stat div:last-child{color:#d5dee8;font-size:11px;margin-top:2px}
 .subbar{
-  position:sticky;top:64px;z-index:39;
-  display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr 1fr 1.35fr;gap:10px;
-  margin:8px 0 12px 0;padding:9px 14px;background:#fff8ec;
-  border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 18px rgba(37,50,67,.06);
-  color:#4b5566;font-weight:760;
+  position:sticky;top:65px;z-index:45;
+  display:grid;grid-template-columns:1.3fr .95fr .95fr .95fr .95fr 1.15fr;gap:10px;
+  margin:8px 0 12px;padding:9px 14px;background:#fff8ec;border:1px solid var(--line);border-radius:13px;
+  box-shadow:0 8px 18px rgba(37,50,67,.06);font-weight:760;color:#4b5566
 }
 .subbar strong{color:var(--ink)}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px}
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 8px 22px rgba(37,50,67,.07)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px;box-shadow:0 8px 22px rgba(37,50,67,.07)}
 .title{letter-spacing:4px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:10px;margin-bottom:10px}
-.matrix-head{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-bottom:10px}
+.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-bottom:10px}
 .resbar button.active{background:#e8f4eb;color:var(--bidder);border-color:#a6cbb5}
-select{
-  border:1px solid var(--line);border-radius:10px;background:#fffdf8;color:var(--ink);
-  padding:6px 9px;font-size:11px;font-weight:800;
-}
-.month-mini{
-  display:grid;grid-template-columns:repeat(7,1fr);gap:3px;
-  margin-bottom:10px;padding:8px;background:#fffdf8;border:1px solid var(--line);border-radius:12px;
-}
-.month-mini .dow{font-size:9px;color:#89909a;text-align:center;font-weight:900}
-.day{
-  height:22px;border-radius:7px;border:1px solid #e3d8c8;background:#f8f1e4;
-  display:grid;place-items:center;font-size:10px;font-weight:800;cursor:pointer;color:#5d6674;
-}
-.day.blank{opacity:.25;cursor:default}
+select,input,textarea{border:1px solid var(--line);border-radius:9px;background:var(--field);color:#4c5666;padding:7px}
+select{font-size:11px;font-weight:850;min-width:146px}
+.month-card{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:10px;padding:8px;background:var(--field);border:1px solid var(--line);border-radius:13px}
+.dow{font-size:9px;color:#89909a;text-align:center;font-weight:950}
+.day{height:23px;border-radius:7px;border:1px solid #e3d8c8;background:#f8f1e4;color:#5d6674;font-size:10px;font-weight:850}
+.day.blank{opacity:.18;pointer-events:none}
 .day.today{border-color:var(--bidder);color:var(--bidder)}
-.day.selected{background:var(--navy);color:white;border-color:var(--navy)}
-.matrix{
-  display:grid;
-  grid-template-columns:108px repeat(var(--cols),1fr);
-  gap:4px;
-}
-.mh,.rowlabel,.mcell{
-  min-height:28px;border:1px solid var(--line);border-radius:8px;background:#fffdf8;
-}
-.mh{
-  display:grid;place-items:center;font-size:10px;font-weight:950;color:#707988;
-  background:#f4ecdd;
-}
-.rowlabel{
-  display:flex;align-items:center;justify-content:flex-end;text-align:right;
-  padding:5px 8px;font-weight:950;color:#334153;background:#fff9ee;
-}
-.mcell{
-  cursor:pointer;position:relative;overflow:hidden;transition:.12s ease;
-  display:grid;place-items:center;color:#fff;font-weight:950;font-size:9px;
-}
-.mcell:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(37,50,67,.12)}
-.mcell.bidder{background:var(--bidder);border-color:var(--bidder)}
-.mcell.client{background:var(--client);border-color:var(--client)}
-.mcell.property{background:var(--property);border-color:var(--property)}
-.mcell.unassigned{background:#dfe7ed;color:var(--job);border-color:#a2b2bd}
-.mcell.conflict{outline:2px solid rgba(200,132,34,.65)}
-.mcell.empty{background:#fffdf8;color:transparent}
-.matrix-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-.tag{border:1px solid var(--line);border-radius:13px;background:#fffdf8;padding:4px 8px;font-size:10px;font-weight:850;color:#596273}
+.day.active{background:var(--navy);color:white;border-color:var(--navy)}
+.matrix-wrap{overflow:auto;padding-bottom:2px}
+.matrix{--cols:7;display:grid;grid-template-columns:116px repeat(var(--cols),minmax(68px,1fr));gap:4px;min-width:760px}
+.corner,.head,.rowhead,.cell{border:1px solid var(--line);border-radius:8px;min-height:30px;background:var(--field)}
+.head{display:grid;place-items:center;background:#f0e6d6;color:#667181;font-size:10px;font-weight:950}
+.rowhead{display:flex;align-items:center;justify-content:flex-end;text-align:right;padding:5px 8px;background:#fff9ee;font-weight:950;color:#334153}
+.cell{position:relative;display:grid;place-items:center;color:white;font-size:9px;font-weight:950;transition:.12s ease;outline:0}
+.cell:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(37,50,67,.12)}
+.cell.empty{color:transparent;background:var(--field)}
+.cell.bidder{background:var(--bidder);border-color:var(--bidder)}
+.cell.client{background:var(--client);border-color:var(--client)}
+.cell.property{background:var(--property);border-color:var(--property)}
+.cell.unassigned{background:var(--job-soft);color:var(--job);border-color:#9dafbb}
+.cell.selected{box-shadow:0 0 0 3px rgba(20,50,74,.28)}
+.cell.conflict:after{content:"";position:absolute;inset:2px;border:2px solid rgba(200,132,34,.9);border-radius:6px;pointer-events:none}
+.legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.tag{border:1px solid var(--line);border-radius:999px;background:var(--field);padding:4px 8px;font-size:10px;font-weight:850;color:#596273}
 .tag.bidder{color:var(--bidder);border-color:#a6cbb5;background:#fbfffc}
 .tag.client{color:var(--client);border-color:#cdb190;background:#fffaf5}
 .tag.property{color:var(--property);border-color:#bca9db;background:#fdfbff}
 .tag.warn{color:var(--warn);border-color:#d6ae72;background:#fff4df}
-.selectorgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.block{border-left:5px solid var(--bidder)}
-.block.clientline{border-left-color:var(--client)}.block.propertyline{border-left-color:var(--property)}.block.focus{outline:3px solid rgba(200,132,34,.35)}
-.block.dim{opacity:.55}
-.blockhead{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:6px}
-.blocktitle{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#8a8f99;font-weight:950}
-.section-actions{display:flex;gap:5px}.smallbtn{font-size:10px;padding:4px 8px}
-.item{
-  display:grid;grid-template-columns:122px minmax(136px,1fr) 150px;gap:6px;
-  border-bottom:1px solid #ede4d6;padding:6px 0;align-items:start;
-}
-.item:last-child{border-bottom:0}
-.itemlabel{font-weight:900;color:#334153;text-align:right;padding-top:4px}
-.chips{display:flex;flex-wrap:wrap;gap:4px}
-.chip,.ownerchip{
-  border:1px solid var(--line);background:#fffdf8;border-radius:14px;padding:3px 7px;
-  font-weight:850;font-size:10.5px;cursor:pointer;line-height:1.05;
-}
-.chip.active.bidder,.chip.bidder:hover{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
-.chip.active.client,.chip.client:hover{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
-.chip.active.property,.chip.property:hover{background:var(--propertySoft);color:var(--property);border-color:var(--property)}
-.chip.active.unassigned,.chip.unassigned:hover{background:var(--jobSoft);color:var(--job);border-color:#879fb0}
-.ownerrow{display:flex;gap:3px;margin-top:4px;justify-content:flex-end}
-.ownerchip{font-size:9.5px;padding:3px 5px}
-.ownerchip.bidder.active{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
-.ownerchip.client.active{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
-.ownerchip.property.active{background:var(--propertySoft);color:var(--property);border-color:var(--property)}
-.tuners{display:grid;grid-template-columns:42px 1fr;gap:4px}
-input,textarea{
-  border:1px solid var(--line);border-radius:7px;background:#fffefb;
-  padding:6px;color:#4c5666;font:inherit;font-size:10.5px;min-width:0;
-}
-textarea{height:39px;resize:vertical}
-.tuners.bidder input,.tuners.bidder textarea{border-color:#a6cbb5;background:#fbfffc}
-.tuners.client input,.tuners.client textarea{border-color:#cdb190;background:#fffaf5}
-.tuners.property input,.tuners.property textarea{border-color:#bca9db;background:#fdfbff}
-.right{position:sticky;top:128px;height:fit-content;display:flex;flex-direction:column;gap:12px}
-.selectorread{text-align:center}
-.selectorread .selected{letter-spacing:4px;color:var(--bidder);font-weight:950}
+.lower{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:12px}
+.editor{border-left:5px solid var(--bidder)}
+.editor.client{border-left-color:var(--client)}.editor.property{border-left-color:var(--property)}.editor.unassigned{border-left-color:var(--job)}
+.editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
+.editor-title{font-weight:950;color:#334153}
+.formgrid{display:grid;grid-template-columns:76px 1fr;gap:6px;align-items:start;margin-top:10px}
+.formgrid label{font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:2px;color:#7d8492;padding-top:8px;text-align:right}
+textarea{min-height:65px;resize:vertical}
+.hint{font-size:11px;color:#737d89;line-height:1.4;margin:8px 0 0}
+.chip:hover{filter:brightness(.98)}
+.right{position:sticky;top:130px;align-self:start;display:flex;flex-direction:column;gap:12px}
+.readout{text-align:center}
+.readout-main{font-size:11px;letter-spacing:3px;font-weight:950;color:var(--bidder);text-transform:uppercase}
 .readline{border-top:1px solid var(--line);margin:9px 0;padding-top:8px}
 .readlabel{letter-spacing:3px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:10px}
-.readvalue{font-weight:900;margin-top:3px}
+.readvalue{font-weight:900;margin-top:3px;overflow-wrap:anywhere}
 .stat{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:6px 0;font-weight:760}
 .stat strong{color:#26354a}
-.summary{line-height:1.45;font-size:12px}.summary p{margin:.5em 0}
-.legend b.bidder{color:var(--bidder)}.legend b.client{color:var(--client)}.legend b.property{color:var(--property)}.legend b.job{color:var(--job)}
-.savebox{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.savebtn{border:0;border-radius:8px;padding:8px;font-weight:950;color:white}
-.savebtn.team{background:var(--bidder)}.savebtn.client{background:var(--client)}.savebtn.job{background:var(--property)}.savebtn.total{background:var(--navy)}
-.causal-list{margin:8px 0 0;padding-left:15px}.causal-list li{margin:4px 0}
-@media(max-width:980px){
-  .topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.right{position:static}.selectorgrid{grid-template-columns:1fr}
-  .item{grid-template-columns:1fr}.itemlabel{text-align:left}.ownerrow{justify-content:flex-start}
-  .matrix{grid-template-columns:84px repeat(var(--cols),minmax(34px,1fr))}
+.savegrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.savegrid button{border:0;border-radius:9px;padding:8px;color:white;font-weight:950}
+.savegrid .bidder{background:var(--bidder)}.savegrid .client{background:var(--client)}.savegrid .property{background:var(--property)}.savegrid .job{background:var(--navy)}
+.summary{font-size:12px;line-height:1.45}
+.summary p{margin:.5em 0}
+.cause{margin:8px 0 0;padding-left:16px}.cause li{margin:4px 0}
+.saved-note{font-size:11px;color:#687383;margin-top:8px}
+@media(max-width:1000px){
+  .topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.right{position:static}.lower{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <div class="app">
 <header class="topbar">
-  <div><span class="logo">LV</span><span class="brandline">Branding Space</span><div class="brand">LV Job Builder</div></div>
-  <div class="modebar">
-    <button class="active" data-mode="Team">Team</button>
-    <button data-mode="Client">Client</button>
-    <button data-mode="Job">Job</button>
+  <div>
+    <div class="brand-kicker">Branding Space</div>
+    <div class="brand"><span class="logo">LV</span>Job Builder V2</div>
   </div>
-  <div class="topstats"><div class="bigwk" id="timeRead">Daily</div><div class="multiline" id="topStats">Labor x1.00 · PM x1.00 · Risk x1.00</div></div>
+  <div class="lensbar">
+    <button class="active" data-lens="Bidder">Bidder</button>
+    <button data-lens="Client">Client</button>
+    <button data-lens="Job">Job</button>
+  </div>
+  <div class="header-stat"><strong id="headerMode">Daily Matrix</strong><div id="headerStats">Labor x1.00 · PM x1.00 · Risk x1.00</div></div>
 </header>
 
 <section class="subbar">
   <div><strong>JOB</strong> <span contenteditable>Tenant Retrofit 04</span></div>
   <div><strong>TODAY</strong> <span id="today"></span></div>
-  <div><strong>RANGE</strong> <span id="range">Current month</span></div>
-  <div><strong>RESOLUTION</strong> <span id="resRead">Daily</span></div>
-  <div><strong>CONFLICTS</strong> <span id="conflicts">0</span></div>
-  <div><strong>SAVE MODE</strong> <span id="saveMode">Team</span></div>
+  <div><strong>PERIOD</strong> <span id="periodRead"></span></div>
+  <div><strong>RES</strong> <span id="resolutionRead">Daily</span></div>
+  <div><strong>CONFLICTS</strong> <span id="conflictRead">0</span></div>
+  <div><strong>LENS</strong> <span id="lensRead">Bidder</span></div>
 </section>
 
-<div class="grid">
+<div class="layout">
 <main>
-<section class="panel">
-  <div class="matrix-head">
-    <div class="title">Operational Scheduling Matrix</div>
-    <div class="resbar">
-      <button class="active" data-res="Daily">Daily</button>
-      <button data-res="Monthly">Monthly</button>
-      <button data-res="Quarterly">Quarterly</button>
+  <section class="panel">
+    <div class="toolbar">
+      <div class="title">Programmable Calendar Matrix</div>
+      <div class="resbar">
+        <button class="active" data-resolution="Daily">Daily</button>
+        <button data-resolution="Weekly">Weekly</button>
+        <button data-resolution="Monthly">Monthly</button>
+        <button data-resolution="Quarterly">Quarterly</button>
+      </div>
+      <select id="periodSelect"></select>
     </div>
-    <select id="periodSelect"></select>
-  </div>
-  <div id="miniCalendar"></div>
-  <div id="matrix"></div>
-  <div class="matrix-legend" id="matrixSignals"></div>
-</section>
+    <div id="monthPicker"></div>
+    <div class="matrix-wrap"><div id="matrix" class="matrix"></div></div>
+    <div class="legend">
+      <span class="tag bidder">Bidder = controllable work</span>
+      <span class="tag client">Client = carried scope</span>
+      <span class="tag property">Property = site condition</span>
+      <span class="tag warn">Amber = compression/conflict</span>
+    </div>
+  </section>
 
-<section class="selectorgrid" id="blocks"></section>
+  <section class="lower">
+    <section class="panel editor" id="editorCard">
+      <div class="editor-head">
+        <div><div class="title" style="margin-bottom:3px">Selected Cell Tuner</div><div class="editor-title" id="selectedTitle">Select a matrix cell</div></div>
+        <button class="smallbtn" id="clearCellBtn">Clear</button>
+      </div>
+      <div class="ownerbar">
+        <button data-owner="bidder">Bidder</button>
+        <button data-owner="client">Client</button>
+        <button data-owner="property">Property</button>
+        <button data-owner="unassigned">Unassigned</button>
+      </div>
+      <div class="formgrid">
+        <label>Qty</label><input id="qtyInput" placeholder="drops / days / rooms"/>
+        <label>Mod</label><input id="modInput" placeholder="compressed, escorted, hard-lid"/>
+        <label>Notes</label><textarea id="noteInput" placeholder="Describe schedule and field condition."></textarea>
+      </div>
+      <p class="hint">Stable law: the calendar cell owns the job condition; this tuner explains it.</p>
+    </section>
+
+    <section class="panel">
+      <div class="editor-head">
+        <div><div class="title" style="margin-bottom:3px">Causal Editor Seed</div><div class="editor-title">Quick implications</div></div>
+        <button class="smallbtn" id="applyCommonBtn">Apply Common</button>
+      </div>
+      <div class="chips" id="quickChips"></div>
+      <p class="hint">Quick chips write directly into the selected calendar cell. More subject selectors can grow here once this engine feels right.</p>
+    </section>
+  </section>
 </main>
 
 <aside class="right">
-  <section class="panel selectorread">
-    <div class="selected">SELECTED SELECTOR</div>
-    <div class="readline"><div class="readlabel">Ownership</div><div class="readvalue" id="selOwner">Bidder</div></div>
-    <div class="readline"><div class="readlabel">Choice</div><div class="readvalue" id="selChoice">—</div></div>
-    <div class="readline"><div class="readlabel">Drops / Strands</div><div class="readvalue" id="selQty">—</div></div>
-    <div class="readline"><div class="readlabel">Modifier / Adjective</div><div class="readvalue" id="selMod">—</div></div>
+  <section class="panel readout">
+    <div class="readout-main">Selected</div>
+    <div class="readline"><div class="readlabel">Cell</div><div class="readvalue" id="selectedCellRead">—</div></div>
+    <div class="readline"><div class="readlabel">Owner</div><div class="readvalue" id="selectedOwnerRead">—</div></div>
+    <div class="readline"><div class="readlabel">Qty</div><div class="readvalue" id="selectedQtyRead">—</div></div>
+    <div class="readline"><div class="readlabel">Modifier</div><div class="readvalue" id="selectedModRead">—</div></div>
   </section>
 
   <section class="panel">
-    <div class="title" style="color:var(--bidder)">Live Stats</div>
-    <div class="stat"><span>Labor</span><strong id="labor">x1.00</strong></div>
-    <div class="stat"><span>PM</span><strong id="pm">x1.00</strong></div>
-    <div class="stat"><span>Risk</span><strong id="risk">x1.00</strong></div>
-    <div class="stat"><span>Qty load</span><strong id="qtyLoad">0</strong></div>
-    <div class="stat"><span>Unassigned</span><strong id="unassigned">0</strong></div>
-    <div class="savebox">
-      <button class="savebtn team" onclick="saveAs('Team')">Save Team</button>
-      <button class="savebtn client" onclick="saveAs('Client')">Save Client</button>
-      <button class="savebtn job" onclick="saveAs('Job')">Save Job</button>
-      <button class="savebtn total" onclick="saveAs('Total')">Save Total</button>
+    <div class="title" style="color:var(--bidder)">Right Rail Stats</div>
+    <div class="stat"><span>Labor</span><strong id="laborRead">x1.00</strong></div>
+    <div class="stat"><span>PM</span><strong id="pmRead">x1.00</strong></div>
+    <div class="stat"><span>Risk</span><strong id="riskRead">x1.00</strong></div>
+    <div class="stat"><span>Marked</span><strong id="markedRead">0</strong></div>
+    <div class="stat"><span>Unassigned</span><strong id="unassignedRead">0</strong></div>
+    <div class="savegrid">
+      <button class="bidder" id="saveBidder">Bidder</button>
+      <button class="client" id="saveClient">Client</button>
+      <button class="property" id="saveProperty">Property</button>
+      <button class="job" id="saveJob">Total</button>
     </div>
+    <div class="saved-note" id="savedNote">No perspective saved yet.</div>
   </section>
 
   <section class="panel summary">
     <div class="title" style="color:var(--bidder)">Floating Summary</div>
-    <p class="legend"><b class="bidder">Bidder</b> = labor/control. <b class="client">Client</b> = carried scope. <b class="property">Property</b> = site conditions. <b class="job">Job</b> = unresolved burden.</p>
     <p id="summaryText"></p>
-    <ul class="causal-list" id="causeList"></ul>
+    <ul class="cause" id="causeList"></ul>
   </section>
 </aside>
 </div>
 </div>
 
 <script>
+const monthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const dows=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const now=new Date();
-const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const dows=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-let mode='Team', resolution='Daily', selectedDay=now.getDate(), selectedMonth=now.getMonth(), selected={owner:'Bidder',choice:'—',qty:'—',mod:'—'};
-let selectedItems=new Map();
-let matrixMarks={};
 
-const rowsByResolution={
-  Daily:['OSP','MDF','IDF','Rough-in','Terminating','Installing','Activating','Testing'],
-  Monthly:['Survey','Procurement','Rough','Backbone','Devices','Termination','Testing','Closeout'],
-  Quarterly:['Capital pacing','Lease turnover','Region staging','Long-lead procurement','Multi-site deployment','Infrastructure upgrades','Documentation strategy','Turnover risk']
+const rows={
+  Daily:["OSP","MDF","IDF","Rough-in","Terminating","Installing","Activating","Testing"],
+  Weekly:["OSP","MDF","IDF","Rough-in","Terminating","Installing","Activating","Testing"],
+  Monthly:["Survey","Procurement","Rough","Backbone","Devices","Termination","Testing","Closeout"],
+  Quarterly:["Capital pacing","Lease turnover","Regional staging","Long-lead procurement","Multi-site deployment","Infrastructure upgrades","Documentation strategy","Turnover risk"]
 };
-const columnsByResolution={
-  Daily:dows,
-  Monthly:months,
-  Quarterly:['Q1','Q2','Q3','Q4']
-};
-const rowLinks={
-  OSP:['Scope Modules','Site Reality'], MDF:['Scope Modules'], IDF:['Scope Modules'], 'Rough-in':['Site Reality','Scope Modules'], Terminating:['Scope Modules','Proof & Closeout'], Installing:['Scope Modules'], Activating:['Proof & Closeout'], Testing:['Proof & Closeout'],
-  Survey:['Site Reality'], Procurement:['Responsibility Split'], Rough:['Scope Modules','Site Reality'], Backbone:['Scope Modules'], Devices:['Scope Modules'], Termination:['Proof & Closeout'], Closeout:['Proof & Closeout'],
-  'Capital pacing':['Responsibility Split'], 'Lease turnover':['Proof & Closeout'], 'Region staging':['Responsibility Split'], 'Long-lead procurement':['Responsibility Split','Scope Modules'], 'Multi-site deployment':['Site Reality','Responsibility Split'], 'Infrastructure upgrades':['Scope Modules'], 'Documentation strategy':['Proof & Closeout'], 'Turnover risk':['Proof & Closeout']
-};
-const ownerCycle=['empty','bidder','client','property','unassigned'];
-const blockData=[
- {title:'Site Reality', line:'propertyline', lens:['Team','Client','Job'], subjects:[
-  {label:'Occupancy', opts:['Unoccupied','Occupied','Healthcare','Secure'], owner:'property', qty:'3', note:'escort, infection control, tenant hours', weight:{labor:.08,pm:.08,risk:.10}, uncommon:['Healthcare','Secure']},
-  {label:'Ceiling', opts:['Open','Drop tile','Hard lid','Mixed'], owner:'property', qty:'%', note:'height, grid condition, access', weight:{labor:.07,pm:.02,risk:.04}, uncommon:['Hard lid','Mixed']},
-  {label:'Access', opts:['Clear','Shared trades','Limited','After-hours'], owner:'client', qty:'w', note:'night work, parking, dock', weight:{labor:.05,pm:.09,risk:.08}, uncommon:['Limited','After-hours']},
-  {label:'Pathway', opts:['Usable','Partial','Congested','Client-provided'], owner:'client', qty:'u', note:'tray, sleeves, cores, congestion', weight:{labor:.09,pm:.07,risk:.12}, uncommon:['Congested','Client-provided']}
- ]},
- {title:'Scope Modules', line:'', lens:['Team','Job'], subjects:[
-  {label:'Cabling', opts:['Cat6','Cat6A','Fiber','OSP'], owner:'bidder', qty:'drops', note:'cable type, color, pathway class', weight:{labor:.08,pm:.02,risk:.03}, uncommon:['Fiber','OSP']},
-  {label:'Endpoints', opts:['Drops','WAPs','Cameras','Access Control','AV/Paging'], owner:'bidder', qty:'devices', note:'mounting height, PoE, exterior', weight:{labor:.07,pm:.03,risk:.04}, uncommon:['Cameras','Access Control','AV/Paging']},
-  {label:'Closets', opts:['MDF','MDF + IDF','New rack','Migration'], owner:'property', qty:'room', note:'power, grounding, cooling, cleanup', weight:{labor:.04,pm:.06,risk:.08}, uncommon:['Migration','New rack']},
-  {label:'Testing', opts:['Continuity','Certification','OLTS','OTDR'], owner:'bidder', qty:'cert', note:'tester level, reports, traces', weight:{labor:.05,pm:.04,risk:.03}, uncommon:['OLTS','OTDR']}
- ]},
- {title:'Responsibility Split', line:'clientline', lens:['Client','Job'], subjects:[
-  {label:'Pathway Owner', opts:['Contractor','Client','GC','EC','Shared','Unassigned'], owner:'client', qty:'%', note:'assumptions, exclusions, dependencies', weight:{labor:.01,pm:.10,risk:.12}, uncommon:['Shared','Unassigned']},
-  {label:'Cable Owner', opts:['Contractor','Client Provided','Mixed','Unassigned'], owner:'client', qty:'%', note:'material standards, warranty boundary', weight:{labor:.02,pm:.07,risk:.09}, uncommon:['Client Provided','Mixed','Unassigned']},
-  {label:'Closet Prep', opts:['Ready','Needs Power','Needs Ground','Needs Cooling','Unassigned'], owner:'property', qty:'rooms', note:'client/EC prerequisites', weight:{labor:.01,pm:.08,risk:.10}, uncommon:['Needs Power','Needs Ground','Needs Cooling','Unassigned']},
-  {label:'Permits / Access', opts:['None','Badge','Escort','Permit','Unassigned'], owner:'client', qty:'count', note:'lead time, approval path', weight:{labor:.02,pm:.09,risk:.09}, uncommon:['Escort','Permit','Unassigned']}
- ]},
- {title:'Proof & Closeout', line:'', lens:['Team','Client','Job'], subjects:[
-  {label:'Documentation', opts:['Labels','Photos','Redlines','As-builts'], owner:'bidder', qty:'deliver', note:'photo sets, labels, redline standard', weight:{labor:.03,pm:.07,risk:.02}, uncommon:['As-builts']},
-  {label:'Meetings', opts:['None','Weekly','Twice Weekly','Daily'], owner:'client', qty:'h', note:'OAC, coordination, minutes', weight:{labor:.01,pm:.12,risk:.03}, uncommon:['Twice Weekly','Daily']},
-  {label:'Punch Style', opts:['Single Pass','Phased','Owner Witness','High Rigor'], owner:'client', qty:'p', note:'witnessing, retest, turnover', weight:{labor:.04,pm:.08,risk:.06}, uncommon:['Phased','Owner Witness','High Rigor']},
-  {label:'Warranty Pack', opts:['Basic','Reports','Full Binder','Turnover'], owner:'bidder', qty:'c', note:'binder, test reports, closeout', weight:{labor:.03,pm:.04,risk:.02}, uncommon:['Full Binder','Turnover']}
- ]}
-];
+function cols(res){return res==="Monthly"?monthNames:res==="Quarterly"?["Q1","Q2","Q3","Q4"]:dows}
 
-function byId(id){return document.getElementById(id)}
-function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
-function matrixKey(row,col){return resolution+'|'+selectedMonth+'|'+row+'|'+col}
+const quick={
+  OSP:["locates","weather","utility coordination","long pull"], MDF:["rack space","grounding","power","cooling"], IDF:["backboard","patching","cleanup","migration"],
+  "Rough-in":["pathway","lift","hard lid","shared trades"], Terminating:["density","labeling","patch panels","rework"], Installing:["height","mounting","PoE","exterior"],
+  Activating:["client approval","network handoff","programming","commissioning"], Testing:["certification","OLTS","OTDR","owner witness"],
+  Survey:["site walk","photos","as-built review","pathway check"], Procurement:["lead time","client-furnished","submittal","approval"], Rough:["pathway","riser","crew stacking","access"],
+  Backbone:["fiber","splice","LIU","riser"], Devices:["WAP","camera","access control","AV/paging"], Termination:["patch panel","labeling","closet work","density"], Closeout:["redlines","photos","test reports","turnover"],
+  "Capital pacing":["budget gate","phasing","release"], "Lease turnover":["deadline","tenant move-in","punch"], "Regional staging":["multi-site","travel","storage"], "Long-lead procurement":["fiber","switches","racks","approval"],
+  "Multi-site deployment":["template","crew rotation","standardization"], "Infrastructure upgrades":["MDF","IDF","backbone","power"], "Documentation strategy":["as-builts","reports","binder"], "Turnover risk":["testing","signoff","witness","punch"]
+};
 
-function setupPeriodSelect(){
- const sel=byId('periodSelect'); sel.innerHTML='';
- if(resolution==='Daily'){
-  months.forEach((m,i)=>sel.add(new Option(m+' '+now.getFullYear(), i)));
-  sel.value=selectedMonth;
- } else if(resolution==='Monthly') {
-  months.forEach((m,i)=>sel.add(new Option(m+' focus', i)));
-  sel.value=selectedMonth;
- } else {
-  ['Current year','Next year','Two-year view'].forEach((q,i)=>sel.add(new Option(q,i)));
- }
- sel.onchange=()=>{selectedMonth=Number(sel.value)||0; selectedDay=1; renderAll();}
+const weights={bidder:{labor:.06,pm:.02,risk:.02},client:{labor:.01,pm:.07,risk:.06},property:{labor:.04,pm:.03,risk:.08},unassigned:{labor:.02,pm:.10,risk:.18}};
+let state={lens:"Bidder",res:"Daily",month:now.getMonth(),day:now.getDate(),selected:null,cells:{},saved:{Bidder:[],Client:[],Property:[],Job:[]}};
+
+function id(x){return document.getElementById(x)}
+function cap(s){return s? s.charAt(0).toUpperCase()+s.slice(1):"None"}
+function key(row,col){return [state.res,state.month,state.day,row,col].join("|")}
+
+function suggested(row,col,i){
+  if(state.res==="Daily"){
+    const active=(new Date(now.getFullYear(),state.month,state.day).getDay()+6)%7;
+    if(i===active && ["Rough-in","Installing","Testing"].includes(row)){
+      return {owner:row==="Rough-in"?"property":"bidder",qty:"",mod:"suggested",notes:"Auto-suggested from selected day."}
+    }
+  }
+  if(state.res==="Weekly" && ["Rough-in","Terminating","Testing"].includes(row) && ["Tue","Wed","Thu"].includes(col)) return {owner:"bidder",qty:"",mod:"work window",notes:"Suggested weekly production window."}
+  if(state.res==="Monthly" && col===monthNames[state.month] && ["Procurement","Rough","Testing","Closeout"].includes(row)) return {owner:(row==="Procurement"||row==="Closeout")?"client":"bidder",qty:"",mod:"month focus",notes:"Suggested project milestone."}
+  if(state.res==="Quarterly" && ["Long-lead procurement","Lease turnover","Turnover risk"].includes(row) && col==="Q2") return {owner:"client",qty:"",mod:"strategic risk",notes:"Suggested quarterly risk window."}
+  return null
 }
-function renderMiniCalendar(){
- const mini=byId('miniCalendar'); mini.innerHTML='';
- if(resolution!=='Daily'){ mini.style.display='none'; return; }
- mini.style.display='grid'; mini.className='month-mini';
- dows.forEach(d=>{let e=document.createElement('div');e.className='dow';e.textContent=d;mini.appendChild(e)});
- const y=now.getFullYear(), m=selectedMonth;
- const first=(new Date(y,m,1).getDay()+6)%7;
- const days=new Date(y,m+1,0).getDate();
- for(let i=0;i<first;i++){let b=document.createElement('button');b.className='day blank';mini.appendChild(b)}
- for(let d=1;d<=days;d++){
-  let b=document.createElement('button');b.className='day';b.textContent=d;
-  if(m===now.getMonth() && d===now.getDate()) b.classList.add('today');
-  if(d===selectedDay) b.classList.add('selected');
-  b.onclick=()=>{selectedDay=d; selected.choice='Day '+d+' selected'; selected.owner='Job'; selected.qty=dows[(new Date(y,m,d).getDay()+6)%7]; selected.mod='calendar day highlight'; updateReadout(); renderAll();}
-  mini.appendChild(b);
- }
+function get(row,col,i){return state.cells[key(row,col)] || suggested(row,col,i)}
+function set(row,col,data){if(!data||!data.owner) delete state.cells[key(row,col)]; else state.cells[key(row,col)]={row,col,...data}}
+
+function setupPeriod(){
+  const sel=id("periodSelect"); sel.innerHTML="";
+  if(state.res==="Quarterly"){["Current year","Next year","Two-year view"].forEach((v,i)=>sel.add(new Option(v,i))); sel.value=0}
+  else {monthNames.forEach((m,i)=>sel.add(new Option(`${m} ${now.getFullYear()}`,i))); sel.value=state.month}
+  sel.onchange=()=>{state.month=Number(sel.value)||0; state.day=1; state.selected=null; render()}
+}
+function renderMonth(){
+  const h=id("monthPicker"); h.innerHTML="";
+  if(state.res!=="Daily"){h.style.display="none";return}
+  h.style.display="grid"; h.className="month-card";
+  dows.forEach(d=>{const e=document.createElement("div");e.className="dow";e.textContent=d;h.appendChild(e)});
+  const first=(new Date(now.getFullYear(),state.month,1).getDay()+6)%7, days=new Date(now.getFullYear(),state.month+1,0).getDate();
+  for(let i=0;i<first;i++){const b=document.createElement("button");b.className="day blank";h.appendChild(b)}
+  for(let d=1;d<=days;d++){const b=document.createElement("button");b.className="day";b.textContent=d;if(state.month===now.getMonth()&&d===now.getDate())b.classList.add("today");if(d===state.day)b.classList.add("active");b.onclick=()=>{state.day=d;state.selected=null;render()};h.appendChild(b)}
+}
+function conflict(row,col,i,data){
+  if(!data)return false;
+  if(data.owner==="unassigned")return true;
+  if(state.res==="Daily"){const a=(new Date(now.getFullYear(),state.month,state.day).getDay()+6)%7;return i===a&&["Testing","Activating"].includes(row)}
+  if(state.res==="Weekly")return ["Testing","Activating"].includes(row)&&["Fri","Sat","Sun"].includes(col);
+  if(state.res==="Monthly")return ["Testing","Closeout"].includes(row)&&col===monthNames[state.month];
+  return ["Long-lead procurement","Turnover risk"].includes(row)&&col==="Q2"
 }
 function renderMatrix(){
- const matrix=byId('matrix'); const rows=rowsByResolution[resolution], cols=columnsByResolution[resolution];
- matrix.style.setProperty('--cols', cols.length);
- matrix.innerHTML=`<div></div>` + cols.map(c=>`<div class="mh">${c}</div>`).join('');
- rows.forEach(row=>{
-  const rl=document.createElement('div'); rl.className='rowlabel'; rl.textContent=row; rl.onclick=()=>activateRow(row); matrix.appendChild(rl);
-  cols.forEach((col,idx)=>{
-    const cell=document.createElement('button'); cell.className='mcell empty';
-    const key=matrixKey(row,col);
-    let mark=matrixMarks[key] || inferMark(row,col,idx);
-    if(mark && mark!=='empty') {cell.classList.remove('empty'); cell.classList.add(mark); cell.textContent=mark==='unassigned'?'?':'●';}
-    if(isConflict(row,col,idx,mark)) cell.classList.add('conflict');
-    cell.onclick=()=>cycleCell(row,col,cell);
-    matrix.appendChild(cell);
-  });
- });
+  const m=id("matrix"), cs=cols(state.res), rs=rows[state.res]; m.style.setProperty("--cols",cs.length); m.innerHTML="";
+  const corner=document.createElement("div"); corner.className="corner"; m.appendChild(corner);
+  cs.forEach(c=>{const h=document.createElement("div");h.className="head";h.textContent=c;m.appendChild(h)});
+  rs.forEach(row=>{
+    const rh=document.createElement("button");rh.className="rowhead";rh.textContent=row;rh.onclick=()=>selectCell(row,cs[0],0);m.appendChild(rh);
+    cs.forEach((col,i)=>{
+      const data=get(row,col,i), cell=document.createElement("button");
+      cell.className="cell "+(data?data.owner:"empty");
+      if(state.selected&&state.selected.row===row&&state.selected.col===col)cell.classList.add("selected");
+      if(conflict(row,col,i,data))cell.classList.add("conflict");
+      cell.textContent=data?(data.owner==="unassigned"?"?":"●"):"";
+      cell.onclick=()=>selectCell(row,col,i);
+      m.appendChild(cell)
+    })
+  })
 }
-function inferMark(row,col,idx){
- if(resolution==='Daily'){
-  const dowIndex=(new Date(now.getFullYear(),selectedMonth,selectedDay).getDay()+6)%7;
-  if(idx===dowIndex && ['Rough-in','Installing','Testing'].includes(row)) return row==='Testing'?'bidder':row==='Installing'?'bidder':'property';
-  if(idx===dowIndex+1 && row==='Activating') return 'client';
- }
- if(resolution==='Monthly'){
-  if(['Procurement','Closeout'].includes(row) && idx===selectedMonth) return 'client';
-  if(['Rough','Devices','Testing'].includes(row) && idx===selectedMonth) return 'bidder';
- }
- if(resolution==='Quarterly'){
-  if(['Long-lead procurement','Lease turnover','Turnover risk'].includes(row) && idx===1) return 'client';
-  if(['Infrastructure upgrades','Multi-site deployment'].includes(row) && idx===1) return 'property';
- }
- return 'empty';
+function selectCell(row,col,i){
+  state.selected={row,col,i};
+  const data=get(row,col,i)||{owner:"bidder",qty:"",mod:"",notes:""};
+  id("selectedTitle").textContent=`${row} / ${col}`;
+  id("qtyInput").value=data.qty||""; id("modInput").value=data.mod||""; id("noteInput").value=data.notes||"";
+  setOwner(data.owner||"bidder"); renderChips(row); renderMatrix(); updateReadout(); updateStats()
 }
-function isConflict(row,col,idx,mark){
- if(mark==='empty') return false;
- if(resolution==='Daily') return ['Testing','Activating'].includes(row) && columnsByResolution.Daily[idx]===dows[(new Date(now.getFullYear(),selectedMonth,selectedDay).getDay()+6)%7];
- if(resolution==='Monthly') return row==='Testing' && idx===selectedMonth;
- if(resolution==='Quarterly') return ['Turnover risk','Long-lead procurement'].includes(row) && idx===1;
+function setOwner(owner){
+  document.querySelectorAll(".ownerbar button").forEach(b=>b.classList.toggle("active",b.dataset.owner===owner));
+  id("editorCard").className="panel editor "+owner;
 }
-function cycleCell(row,col,cell){
- const key=matrixKey(row,col); let cur=matrixMarks[key] || 'empty';
- let next=ownerCycle[(ownerCycle.indexOf(cur)+1)%ownerCycle.length];
- matrixMarks[key]=next;
- selected.owner=next==='empty'?'None':cap(next);
- selected.choice=row+' / '+col;
- selected.qty=resolution;
- selected.mod=next==='empty'?'cleared':next+' ownership schedule cell';
- activateRow(row);
- renderAll(false);
+function activeOwner(){const b=document.querySelector(".ownerbar button.active");return b?b.dataset.owner:"bidder"}
+function saveEditor(){
+  if(!state.selected)return;
+  set(state.selected.row,state.selected.col,{owner:activeOwner(),qty:id("qtyInput").value.trim(),mod:id("modInput").value.trim(),notes:id("noteInput").value.trim()});
+  renderMatrix(); updateReadout(); updateStats()
 }
-function activateRow(row){
- document.querySelectorAll('.block').forEach(b=>b.classList.remove('focus'));
- (rowLinks[row]||[]).forEach(title=>{
-  const b=[...document.querySelectorAll('.block')].find(x=>x.dataset.title===title);
-  if(b) b.classList.add('focus');
- });
- selected.choice=row+' row opened';
- selected.mod=(rowLinks[row]||[]).join(', ') || 'no linked lower tuners';
- updateReadout();
+function renderChips(row){
+  const host=id("quickChips"); host.innerHTML="";
+  (quick[row]||["pathway","access","labor","closeout"]).forEach((label,i)=>{
+    const owner=["bidder","client","property","unassigned"][i%4];
+    const b=document.createElement("button"); b.className="chip "+owner; b.textContent=label;
+    b.onclick=()=>{id("modInput").value=label; setOwner(owner); b.classList.add("active"); saveEditor()};
+    host.appendChild(b)
+  })
 }
-function renderBlocks(){
- const wrap=byId('blocks'); wrap.innerHTML='';
- blockData.forEach(block=>{
-  const card=document.createElement('section'); card.className='panel block '+block.line; card.dataset.title=block.title;
-  if(!block.lens.includes(mode)) card.classList.add('dim');
-  card.innerHTML=`<div class="blockhead"><div class="blocktitle">${block.title}</div><div class="section-actions"><button class="smallbtn common">Common all</button><button class="smallbtn clear">Clear</button></div></div>`;
-  block.subjects.forEach(sub=>{
-    const item=document.createElement('div'); item.className='item';
-    const chips=sub.opts.map(o=>{
-      const owner=o==='Unassigned'?'unassigned':sub.owner;
-      const id=block.title+'|'+sub.label+'|'+o;
-      return `<button class="chip ${owner} ${selectedItems.has(id)?'active':''}" data-id="${id}" data-owner="${owner}" data-choice="${o}">${o}</button>`;
-    }).join('');
-    item.innerHTML=`<div class="itemlabel">${sub.label}<div class="ownerrow">
-      <button class="ownerchip bidder ${sub.owner==='bidder'?'active':''}" data-owner="bidder">Bidder</button>
-      <button class="ownerchip client ${sub.owner==='client'?'active':''}" data-owner="client">Client</button>
-      <button class="ownerchip property ${sub.owner==='property'?'active':''}" data-owner="property">Property</button>
-    </div></div><div class="chips">${chips}</div><div class="tuners ${sub.owner}"><input value="${sub.qty}"><textarea>${sub.note}</textarea></div>`;
-    item.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
-      const id=ch.dataset.id;
-      if(selectedItems.has(id)){selectedItems.delete(id);ch.classList.remove('active')}
-      else{selectedItems.set(id,{block:block.title,label:sub.label,choice:ch.dataset.choice,owner:ch.dataset.owner,weight:sub.weight,qty:item.querySelector('input').value,note:item.querySelector('textarea').value,uncommon:sub.uncommon.includes(ch.dataset.choice)}) ; ch.classList.add('active')}
-      selected.owner=cap(ch.dataset.owner); selected.choice=ch.dataset.choice; selected.qty=item.querySelector('input').value; selected.mod=item.querySelector('textarea').value;
-      computeStats(); updateReadout();
-    });
-    item.querySelectorAll('.ownerchip').forEach(oc=>oc.onclick=()=>{
-      item.querySelectorAll('.ownerchip').forEach(x=>x.classList.remove('active')); oc.classList.add('active');
-      item.querySelector('.tuners').className='tuners '+oc.dataset.owner;
-      selected.owner=cap(oc.dataset.owner); selected.choice=sub.label+' ownership'; selected.qty=item.querySelector('input').value; selected.mod='ownership lens changed'; updateReadout();
-    });
-    card.appendChild(item);
-  });
-  card.querySelector('.common').onclick=()=>selectCommon(block);
-  card.querySelector('.clear').onclick=()=>clearBlock(block.title);
-  wrap.appendChild(card);
- });
-}
-function selectCommon(block){
- block.subjects.forEach(sub=>sub.opts.filter(o=>!sub.uncommon.includes(o)&&o!=='Unassigned').forEach(o=>{
-  selectedItems.set(block.title+'|'+sub.label+'|'+o,{block:block.title,label:sub.label,choice:o,owner:sub.owner,weight:sub.weight,qty:sub.qty,note:sub.note,uncommon:false});
- }));
- renderBlocks(); computeStats(); updateReadout();
-}
-function clearBlock(title){
- [...selectedItems.keys()].filter(k=>k.startsWith(title+'|')).forEach(k=>selectedItems.delete(k));
- renderBlocks(); computeStats(); updateReadout();
-}
-function computeStats(){
- let labor=1, pm=1, risk=1, qty=0, unassigned=0, causes=[];
- selectedItems.forEach(it=>{
-  labor+=it.weight.labor; pm+=it.weight.pm; risk+=it.weight.risk; qty++;
-  if(it.owner==='client'){pm+=.02;risk+=.02}
-  if(it.owner==='property'){labor+=.02;risk+=.03}
-  if(it.owner==='unassigned'){unassigned++;risk+=.18;pm+=.08;causes.push(`${it.label} is unassigned: probable change-order exposure.`)}
-  if(it.uncommon) causes.push(`${it.choice} adds extra ${it.owner} burden.`);
- });
- let matrixCount=0, conflicts=0;
- Object.entries(matrixMarks).forEach(([k,v])=>{
-  if(v && v!=='empty'){ matrixCount++; qty++; if(v==='bidder') labor+=.02; if(v==='client') pm+=.03; if(v==='property') risk+=.035; if(v==='unassigned'){unassigned++;risk+=.16;pm+=.05}}
- });
- document.querySelectorAll('.mcell.conflict').forEach(()=>conflicts++);
- if(resolution==='Daily'){labor+=.04;causes.push('Daily mode emphasizes crew distribution, access, and field sequencing.')}
- if(resolution==='Monthly'){pm+=.05;causes.push('Monthly mode emphasizes procurement, milestones, and coordination cadence.')}
- if(resolution==='Quarterly'){risk+=.06;causes.push('Quarterly mode emphasizes capital pacing, long-lead risk, and turnover exposure.')}
- risk+=conflicts*.025; pm+=conflicts*.015;
- byId('labor').textContent='x'+labor.toFixed(2); byId('pm').textContent='x'+pm.toFixed(2); byId('risk').textContent='x'+risk.toFixed(2);
- byId('qtyLoad').textContent=qty; byId('unassigned').textContent=unassigned; byId('conflicts').textContent=conflicts;
- byId('topStats').textContent=`Labor x${labor.toFixed(2)} · PM x${pm.toFixed(2)} · Risk x${risk.toFixed(2)}`;
- byId('matrixSignals').innerHTML=`<span class="tag bidder">Bidder cells = labor control</span><span class="tag client">Client cells = approvals/dependencies</span><span class="tag property">Property cells = site friction</span><span class="tag warn">${conflicts} conflict windows</span>`;
- writeSummary(labor,pm,risk,qty,unassigned,causes);
-}
-function writeSummary(labor,pm,risk,qty,unassigned,causes){
- const lead=mode==='Team'
-  ? `Team mode is reading the ${resolution.toLowerCase()} matrix as a crew and production board.`
-  : mode==='Client'
-  ? `Client mode is reading the ${resolution.toLowerCase()} matrix for approvals, carried scope, and promised dates.`
-  : `Job mode is reading the ${resolution.toLowerCase()} matrix for unresolved burden and change-order exposure.`;
- byId('summaryText').textContent=`${lead} ${qty} active schedule/selector marks are shaping labor x${labor.toFixed(2)}, PM x${pm.toFixed(2)}, risk x${risk.toFixed(2)}. ${unassigned?unassigned+' unassigned items remain.':''}`;
- byId('causeList').innerHTML=causes.slice(0,5).map(c=>`<li>${c}</li>`).join('');
+function clearCell(){
+  if(!state.selected)return;
+  set(state.selected.row,state.selected.col,null); id("qtyInput").value=""; id("modInput").value=""; id("noteInput").value=""; renderMatrix(); updateReadout(); updateStats()
 }
 function updateReadout(){
- byId('selOwner').textContent=selected.owner; byId('selChoice').textContent=selected.choice; byId('selQty').textContent=selected.qty; byId('selMod').textContent=selected.mod;
+  if(!state.selected){id("selectedCellRead").textContent="—";id("selectedOwnerRead").textContent="—";id("selectedQtyRead").textContent="—";id("selectedModRead").textContent="—";return}
+  const d=get(state.selected.row,state.selected.col,state.selected.i)||{};
+  id("selectedCellRead").textContent=`${state.selected.row} / ${state.selected.col}`;
+  id("selectedOwnerRead").textContent=cap(d.owner);
+  id("selectedQtyRead").textContent=d.qty||"—";
+  id("selectedModRead").textContent=d.mod||"—"
 }
-function renderAll(rebuildBlocks=true){
- byId('resRead').textContent=resolution; byId('timeRead').textContent=resolution;
- byId('range').textContent=resolution==='Daily'?months[selectedMonth]+' '+now.getFullYear():resolution==='Monthly'?'Jan – Dec':resolution==='Quarterly'?'Q1 – Q4':'';
- setupPeriodSelect(); renderMiniCalendar(); renderMatrix(); if(rebuildBlocks) renderBlocks(); computeStats(); updateReadout();
+function updateStats(){
+  let labor=1,pm=1,risk=1,marked=0,unassigned=0,conflicts=0,causes=[];
+  const cs=cols(state.res), rs=rows[state.res];
+  rs.forEach(row=>cs.forEach((col,i)=>{
+    const d=get(row,col,i); if(!d)return; marked++;
+    const w=weights[d.owner]||weights.bidder; labor+=w.labor; pm+=w.pm; risk+=w.risk;
+    if(d.owner==="unassigned"){unassigned++;causes.push(`${row} / ${col} is unassigned.`)}
+    if(conflict(row,col,i,d)){conflicts++;pm+=.015;risk+=.025}
+    if(d.mod)causes.push(`${row} carries modifier: ${d.mod}.`)
+  }));
+  if(state.res==="Daily"){labor+=.04;causes.unshift("Daily mode emphasizes crew placement, access, and handoff timing.")}
+  if(state.res==="Weekly"){labor+=.03;pm+=.03;causes.unshift("Weekly mode emphasizes production rhythm and crew sequencing.")}
+  if(state.res==="Monthly"){pm+=.05;causes.unshift("Monthly mode emphasizes procurement, milestones, and PM cadence.")}
+  if(state.res==="Quarterly"){risk+=.06;causes.unshift("Quarterly mode emphasizes capital pacing, long-lead risk, and turnover exposure.")}
+  if(state.lens==="Bidder")labor+=.02; if(state.lens==="Client")pm+=.03; if(state.lens==="Job")risk+=.03;
+  id("laborRead").textContent="x"+labor.toFixed(2); id("pmRead").textContent="x"+pm.toFixed(2); id("riskRead").textContent="x"+risk.toFixed(2);
+  id("markedRead").textContent=marked; id("unassignedRead").textContent=unassigned; id("conflictRead").textContent=conflicts;
+  id("headerStats").textContent=`Labor x${labor.toFixed(2)} · PM x${pm.toFixed(2)} · Risk x${risk.toFixed(2)}`;
+  const lens=state.lens==="Bidder"?"Bidder lens is reading controllable labor and production burden.":state.lens==="Client"?"Client lens is reading approvals, carried scope, and promised dates.":"Job lens is reading total operational truth, including unresolved burden.";
+  id("summaryText").textContent=`${lens} ${marked} marked calendar conditions are shaping the job. ${unassigned?unassigned+" unresolved item(s) remain.":"No unresolved ownership cells are marked."}`;
+  id("causeList").innerHTML=causes.slice(0,6).map(c=>`<li>${c}</li>`).join("")
 }
-function saveAs(m){byId('saveMode').textContent=m; selected.choice='Saved '+m+' perspective'; selected.owner=m; selected.mod='right rail tracks saved perspective'; updateReadout();}
-document.querySelectorAll('.modebar button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode; document.querySelectorAll('.modebar button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); byId('saveMode').textContent=mode; renderAll();});
-document.querySelectorAll('.resbar button').forEach(b=>b.onclick=()=>{resolution=b.dataset.res; document.querySelectorAll('.resbar button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderAll();});
-byId('today').textContent=now.toLocaleDateString(undefined,{month:'short',day:'2-digit',year:'numeric'});
-renderAll();
+function periodText(){
+  id("periodRead").textContent=state.res==="Daily"?`${monthNames[state.month]} ${state.day}, ${now.getFullYear()}`:state.res==="Weekly"?`${monthNames[state.month]} weekly board`:state.res==="Monthly"?`${now.getFullYear()} year view`:"Quarterly horizon";
+  id("resolutionRead").textContent=state.res; id("headerMode").textContent=state.res+" Matrix"; id("lensRead").textContent=state.lens
+}
+function render(){setupPeriod(); renderMonth(); renderMatrix(); periodText(); updateReadout(); updateStats()}
+document.querySelectorAll(".lensbar button").forEach(b=>b.onclick=()=>{state.lens=b.dataset.lens;document.querySelectorAll(".lensbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");periodText();updateStats()});
+document.querySelectorAll(".resbar button").forEach(b=>b.onclick=()=>{state.res=b.dataset.resolution;state.selected=null;document.querySelectorAll(".resbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()});
+document.querySelectorAll(".ownerbar button").forEach(b=>b.onclick=()=>{setOwner(b.dataset.owner);saveEditor()});
+["qtyInput","modInput","noteInput"].forEach(n=>id(n).addEventListener("input",saveEditor));
+id("clearCellBtn").onclick=clearCell;
+id("applyCommonBtn").onclick=()=>{if(!state.selected)return;const first=(quick[state.selected.row]||["standard"])[0];id("modInput").value=first;id("noteInput").value="Common condition applied for this work domain.";saveEditor()};
+function savePerspective(which){state.saved[which].push({time:new Date().toISOString(),cells:JSON.parse(JSON.stringify(state.cells)),lens:state.lens,res:state.res});id("savedNote").textContent=`Saved ${which} perspective (${state.saved[which].length}).`}
+id("saveBidder").onclick=()=>savePerspective("Bidder"); id("saveClient").onclick=()=>savePerspective("Client"); id("saveProperty").onclick=()=>savePerspective("Property"); id("saveJob").onclick=()=>savePerspective("Job");
+id("today").textContent=now.toLocaleDateString(undefined,{month:"short",day:"2-digit",year:"numeric"});
+render();
+const active=(new Date(now.getFullYear(),state.month,state.day).getDay()+6)%7;
+selectCell("Testing",dows[active],active);
 </script>
 </body>
 </html>

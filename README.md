@@ -1,19 +1,20 @@
-# LV Job Builder - Calendar Matrix Experiment
+# LV Job Builder V2 - Synergy Rebuild
 
-Implemented:
-- Daily / Monthly / Quarterly resolution modes
-- Daily defaults to current month with clickable month calendar and highlighted selected day
-- Daily matrix columns Mon-Sun and rows OSP, MDF, IDF, Rough-in, Terminating, Installing, Activating, Testing
-- Monthly matrix columns Jan-Dec and project rows
-- Quarterly matrix columns Q1-Q4 and strategic rows
-- Clickable cells cycle ownership: empty -> Bidder -> Client -> Property -> Unassigned
-- Matrix cells color by ownership
-- Row clicks open linked lower task tuners
-- Schedule matrix updates right rail stats and summary
-- Team / Client / Job perspective still drives summary interpretation
+A clean static Vercel package.
 
-Vercel:
-Framework Preset: Other
-Install Command: echo "Skipping install"
-Build Command: echo "Using prebuilt dist"
-Output Directory: dist
+## Core architecture
+- Calendar matrix is the job engine.
+- Daily / Weekly use LV workstream rows and Mon-Sun columns.
+- Monthly uses Jan-Dec project sequencing.
+- Quarterly uses strategic planning rows and Q1-Q4.
+- Bidder / Client / Job are global lenses.
+- Job means total operational truth.
+- Cells carry ownership: Bidder green, Client brown, Property purple, Unassigned gray.
+- Right rail shows selected cell, labor, PM, risk, marked cells, unresolved cells, and summary.
+- Selected Cell Tuner writes directly into the calendar cell.
+
+## Vercel
+Framework Preset: Other  
+Install Command: `echo "Skipping install"`  
+Build Command: `echo "Using prebuilt dist"`  
+Output Directory: `dist`

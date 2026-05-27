@@ -1,6 +1,6 @@
 {
-  "name": "lv-job-builder-calendar-matrix",
-  "version": "0.5.0",
+  "name": "lv-job-builder-v2-synergy-rebuild",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "build": "echo \"Using prebuilt dist\""
