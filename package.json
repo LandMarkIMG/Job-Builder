@@ -1,7 +1,7 @@
 {
-  "name": "chordal-resonance-interface",
-  "version": "1.0.0",
+  "name": "chordal-resonance-sonic",
   "private": true,
+  "version": "1.0.0",
   "scripts": {
     "build": "echo \"Using prebuilt dist\""
   }

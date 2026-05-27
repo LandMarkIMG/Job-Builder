@@ -1,14 +1,18 @@
-# Chordal Resonance Interface
 
-A symbolic interface for the user's chakra-as-chord model:
+# Chordal Resonance Sonic
 
-- Not a vertical stack
-- Centers meet twins independently
-- Triads tune into a chord
-- The One sounds through all centers without erasing difference
+Sound-enabled contemplative resonance interface.
+
+Features:
+- Web Audio API harmonic drone
+- Responsive tone balancing
+- Pair harmony calculations
+- Triadic coherence system
+- Harmonize interaction
+- Static Vercel deployment
 
 Vercel:
 Framework Preset: Other
-Install Command: `echo "Skipping install"`
-Build Command: `echo "Using prebuilt dist"`
-Output Directory: `dist`
+Install Command: echo "Skipping install"
+Build Command: echo "Using prebuilt dist"
+Output Directory: dist

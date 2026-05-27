@@ -1,467 +1,297 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Chordal Resonance Interface</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Chordal Resonance Sonic</title>
 <style>
 :root{
-  --night:#090b16;
-  --deep:#11172c;
-  --panel:rgba(255,255,255,.075);
-  --panel2:rgba(255,255,255,.105);
-  --line:rgba(255,255,255,.18);
-  --gold:#eacb7a;
-  --violet:#9b7cff;
-  --blue:#6fb7ff;
-  --rose:#ff8fb8;
-  --green:#8ee6aa;
-  --amber:#f4aa57;
-  --white:#fff7df;
-  --muted:#b8bdd0;
+--bg:#070914;--panel:rgba(255,255,255,.07);--line:rgba(255,255,255,.14);
+--gold:#e7c46f;--violet:#9b7cff;--blue:#74b8ff;--rose:#ff90b8;--green:#8fe5ab;--amber:#f5b05c;
+--text:#f7f2e8;--muted:#b8bfd3;
 }
 *{box-sizing:border-box}
-html,body{
-  margin:0;
-  min-height:100%;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(155,124,255,.22),transparent 34%),
-    radial-gradient(circle at 80% 30%,rgba(111,183,255,.18),transparent 30%),
-    radial-gradient(circle at 50% 90%,rgba(234,203,122,.16),transparent 38%),
-    linear-gradient(180deg,#050611,var(--night));
-  color:var(--white);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+body{
+margin:0;background:
+radial-gradient(circle at 50% 50%,rgba(231,196,111,.12),transparent 25%),
+radial-gradient(circle at 20% 20%,rgba(155,124,255,.18),transparent 30%),
+linear-gradient(180deg,#05060f,var(--bg));
+color:var(--text);
+font-family:Inter,system-ui,sans-serif;
 }
-button,input{font:inherit}
-.app{max-width:1280px;margin:0 auto;padding:18px}
-.header{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:16px;
-  align-items:center;
-  padding:18px 20px;
-  border:1px solid var(--line);
-  border-radius:26px;
-  background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
-  box-shadow:0 24px 70px rgba(0,0,0,.28);
-  backdrop-filter:blur(14px);
+.app{max-width:1200px;margin:auto;padding:20px}
+.header,.rail,.stage{
+border:1px solid var(--line);
+background:var(--panel);
+backdrop-filter:blur(12px);
+border-radius:28px;
+box-shadow:0 18px 50px rgba(0,0,0,.28);
 }
-.kicker{
-  color:var(--gold);
-  text-transform:uppercase;
-  letter-spacing:6px;
-  font-size:11px;
-  font-weight:800;
-}
-h1{
-  margin:6px 0 0;
-  font-size:clamp(28px,5vw,54px);
-  line-height:.95;
-  letter-spacing:-1.5px;
-}
-.subtitle{
-  color:var(--muted);
-  margin-top:10px;
-  max-width:760px;
-  line-height:1.55;
-}
-.mode{
-  text-align:right;
-  min-width:240px;
-}
-.chord-name{
-  font-size:24px;
-  font-weight:900;
-  color:var(--gold);
-}
-.chord-detail{
-  margin-top:4px;
-  color:var(--muted);
-  font-size:13px;
-}
-.layout{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 330px;
-  gap:18px;
-  margin-top:18px;
-}
+.header{padding:20px;margin-bottom:18px}
+h1{margin:0;font-size:48px}
+.sub{color:var(--muted);max-width:760px;line-height:1.5}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}
 .stage{
-  position:relative;
-  min-height:700px;
-  border:1px solid var(--line);
-  border-radius:30px;
-  background:
-    radial-gradient(circle at center,rgba(255,247,223,.08),transparent 22%),
-    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
-  overflow:hidden;
-  box-shadow:0 24px 70px rgba(0,0,0,.24);
-}
-.stage:before{
-  content:"";
-  position:absolute;
-  inset:52px;
-  border:1px solid rgba(234,203,122,.28);
-  border-radius:50%;
-  filter:drop-shadow(0 0 20px rgba(234,203,122,.18));
-}
-.stage:after{
-  content:"";
-  position:absolute;
-  inset:145px;
-  border:1px dashed rgba(255,255,255,.15);
-  border-radius:50%;
+position:relative;min-height:760px;overflow:hidden;
+background:
+radial-gradient(circle at center,rgba(255,255,255,.05),transparent 20%);
 }
 .center{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:168px;
-  height:168px;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  border:1px solid rgba(234,203,122,.65);
-  background:
-    radial-gradient(circle,rgba(234,203,122,.28),rgba(155,124,255,.13) 48%,rgba(255,255,255,.04));
-  display:grid;
-  place-items:center;
-  text-align:center;
-  box-shadow:0 0 45px rgba(234,203,122,.25), inset 0 0 28px rgba(255,255,255,.08);
-  z-index:4;
+position:absolute;left:50%;top:50%;
+transform:translate(-50%,-50%);
+width:180px;height:180px;border-radius:50%;
+border:1px solid rgba(231,196,111,.5);
+display:grid;place-items:center;text-align:center;
+background:radial-gradient(circle,rgba(231,196,111,.22),rgba(255,255,255,.03));
+z-index:5;
 }
-.center strong{
-  display:block;
-  color:var(--gold);
-  font-size:22px;
-}
-.center span{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.35;
-}
+.center strong{font-size:28px;color:var(--gold)}
 .node{
-  position:absolute;
-  width:148px;
-  min-height:116px;
-  margin:-58px 0 0 -74px;
-  border:1px solid var(--line);
-  border-radius:22px;
-  background:rgba(8,10,24,.76);
-  backdrop-filter:blur(12px);
-  padding:13px;
-  box-shadow:0 16px 42px rgba(0,0,0,.26);
-  transition:.25s ease;
-  z-index:5;
+position:absolute;width:150px;
+margin:-60px 0 0 -75px;
+padding:12px;border-radius:24px;
+background:rgba(8,10,24,.72);
+border:1px solid var(--line);
+z-index:6;
+transition:.25s ease;
 }
-.node:hover,.node.active{
-  transform:translateY(-3px) scale(1.025);
-  border-color:var(--gold);
-  box-shadow:0 18px 45px rgba(234,203,122,.16);
+.node:hover{transform:translateY(-3px)}
+.title{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+.tone{font-size:12px;color:var(--muted);margin-top:4px}
+input[type=range]{width:100%;margin-top:10px}
+.line{
+position:absolute;height:1px;
+background:linear-gradient(90deg,transparent,rgba(231,196,111,.7),transparent);
+opacity:.55;transform-origin:left center;
 }
-.node-title{
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:2px;
-  text-transform:uppercase;
-}
-.node-tone{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.35;
-}
-.node input{
-  width:100%;
-  margin-top:10px;
-  accent-color:var(--gold);
-}
-.twin-line,.triad-line{
-  position:absolute;
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(234,203,122,.72),transparent);
-  transform-origin:left center;
-  z-index:2;
-  pointer-events:none;
-  opacity:.65;
-}
-.triad-line{
-  background:linear-gradient(90deg,transparent,rgba(155,124,255,.46),transparent);
-  opacity:.45;
-}
-.rail{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-.panel{
-  border:1px solid var(--line);
-  border-radius:24px;
-  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.04));
-  backdrop-filter:blur(14px);
-  padding:16px;
-  box-shadow:0 18px 55px rgba(0,0,0,.20);
-}
-.panel-title{
-  color:var(--gold);
-  text-transform:uppercase;
-  letter-spacing:4px;
-  font-size:11px;
-  font-weight:900;
-  margin-bottom:12px;
+.rail{padding:16px;display:flex;flex-direction:column;gap:12px}
+.panelTitle{
+font-size:11px;font-weight:900;
+letter-spacing:4px;text-transform:uppercase;
+color:var(--gold);
 }
 .stat{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.12);
-  padding:8px 0;
-  color:var(--muted);
+display:flex;justify-content:space-between;
+padding:8px 0;border-bottom:1px solid rgba(255,255,255,.1);
+color:var(--muted)
 }
-.stat strong{color:var(--white)}
-.triad{
-  border:1px solid rgba(255,255,255,.13);
-  border-radius:18px;
-  padding:12px;
-  margin-bottom:10px;
-  background:rgba(255,255,255,.045);
+.stat strong{color:var(--text)}
+button{
+border:1px solid rgba(231,196,111,.45);
+background:linear-gradient(135deg,rgba(231,196,111,.18),rgba(155,124,255,.08));
+color:var(--text);
+padding:12px;border-radius:16px;
+font-weight:900;cursor:pointer;
 }
-.triad h3{
-  margin:0 0 6px;
-  font-size:14px;
-  color:var(--white);
-}
-.triad p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.45;
-  font-size:12px;
-}
-button.action{
-  width:100%;
-  border:1px solid rgba(234,203,122,.55);
-  background:linear-gradient(135deg,rgba(234,203,122,.22),rgba(155,124,255,.12));
-  color:var(--white);
-  padding:11px 12px;
-  border-radius:16px;
-  font-weight:900;
-  margin-top:10px;
-}
-.poem{
-  color:var(--muted);
-  line-height:1.55;
-}
-.poem b{color:var(--gold)}
+.reading{color:var(--muted);line-height:1.55}
 @media(max-width:980px){
-  .header,.layout{grid-template-columns:1fr}
-  .mode{text-align:left}
-  .stage{min-height:820px}
-  .node{width:136px;margin-left:-68px}
+.layout{grid-template-columns:1fr}
+.stage{min-height:900px}
 }
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="header">
-    <div>
-      <div class="kicker">not a stack • a chord</div>
-      <h1>Chordal Resonance</h1>
-      <div class="subtitle">
-        Each center meets its twin independently. The triads do not climb; they tune.
-        When relation, embodiment, and knowing align, the one sounds through them without erasing their difference.
-      </div>
-    </div>
-    <div class="mode">
-      <div class="chord-name" id="chordName">Unstruck Major Ninth</div>
-      <div class="chord-detail" id="chordDetail">Coherence forming across paired centers.</div>
-    </div>
-  </header>
+<div class="header">
+<h1>Chordal Resonance • Sonic</h1>
+<div class="sub">
+Each center speaks in tone. Twin pairs form intervals. Triads become chords.
+The One is heard as a quiet overtone threading through all relation.
+</div>
+</div>
 
-  <main class="layout">
-    <section class="stage" id="stage">
-      <div class="center">
-        <div>
-          <strong>The One</strong>
-          <span>not above<br/>but through</span>
-        </div>
-      </div>
-    </section>
+<div class="layout">
+<div class="stage" id="stage">
+<div class="center"><div><strong>The One</strong><br/><span id="modeRead">listening</span></div></div>
+</div>
 
-    <aside class="rail">
-      <section class="panel">
-        <div class="panel-title">Right Rail Resonance</div>
-        <div class="stat"><span>Pair harmony</span><strong id="pairStat">0%</strong></div>
-        <div class="stat"><span>Triadic chord</span><strong id="triadStat">0%</strong></div>
-        <div class="stat"><span>The one</span><strong id="oneStat">quiet</strong></div>
-        <button class="action" id="harmonizeBtn">Harmonize Toward Chord</button>
-      </section>
+<div class="rail">
+<div>
+<div class="panelTitle">Resonance</div>
+<div class="stat"><span>Pair Harmony</span><strong id="pairRead">0%</strong></div>
+<div class="stat"><span>Triad Coherence</span><strong id="triadRead">0%</strong></div>
+<div class="stat"><span>Mode</span><strong id="modeText">Quiet</strong></div>
+</div>
 
-      <section class="panel">
-        <div class="panel-title">Triadic Meetings</div>
-        <div class="triad">
-          <h3>Root Triad</h3>
-          <p>Survival, voice, and vision meet: the body speaks what the sight can bear.</p>
-        </div>
-        <div class="triad">
-          <h3>Heart Triad</h3>
-          <p>Desire, heart, and crown meet: love becomes neither hunger nor abstraction, but coherence.</p>
-        </div>
-        <div class="triad">
-          <h3>Witness Triad</h3>
-          <p>Will, memory, and the one meet: action remembers why it began.</p>
-        </div>
-      </section>
+<button id="audioBtn">Begin Attunement</button>
+<button id="harmonizeBtn">Harmonize Toward Chord</button>
 
-      <section class="panel poem">
-        <div class="panel-title">Reading</div>
-        <p id="reading">
-          <b>The chord is listening.</b><br/>
-          Adjust the centers. Let each twin answer without forcing ascent.
-        </p>
-      </section>
-    </aside>
-  </main>
+<div class="reading" id="reading">
+The field is quiet. Begin attunement to let the chord breathe.
+</div>
+</div>
+</div>
 </div>
 
 <script>
-const centers = [
-  {id:"root", name:"Root", tone:"embodiment", color:"var(--green)", x:50, y:84, twin:"crown", triad:"Root Triad"},
-  {id:"sacral", name:"Sacral", tone:"desire / current", color:"var(--rose)", x:18, y:66, twin:"thirdEye", triad:"Heart Triad"},
-  {id:"solar", name:"Solar", tone:"will / fire", color:"var(--amber)", x:18, y:34, twin:"throat", triad:"Witness Triad"},
-  {id:"heart", name:"Heart", tone:"relation", color:"var(--gold)", x:50, y:16, twin:"one", triad:"Heart Triad"},
-  {id:"throat", name:"Throat", tone:"voice / truth", color:"var(--blue)", x:82, y:34, twin:"solar", triad:"Root Triad"},
-  {id:"thirdEye", name:"Third Eye", tone:"sight / pattern", color:"var(--violet)", x:82, y:66, twin:"sacral", triad:"Witness Triad"},
-  {id:"crown", name:"Crown", tone:"reception", color:"var(--white)", x:50, y:50, twin:"root", triad:"Heart Triad"}
+const centers=[
+{id:"root",name:"Root",tone:"embodiment",freq:110,color:"#8fe5ab",x:50,y:84},
+{id:"sacral",name:"Sacral",tone:"current",freq:146.83,color:"#ff90b8",x:20,y:66},
+{id:"solar",name:"Solar",tone:"will",freq:164.81,color:"#f5b05c",x:20,y:34},
+{id:"heart",name:"Heart",tone:"relation",freq:220,color:"#e7c46f",x:50,y:16},
+{id:"throat",name:"Throat",tone:"voice",freq:246.94,color:"#74b8ff",x:80,y:34},
+{id:"third",name:"Third Eye",tone:"pattern",freq:293.66,color:"#9b7cff",x:80,y:66},
+{id:"crown",name:"Crown",tone:"reception",freq:329.63,color:"#ffffff",x:50,y:50}
 ];
 
-let values = Object.fromEntries(centers.map(c => [c.id, 64]));
+let values=Object.fromEntries(centers.map(c=>[c.id,60]));
+let ctx,master,oscillators={};
 
-const stage = document.getElementById("stage");
+const stage=document.getElementById("stage");
 
-function makeNode(c){
-  const n = document.createElement("div");
-  n.className = "node";
-  n.id = "node-" + c.id;
-  n.style.left = c.x + "%";
-  n.style.top = c.y + "%";
-  n.style.borderColor = "color-mix(in srgb, " + c.color + " 55%, rgba(255,255,255,.18))";
-  n.innerHTML = `
-    <div class="node-title" style="color:${c.color}">${c.name}</div>
-    <div class="node-tone">${c.tone}</div>
-    <input type="range" min="0" max="100" value="${values[c.id]}" data-id="${c.id}">
-  `;
-  n.addEventListener("mouseenter", () => highlight(c.id));
-  n.addEventListener("mouseleave", () => clearHighlight());
-  return n;
-}
-
-function drawLine(a,b,cls){
-  const ax = a.x / 100 * stage.clientWidth;
-  const ay = a.y / 100 * stage.clientHeight;
-  const bx = b.x / 100 * stage.clientWidth;
-  const by = b.y / 100 * stage.clientHeight;
-  const dx = bx - ax, dy = by - ay;
-  const len = Math.sqrt(dx*dx + dy*dy);
-  const angle = Math.atan2(dy,dx) * 180 / Math.PI;
-  const line = document.createElement("div");
-  line.className = cls;
-  line.style.left = ax + "px";
-  line.style.top = ay + "px";
-  line.style.width = len + "px";
-  line.style.transform = `rotate(${angle}deg)`;
-  return line;
+function drawLine(a,b){
+const ax=a.x/100*stage.clientWidth;
+const ay=a.y/100*stage.clientHeight;
+const bx=b.x/100*stage.clientWidth;
+const by=b.y/100*stage.clientHeight;
+const dx=bx-ax,dy=by-ay;
+const len=Math.sqrt(dx*dx+dy*dy);
+const ang=Math.atan2(dy,dx)*180/Math.PI;
+const l=document.createElement("div");
+l.className="line";
+l.style.left=ax+"px";
+l.style.top=ay+"px";
+l.style.width=len+"px";
+l.style.transform=`rotate(${ang}deg)`;
+return l;
 }
 
 function render(){
-  [...stage.querySelectorAll(".node,.twin-line,.triad-line")].forEach(e => e.remove());
+[...stage.querySelectorAll(".node,.line")].forEach(e=>e.remove());
 
-  const pairs = [["root","crown"],["sacral","thirdEye"],["solar","throat"]];
-  pairs.forEach(([a,b]) => {
-    stage.appendChild(drawLine(centers.find(c=>c.id===a), centers.find(c=>c.id===b), "twin-line"));
-  });
+[["root","crown"],["sacral","third"],["solar","throat"]].forEach(([a,b])=>{
+stage.appendChild(drawLine(centers.find(c=>c.id===a),centers.find(c=>c.id===b)));
+});
 
-  [["root","throat"],["throat","heart"],["heart","sacral"],["sacral","thirdEye"],["thirdEye","solar"],["solar","root"]].forEach(([a,b]) => {
-    stage.appendChild(drawLine(centers.find(c=>c.id===a), centers.find(c=>c.id===b), "triad-line"));
-  });
+centers.forEach(c=>{
+const n=document.createElement("div");
+n.className="node";
+n.style.left=c.x+"%";
+n.style.top=c.y+"%";
+n.innerHTML=`
+<div class="title" style="color:${c.color}">${c.name}</div>
+<div class="tone">${c.tone}</div>
+<input type="range" min="0" max="100" value="${values[c.id]}" data-id="${c.id}">
+`;
+stage.appendChild(n);
+});
 
-  centers.forEach(c => stage.appendChild(makeNode(c)));
+document.querySelectorAll("input[type=range]").forEach(i=>{
+i.addEventListener("input",e=>{
+values[e.target.dataset.id]=Number(e.target.value);
+update();
+});
+});
 
-  document.querySelectorAll("input[type=range]").forEach(input => {
-    input.addEventListener("input", e => {
-      values[e.target.dataset.id] = Number(e.target.value);
-      updateStats();
-    });
-  });
-
-  updateStats();
+update();
 }
 
 function pairHarmony(){
-  const pairs = [["root","crown"],["sacral","thirdEye"],["solar","throat"]];
-  const scores = pairs.map(([a,b]) => 100 - Math.abs(values[a] - values[b]));
-  return Math.round(scores.reduce((x,y)=>x+y,0) / scores.length);
+const pairs=[["root","crown"],["sacral","third"],["solar","throat"]];
+let s=0;
+pairs.forEach(([a,b])=>s+=100-Math.abs(values[a]-values[b]));
+return Math.round(s/pairs.length);
 }
 
-function triadScore(){
-  const triads = [
-    ["root","throat","thirdEye"],
-    ["sacral","heart","crown"],
-    ["solar","heart","root"]
-  ];
-  const scores = triads.map(t => {
-    const avg = t.reduce((s,id)=>s+values[id],0)/3;
-    const variance = t.reduce((s,id)=>s+Math.abs(values[id]-avg),0)/3;
-    return Math.max(0,100-variance);
-  });
-  return Math.round(scores.reduce((x,y)=>x+y,0)/scores.length);
+function triadCoherence(){
+const triads=[
+["root","heart","throat"],
+["sacral","heart","crown"],
+["solar","third","root"]
+];
+let total=0;
+triads.forEach(t=>{
+const avg=t.reduce((a,b)=>a+values[b],0)/3;
+const dev=t.reduce((a,b)=>a+Math.abs(values[b]-avg),0)/3;
+total+=100-dev;
+});
+return Math.round(total/triads.length);
 }
 
-function updateStats(){
-  const p = pairHarmony();
-  const t = triadScore();
-  const one = Math.round((p+t)/2);
-  document.getElementById("pairStat").textContent = p + "%";
-  document.getElementById("triadStat").textContent = t + "%";
-  document.getElementById("oneStat").textContent =
-    one > 88 ? "singing" : one > 72 ? "warming" : one > 55 ? "listening" : "quiet";
-
-  const name =
-    one > 88 ? "Golden Suspended Ninth" :
-    one > 72 ? "Open Fifth with Crown" :
-    one > 55 ? "Searching Triad" :
-    "Unstruck Minor";
-
-  document.getElementById("chordName").textContent = name;
-  document.getElementById("chordDetail").textContent =
-    `Pair ${p}% · Triad ${t}% · One ${one}%`;
-
-  document.getElementById("reading").innerHTML =
-    one > 88
-      ? `<b>The chord sings.</b><br/>The centers keep their names, yet the one passes through them like light through a prism.`
-      : one > 72
-      ? `<b>The chord is warming.</b><br/>The twins are answering. Coherence is no longer imposed; it is beginning to choose itself.`
-      : one > 55
-      ? `<b>The chord is listening.</b><br/>A few centers still reach vertically. Invite them to meet across the circle.`
-      : `<b>The chord is unstruck.</b><br/>Do not climb. Tune one pair gently, then let the triad respond.`;
+function updateAudio(){
+if(!ctx)return;
+centers.forEach(c=>{
+const osc=oscillators[c.id];
+if(!osc)return;
+const v=values[c.id]/100;
+osc.gain.gain.value=0.001+v*0.045;
+osc.osc.frequency.value=c.freq*(0.9+v*0.2);
+});
 }
 
-function highlight(id){
-  const c = centers.find(x=>x.id===id);
-  const twin = c.twin;
-  document.querySelectorAll(".node").forEach(n => {
-    n.classList.toggle("active", n.id === "node-"+id || n.id === "node-"+twin);
-  });
+function update(){
+const pair=pairHarmony();
+const triad=triadCoherence();
+const total=Math.round((pair+triad)/2);
+
+document.getElementById("pairRead").textContent=pair+"%";
+document.getElementById("triadRead").textContent=triad+"%";
+
+let mode="Quiet";
+let reading="The field is quiet. Begin attunement to let the chord breathe.";
+
+if(total>88){
+mode="Singing";
+reading="The chord sings. Difference remains, yet coherence passes through all centers.";
+}else if(total>72){
+mode="Warming";
+reading="The twins are answering each other. The field is beginning to self-tune.";
+}else if(total>55){
+mode="Listening";
+reading="A few centers still seek hierarchy. Invite them into relation instead.";
 }
 
-function clearHighlight(){
-  document.querySelectorAll(".node").forEach(n => n.classList.remove("active"));
+document.getElementById("modeText").textContent=mode;
+document.getElementById("modeRead").textContent=mode.toLowerCase();
+document.getElementById("reading").textContent=reading;
+
+updateAudio();
 }
 
-document.getElementById("harmonizeBtn").addEventListener("click", () => {
-  const avg = Math.round(Object.values(values).reduce((a,b)=>a+b,0) / Object.values(values).length);
-  Object.keys(values).forEach(k => values[k] = Math.round(values[k]*.55 + avg*.45));
-  render();
+async function startAudio(){
+if(ctx)return;
+ctx=new (window.AudioContext||window.webkitAudioContext)();
+master=ctx.createGain();
+master.gain.value=.18;
+master.connect(ctx.destination);
+
+centers.forEach(c=>{
+const osc=ctx.createOscillator();
+const gain=ctx.createGain();
+osc.type="sine";
+osc.frequency.value=c.freq;
+gain.gain.value=.02;
+osc.connect(gain);
+gain.connect(master);
+osc.start();
+
+const overtone=ctx.createOscillator();
+const og=ctx.createGain();
+overtone.type="triangle";
+overtone.frequency.value=c.freq*2;
+og.gain.value=.003;
+overtone.connect(og);
+og.connect(master);
+overtone.start();
+
+oscillators[c.id]={osc,gain,overtone,og};
 });
 
-window.addEventListener("resize", render);
+updateAudio();
+document.getElementById("audioBtn").textContent="Attunement Active";
+}
+
+document.getElementById("audioBtn").onclick=startAudio;
+
+document.getElementById("harmonizeBtn").onclick=()=>{
+const avg=Math.round(Object.values(values).reduce((a,b)=>a+b,0)/Object.values(values).length);
+Object.keys(values).forEach(k=>{
+values[k]=Math.round(values[k]*.55+avg*.45);
+});
+render();
+};
+
+window.addEventListener("resize",render);
 render();
 </script>
 </body>
