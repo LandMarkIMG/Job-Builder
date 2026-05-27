@@ -1,20 +1,17 @@
-# LV Job Builder V2 - Synergy Rebuild
+# LV Job Builder V2 - Operations / Survey Split
 
-A clean static Vercel package.
+This pass separates the concepts:
 
-## Core architecture
-- Calendar matrix is the job engine.
-- Daily / Weekly use LV workstream rows and Mon-Sun columns.
-- Monthly uses Jan-Dec project sequencing.
-- Quarterly uses strategic planning rows and Q1-Q4.
-- Bidder / Client / Job are global lenses.
-- Job means total operational truth.
-- Cells carry ownership: Bidder green, Client brown, Property purple, Unassigned gray.
-- Right rail shows selected cell, labor, PM, risk, marked cells, unresolved cells, and summary.
-- Selected Cell Tuner writes directly into the calendar cell.
+- Operations Scheduling Board starts blank.
+- Survey Intake Signals are separate and attach to selected cells.
+- No arbitrary static pre-colored day cells.
+- Smaller, denser UI.
+- Calendar matrix remains the scheduling engine.
+- Bidder / Client / Job remain global interpretation lenses.
+- Right rail remains the consequence readout.
 
-## Vercel
-Framework Preset: Other  
-Install Command: `echo "Skipping install"`  
-Build Command: `echo "Using prebuilt dist"`  
+Vercel:
+Framework Preset: Other
+Install Command: `echo "Skipping install"`
+Build Command: `echo "Using prebuilt dist"`
 Output Directory: `dist`

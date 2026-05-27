@@ -6,125 +6,98 @@
 <title>LV Job Builder V2</title>
 <style>
 :root{
-  --navy:#15324a; --navy2:#24475f;
-  --paper:#f5efe4; --panel:#fffaf1; --field:#fffdf8; --line:#d7c9b4;
+  --navy:#15324a; --paper:#f4eee3; --panel:#fffaf1; --field:#fffdf8; --line:#d8c9b5;
   --ink:#263444; --muted:#7b8490;
   --bidder:#2f8a57; --bidder-soft:#dff2e5;
   --client:#8a5b32; --client-soft:#efe1d1;
   --property:#7757a6; --property-soft:#e7def6;
-  --job:#46596b; --job-soft:#dde8ef;
-  --warn:#c88422; --danger:#a7433a;
-  --shadow:0 12px 30px rgba(37,50,67,.10);
+  --job:#4b5d70; --job-soft:#dfe8ee;
+  --warn:#c88422; --shadow:0 10px 24px rgba(37,50,67,.09);
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7f2ea,#ece4d7);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:12px}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7f2ea,#ece4d7);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11px}
 button,select,input,textarea{font:inherit}
 button{cursor:pointer}
-.app{max-width:1300px;margin:0 auto;padding:0 8px 28px}
+.app{max-width:1320px;margin:0 auto;padding:0 8px 24px}
 .topbar{
-  position:sticky;top:0;z-index:50;
-  display:grid;grid-template-columns:320px 1fr 315px;gap:14px;align-items:center;
-  padding:12px 16px;background:var(--navy);color:white;border-radius:0 0 15px 15px;box-shadow:var(--shadow)
+  position:sticky;top:0;z-index:50;display:grid;grid-template-columns:280px 1fr 290px;gap:10px;align-items:center;
+  padding:9px 13px;background:var(--navy);color:#fff;border-radius:0 0 13px 13px;box-shadow:var(--shadow)
 }
-.brand-kicker{letter-spacing:6px;font-size:10px;color:#cad8d2;text-transform:uppercase}
-.brand{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900}
-.logo{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#e9f3e8;color:var(--bidder);font-weight:950}
-.lensbar,.resbar,.ownerbar,.chips{display:flex;gap:5px;flex-wrap:wrap}
+.kicker{letter-spacing:5px;font-size:9px;color:#cbd9d4;text-transform:uppercase}
+.brand{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:900}
+.logo{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#e9f3e8;color:var(--bidder);font-weight:950}
+.lensbar,.resbar,.ownerbar,.chips{display:flex;gap:4px;flex-wrap:wrap}
 .lensbar{justify-content:center}
-.lensbar button,.resbar button,.ownerbar button,.chip,.smallbtn{
-  border:1px solid var(--line);background:#fffaf0;color:var(--ink);
-  border-radius:999px;padding:5px 11px;font-weight:850;font-size:11px
+button.pill,.lensbar button,.resbar button,.ownerbar button,.chip{
+  border:1px solid var(--line);background:#fffaf0;color:var(--ink);border-radius:999px;padding:4px 9px;font-weight:850;font-size:10px
 }
 .lensbar button.active[data-lens="Bidder"],.ownerbar button.active[data-owner="bidder"],.chip.bidder.active{background:var(--bidder-soft);color:var(--bidder);border-color:var(--bidder)}
 .lensbar button.active[data-lens="Client"],.ownerbar button.active[data-owner="client"],.chip.client.active{background:var(--client-soft);color:var(--client);border-color:var(--client)}
-.lensbar button.active[data-lens="Job"],.ownerbar button.active[data-owner="unassigned"],.chip.unassigned.active{background:var(--job-soft);color:var(--job);border-color:#879fb0}
+.lensbar button.active[data-lens="Job"],.ownerbar button.active[data-owner="unassigned"],.chip.unassigned.active{background:var(--job-soft);color:var(--job);border-color:#899aaa}
 .ownerbar button.active[data-owner="property"],.chip.property.active{background:var(--property-soft);color:var(--property);border-color:var(--property)}
-.header-stat{justify-self:end;width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.20);border-radius:12px;padding:8px 10px;text-align:right}
-.header-stat strong{font-size:15px}
-.header-stat div:last-child{color:#d5dee8;font-size:11px;margin-top:2px}
+.header-stat{justify-self:end;width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:6px 8px;text-align:right}
+.header-stat strong{font-size:13px}.header-stat div:last-child{color:#d8e1e8;font-size:10px;margin-top:1px}
 .subbar{
-  position:sticky;top:65px;z-index:45;
-  display:grid;grid-template-columns:1.3fr .95fr .95fr .95fr .95fr 1.15fr;gap:10px;
-  margin:8px 0 12px;padding:9px 14px;background:#fff8ec;border:1px solid var(--line);border-radius:13px;
-  box-shadow:0 8px 18px rgba(37,50,67,.06);font-weight:760;color:#4b5566
+  position:sticky;top:51px;z-index:45;display:grid;grid-template-columns:1.25fr .95fr .95fr .9fr .9fr 1fr;gap:8px;
+  margin:7px 0 10px;padding:7px 11px;background:#fff8ec;border:1px solid var(--line);border-radius:11px;box-shadow:0 7px 15px rgba(37,50,67,.05);font-weight:760;color:#4b5566
 }
 .subbar strong{color:var(--ink)}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px;box-shadow:0 8px 22px rgba(37,50,67,.07)}
-.title{letter-spacing:4px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:10px;margin-bottom:10px}
-.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-bottom:10px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:10px;box-shadow:0 7px 18px rgba(37,50,67,.06)}
+.title{letter-spacing:3.2px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:9px;margin-bottom:8px}
+.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-bottom:8px}
 .resbar button.active{background:#e8f4eb;color:var(--bidder);border-color:#a6cbb5}
-select,input,textarea{border:1px solid var(--line);border-radius:9px;background:var(--field);color:#4c5666;padding:7px}
-select{font-size:11px;font-weight:850;min-width:146px}
-.month-card{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:10px;padding:8px;background:var(--field);border:1px solid var(--line);border-radius:13px}
-.dow{font-size:9px;color:#89909a;text-align:center;font-weight:950}
-.day{height:23px;border-radius:7px;border:1px solid #e3d8c8;background:#f8f1e4;color:#5d6674;font-size:10px;font-weight:850}
-.day.blank{opacity:.18;pointer-events:none}
-.day.today{border-color:var(--bidder);color:var(--bidder)}
-.day.active{background:var(--navy);color:white;border-color:var(--navy)}
-.matrix-wrap{overflow:auto;padding-bottom:2px}
-.matrix{--cols:7;display:grid;grid-template-columns:116px repeat(var(--cols),minmax(68px,1fr));gap:4px;min-width:760px}
-.corner,.head,.rowhead,.cell{border:1px solid var(--line);border-radius:8px;min-height:30px;background:var(--field)}
-.head{display:grid;place-items:center;background:#f0e6d6;color:#667181;font-size:10px;font-weight:950}
-.rowhead{display:flex;align-items:center;justify-content:flex-end;text-align:right;padding:5px 8px;background:#fff9ee;font-weight:950;color:#334153}
-.cell{position:relative;display:grid;place-items:center;color:white;font-size:9px;font-weight:950;transition:.12s ease;outline:0}
-.cell:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(37,50,67,.12)}
-.cell.empty{color:transparent;background:var(--field)}
+select,input,textarea{border:1px solid var(--line);border-radius:7px;background:var(--field);color:#4c5666;padding:5px 6px}
+select{font-size:10px;font-weight:850;min-width:130px}
+.month-card{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px;padding:6px;background:var(--field);border:1px solid var(--line);border-radius:10px}
+.dow{font-size:8px;color:#89909a;text-align:center;font-weight:950}
+.day{height:18px;border-radius:6px;border:1px solid #e3d8c8;background:#f8f1e4;color:#5d6674;font-size:9px;font-weight:850}
+.day.blank{opacity:.18;pointer-events:none}.day.today{border-color:var(--bidder);color:var(--bidder)}.day.active{background:var(--navy);color:white;border-color:var(--navy)}
+.matrix-wrap{overflow:auto}
+.matrix{--cols:7;display:grid;grid-template-columns:104px repeat(var(--cols),minmax(56px,1fr));gap:3px;min-width:640px}
+.corner,.head,.rowhead,.cell{border:1px solid var(--line);border-radius:7px;min-height:25px;background:var(--field)}
+.head{display:grid;place-items:center;background:#f0e6d6;color:#667181;font-size:9px;font-weight:950}
+.rowhead{display:flex;align-items:center;justify-content:flex-end;text-align:right;padding:4px 6px;background:#fff9ee;font-weight:950;color:#334153}
+.cell{position:relative;display:grid;place-items:center;color:white;font-size:8px;font-weight:950;transition:.1s ease;outline:0}
+.cell:hover{box-shadow:0 4px 10px rgba(37,50,67,.12)}
+.cell.empty{color:#bac1c9;background:var(--field)}
+.cell.empty::before{content:"+";opacity:.35}
 .cell.bidder{background:var(--bidder);border-color:var(--bidder)}
 .cell.client{background:var(--client);border-color:var(--client)}
 .cell.property{background:var(--property);border-color:var(--property)}
 .cell.unassigned{background:var(--job-soft);color:var(--job);border-color:#9dafbb}
-.cell.selected{box-shadow:0 0 0 3px rgba(20,50,74,.28)}
-.cell.conflict:after{content:"";position:absolute;inset:2px;border:2px solid rgba(200,132,34,.9);border-radius:6px;pointer-events:none}
-.legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-.tag{border:1px solid var(--line);border-radius:999px;background:var(--field);padding:4px 8px;font-size:10px;font-weight:850;color:#596273}
-.tag.bidder{color:var(--bidder);border-color:#a6cbb5;background:#fbfffc}
-.tag.client{color:var(--client);border-color:#cdb190;background:#fffaf5}
-.tag.property{color:var(--property);border-color:#bca9db;background:#fdfbff}
-.tag.warn{color:var(--warn);border-color:#d6ae72;background:#fff4df}
-.lower{display:grid;grid-template-columns:1.05fr .95fr;gap:12px;margin-top:12px}
-.editor{border-left:5px solid var(--bidder)}
-.editor.client{border-left-color:var(--client)}.editor.property{border-left-color:var(--property)}.editor.unassigned{border-left-color:var(--job)}
-.editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
+.cell.selected{box-shadow:0 0 0 2px rgba(20,50,74,.34)}
+.cell.conflict:after{content:"";position:absolute;inset:2px;border:2px solid rgba(200,132,34,.88);border-radius:5px;pointer-events:none}
+.legend{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.tag{border:1px solid var(--line);border-radius:999px;background:var(--field);padding:3px 7px;font-size:9px;font-weight:850;color:#596273}
+.tag.bidder{color:var(--bidder);border-color:#a6cbb5;background:#fbfffc}.tag.client{color:var(--client);border-color:#cdb190;background:#fffaf5}.tag.property{color:var(--property);border-color:#bca9db;background:#fdfbff}.tag.warn{color:var(--warn);border-color:#d6ae72;background:#fff4df}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.editor{border-left:4px solid var(--bidder)}.editor.client{border-left-color:var(--client)}.editor.property{border-left-color:var(--property)}.editor.unassigned{border-left-color:var(--job)}
+.editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:7px}
 .editor-title{font-weight:950;color:#334153}
-.formgrid{display:grid;grid-template-columns:76px 1fr;gap:6px;align-items:start;margin-top:10px}
-.formgrid label{font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:2px;color:#7d8492;padding-top:8px;text-align:right}
-textarea{min-height:65px;resize:vertical}
-.hint{font-size:11px;color:#737d89;line-height:1.4;margin:8px 0 0}
-.chip:hover{filter:brightness(.98)}
-.right{position:sticky;top:130px;align-self:start;display:flex;flex-direction:column;gap:12px}
-.readout{text-align:center}
-.readout-main{font-size:11px;letter-spacing:3px;font-weight:950;color:var(--bidder);text-transform:uppercase}
-.readline{border-top:1px solid var(--line);margin:9px 0;padding-top:8px}
-.readlabel{letter-spacing:3px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:10px}
-.readvalue{font-weight:900;margin-top:3px;overflow-wrap:anywhere}
-.stat{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:6px 0;font-weight:760}
-.stat strong{color:#26354a}
-.savegrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.savegrid button{border:0;border-radius:9px;padding:8px;color:white;font-weight:950}
-.savegrid .bidder{background:var(--bidder)}.savegrid .client{background:var(--client)}.savegrid .property{background:var(--property)}.savegrid .job{background:var(--navy)}
-.summary{font-size:12px;line-height:1.45}
-.summary p{margin:.5em 0}
-.cause{margin:8px 0 0;padding-left:16px}.cause li{margin:4px 0}
-.saved-note{font-size:11px;color:#687383;margin-top:8px}
-@media(max-width:1000px){
-  .topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.right{position:static}.lower{grid-template-columns:1fr}
-}
+.formgrid{display:grid;grid-template-columns:62px 1fr;gap:5px;align-items:start;margin-top:8px}
+.formgrid label{font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:1.8px;color:#7d8492;padding-top:6px;text-align:right}
+textarea{min-height:50px;resize:vertical}
+.hint{font-size:10px;color:#737d89;line-height:1.35;margin:7px 0 0}
+.survey-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.survey-item{border:1px solid #eadfce;background:#fffdf8;border-radius:9px;padding:6px}
+.survey-item b{display:block;font-size:10px;margin-bottom:4px}
+.right{position:sticky;top:106px;align-self:start;display:flex;flex-direction:column;gap:10px}
+.readout{text-align:center}.readout-main{font-size:10px;letter-spacing:3px;font-weight:950;color:var(--bidder);text-transform:uppercase}
+.readline{border-top:1px solid var(--line);margin:7px 0;padding-top:6px}.readlabel{letter-spacing:2.5px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:9px}.readvalue{font-weight:900;margin-top:2px;overflow-wrap:anywhere}
+.stat{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:5px 0;font-weight:760}.stat strong{color:#26354a}
+.savegrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.savegrid button{border:0;border-radius:8px;padding:7px;color:white;font-weight:950;font-size:10px}.savegrid .bidder{background:var(--bidder)}.savegrid .client{background:var(--client)}.savegrid .property{background:var(--property)}.savegrid .job{background:var(--navy)}
+.summary{font-size:11px;line-height:1.4}.summary p{margin:.45em 0}.cause{margin:7px 0 0;padding-left:14px}.cause li{margin:3px 0}
+.saved-note{font-size:10px;color:#687383;margin-top:7px}
+@media(max-width:1000px){.topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.right{position:static}.lower{grid-template-columns:1fr}.survey-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="app">
 <header class="topbar">
-  <div>
-    <div class="brand-kicker">Branding Space</div>
-    <div class="brand"><span class="logo">LV</span>Job Builder V2</div>
-  </div>
-  <div class="lensbar">
-    <button class="active" data-lens="Bidder">Bidder</button>
-    <button data-lens="Client">Client</button>
-    <button data-lens="Job">Job</button>
-  </div>
-  <div class="header-stat"><strong id="headerMode">Daily Matrix</strong><div id="headerStats">Labor x1.00 · PM x1.00 · Risk x1.00</div></div>
+  <div><div class="kicker">Branding Space</div><div class="brand"><span class="logo">LV</span>Job Builder V2</div></div>
+  <div class="lensbar"><button class="active" data-lens="Bidder">Bidder</button><button data-lens="Client">Client</button><button data-lens="Job">Job</button></div>
+  <div class="header-stat"><strong id="headerMode">Operations Board</strong><div id="headerStats">Labor x1.00 · PM x1.00 · Risk x1.00</div></div>
 </header>
 
 <section class="subbar">
@@ -132,7 +105,7 @@ textarea{min-height:65px;resize:vertical}
   <div><strong>TODAY</strong> <span id="today"></span></div>
   <div><strong>PERIOD</strong> <span id="periodRead"></span></div>
   <div><strong>RES</strong> <span id="resolutionRead">Daily</span></div>
-  <div><strong>CONFLICTS</strong> <span id="conflictRead">0</span></div>
+  <div><strong>MARKED</strong> <span id="markedTop">0</span></div>
   <div><strong>LENS</strong> <span id="lensRead">Bidder</span></div>
 </section>
 
@@ -140,52 +113,31 @@ textarea{min-height:65px;resize:vertical}
 <main>
   <section class="panel">
     <div class="toolbar">
-      <div class="title">Programmable Calendar Matrix</div>
-      <div class="resbar">
-        <button class="active" data-resolution="Daily">Daily</button>
-        <button data-resolution="Weekly">Weekly</button>
-        <button data-resolution="Monthly">Monthly</button>
-        <button data-resolution="Quarterly">Quarterly</button>
-      </div>
+      <div><div class="title">Operations Scheduling Board</div></div>
+      <div class="resbar"><button class="active" data-resolution="Daily">Daily</button><button data-resolution="Weekly">Weekly</button><button data-resolution="Monthly">Monthly</button><button data-resolution="Quarterly">Quarterly</button></div>
       <select id="periodSelect"></select>
     </div>
     <div id="monthPicker"></div>
     <div class="matrix-wrap"><div id="matrix" class="matrix"></div></div>
-    <div class="legend">
-      <span class="tag bidder">Bidder = controllable work</span>
-      <span class="tag client">Client = carried scope</span>
-      <span class="tag property">Property = site condition</span>
-      <span class="tag warn">Amber = compression/conflict</span>
-    </div>
+    <div class="legend"><span class="tag bidder">Bidder scheduled work</span><span class="tag client">Client dependency</span><span class="tag property">Property condition</span><span class="tag warn">Amber = conflict</span></div>
   </section>
 
   <section class="lower">
     <section class="panel editor" id="editorCard">
-      <div class="editor-head">
-        <div><div class="title" style="margin-bottom:3px">Selected Cell Tuner</div><div class="editor-title" id="selectedTitle">Select a matrix cell</div></div>
-        <button class="smallbtn" id="clearCellBtn">Clear</button>
-      </div>
-      <div class="ownerbar">
-        <button data-owner="bidder">Bidder</button>
-        <button data-owner="client">Client</button>
-        <button data-owner="property">Property</button>
-        <button data-owner="unassigned">Unassigned</button>
-      </div>
+      <div class="editor-head"><div><div class="title" style="margin-bottom:2px">Selected Schedule Cell</div><div class="editor-title" id="selectedTitle">Select a cell</div></div><button class="pill" id="clearCellBtn">Clear</button></div>
+      <div class="ownerbar"><button data-owner="bidder">Bidder</button><button data-owner="client">Client</button><button data-owner="property">Property</button><button data-owner="unassigned">Unassigned</button></div>
       <div class="formgrid">
-        <label>Qty</label><input id="qtyInput" placeholder="drops / days / rooms"/>
-        <label>Mod</label><input id="modInput" placeholder="compressed, escorted, hard-lid"/>
-        <label>Notes</label><textarea id="noteInput" placeholder="Describe schedule and field condition."></textarea>
+        <label>Qty</label><input id="qtyInput" placeholder="crew / days / drops"/>
+        <label>Mod</label><input id="modInput" placeholder="after-hours, escort, long-lead"/>
+        <label>Notes</label><textarea id="noteInput" placeholder="Operational note attached to this time/workstream cell."></textarea>
       </div>
-      <p class="hint">Stable law: the calendar cell owns the job condition; this tuner explains it.</p>
+      <p class="hint">Operations starts blank. Schedule cells become meaningful only when you mark them.</p>
     </section>
 
     <section class="panel">
-      <div class="editor-head">
-        <div><div class="title" style="margin-bottom:3px">Causal Editor Seed</div><div class="editor-title">Quick implications</div></div>
-        <button class="smallbtn" id="applyCommonBtn">Apply Common</button>
-      </div>
-      <div class="chips" id="quickChips"></div>
-      <p class="hint">Quick chips write directly into the selected calendar cell. More subject selectors can grow here once this engine feels right.</p>
+      <div class="editor-head"><div><div class="title" style="margin-bottom:2px">Survey Intake Signals</div><div class="editor-title">Separated from operations</div></div><button class="pill" id="applyCommonBtn">Attach Signal</button></div>
+      <div class="survey-grid" id="surveySignals"></div>
+      <p class="hint">Survey truth informs the selected schedule cell; it does not automatically fill the operations calendar.</p>
     </section>
   </section>
 </main>
@@ -206,12 +158,7 @@ textarea{min-height:65px;resize:vertical}
     <div class="stat"><span>Risk</span><strong id="riskRead">x1.00</strong></div>
     <div class="stat"><span>Marked</span><strong id="markedRead">0</strong></div>
     <div class="stat"><span>Unassigned</span><strong id="unassignedRead">0</strong></div>
-    <div class="savegrid">
-      <button class="bidder" id="saveBidder">Bidder</button>
-      <button class="client" id="saveClient">Client</button>
-      <button class="property" id="saveProperty">Property</button>
-      <button class="job" id="saveJob">Total</button>
-    </div>
+    <div class="savegrid"><button class="bidder" id="saveBidder">Bidder</button><button class="client" id="saveClient">Client</button><button class="property" id="saveProperty">Property</button><button class="job" id="saveJob">Total</button></div>
     <div class="saved-note" id="savedNote">No perspective saved yet.</div>
   </section>
 
@@ -228,16 +175,13 @@ textarea{min-height:65px;resize:vertical}
 const monthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const dows=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const now=new Date();
-
 const rows={
   Daily:["OSP","MDF","IDF","Rough-in","Terminating","Installing","Activating","Testing"],
   Weekly:["OSP","MDF","IDF","Rough-in","Terminating","Installing","Activating","Testing"],
   Monthly:["Survey","Procurement","Rough","Backbone","Devices","Termination","Testing","Closeout"],
   Quarterly:["Capital pacing","Lease turnover","Regional staging","Long-lead procurement","Multi-site deployment","Infrastructure upgrades","Documentation strategy","Turnover risk"]
 };
-function cols(res){return res==="Monthly"?monthNames:res==="Quarterly"?["Q1","Q2","Q3","Q4"]:dows}
-
-const quick={
+const survey={
   OSP:["locates","weather","utility coordination","long pull"], MDF:["rack space","grounding","power","cooling"], IDF:["backboard","patching","cleanup","migration"],
   "Rough-in":["pathway","lift","hard lid","shared trades"], Terminating:["density","labeling","patch panels","rework"], Installing:["height","mounting","PoE","exterior"],
   Activating:["client approval","network handoff","programming","commissioning"], Testing:["certification","OLTS","OTDR","owner witness"],
@@ -246,146 +190,38 @@ const quick={
   "Capital pacing":["budget gate","phasing","release"], "Lease turnover":["deadline","tenant move-in","punch"], "Regional staging":["multi-site","travel","storage"], "Long-lead procurement":["fiber","switches","racks","approval"],
   "Multi-site deployment":["template","crew rotation","standardization"], "Infrastructure upgrades":["MDF","IDF","backbone","power"], "Documentation strategy":["as-builts","reports","binder"], "Turnover risk":["testing","signoff","witness","punch"]
 };
-
 const weights={bidder:{labor:.06,pm:.02,risk:.02},client:{labor:.01,pm:.07,risk:.06},property:{labor:.04,pm:.03,risk:.08},unassigned:{labor:.02,pm:.10,risk:.18}};
 let state={lens:"Bidder",res:"Daily",month:now.getMonth(),day:now.getDate(),selected:null,cells:{},saved:{Bidder:[],Client:[],Property:[],Job:[]}};
-
 function id(x){return document.getElementById(x)}
 function cap(s){return s? s.charAt(0).toUpperCase()+s.slice(1):"None"}
+function cols(){return state.res==="Monthly"?monthNames:state.res==="Quarterly"?["Q1","Q2","Q3","Q4"]:dows}
 function key(row,col){return [state.res,state.month,state.day,row,col].join("|")}
-
-function suggested(row,col,i){
-  if(state.res==="Daily"){
-    const active=(new Date(now.getFullYear(),state.month,state.day).getDay()+6)%7;
-    if(i===active && ["Rough-in","Installing","Testing"].includes(row)){
-      return {owner:row==="Rough-in"?"property":"bidder",qty:"",mod:"suggested",notes:"Auto-suggested from selected day."}
-    }
-  }
-  if(state.res==="Weekly" && ["Rough-in","Terminating","Testing"].includes(row) && ["Tue","Wed","Thu"].includes(col)) return {owner:"bidder",qty:"",mod:"work window",notes:"Suggested weekly production window."}
-  if(state.res==="Monthly" && col===monthNames[state.month] && ["Procurement","Rough","Testing","Closeout"].includes(row)) return {owner:(row==="Procurement"||row==="Closeout")?"client":"bidder",qty:"",mod:"month focus",notes:"Suggested project milestone."}
-  if(state.res==="Quarterly" && ["Long-lead procurement","Lease turnover","Turnover risk"].includes(row) && col==="Q2") return {owner:"client",qty:"",mod:"strategic risk",notes:"Suggested quarterly risk window."}
-  return null
-}
-function get(row,col,i){return state.cells[key(row,col)] || suggested(row,col,i)}
-function set(row,col,data){if(!data||!data.owner) delete state.cells[key(row,col)]; else state.cells[key(row,col)]={row,col,...data}}
-
-function setupPeriod(){
-  const sel=id("periodSelect"); sel.innerHTML="";
-  if(state.res==="Quarterly"){["Current year","Next year","Two-year view"].forEach((v,i)=>sel.add(new Option(v,i))); sel.value=0}
-  else {monthNames.forEach((m,i)=>sel.add(new Option(`${m} ${now.getFullYear()}`,i))); sel.value=state.month}
-  sel.onchange=()=>{state.month=Number(sel.value)||0; state.day=1; state.selected=null; render()}
-}
-function renderMonth(){
-  const h=id("monthPicker"); h.innerHTML="";
-  if(state.res!=="Daily"){h.style.display="none";return}
-  h.style.display="grid"; h.className="month-card";
-  dows.forEach(d=>{const e=document.createElement("div");e.className="dow";e.textContent=d;h.appendChild(e)});
-  const first=(new Date(now.getFullYear(),state.month,1).getDay()+6)%7, days=new Date(now.getFullYear(),state.month+1,0).getDate();
-  for(let i=0;i<first;i++){const b=document.createElement("button");b.className="day blank";h.appendChild(b)}
-  for(let d=1;d<=days;d++){const b=document.createElement("button");b.className="day";b.textContent=d;if(state.month===now.getMonth()&&d===now.getDate())b.classList.add("today");if(d===state.day)b.classList.add("active");b.onclick=()=>{state.day=d;state.selected=null;render()};h.appendChild(b)}
-}
-function conflict(row,col,i,data){
-  if(!data)return false;
-  if(data.owner==="unassigned")return true;
-  if(state.res==="Daily"){const a=(new Date(now.getFullYear(),state.month,state.day).getDay()+6)%7;return i===a&&["Testing","Activating"].includes(row)}
-  if(state.res==="Weekly")return ["Testing","Activating"].includes(row)&&["Fri","Sat","Sun"].includes(col);
-  if(state.res==="Monthly")return ["Testing","Closeout"].includes(row)&&col===monthNames[state.month];
-  return ["Long-lead procurement","Turnover risk"].includes(row)&&col==="Q2"
-}
-function renderMatrix(){
-  const m=id("matrix"), cs=cols(state.res), rs=rows[state.res]; m.style.setProperty("--cols",cs.length); m.innerHTML="";
-  const corner=document.createElement("div"); corner.className="corner"; m.appendChild(corner);
-  cs.forEach(c=>{const h=document.createElement("div");h.className="head";h.textContent=c;m.appendChild(h)});
-  rs.forEach(row=>{
-    const rh=document.createElement("button");rh.className="rowhead";rh.textContent=row;rh.onclick=()=>selectCell(row,cs[0],0);m.appendChild(rh);
-    cs.forEach((col,i)=>{
-      const data=get(row,col,i), cell=document.createElement("button");
-      cell.className="cell "+(data?data.owner:"empty");
-      if(state.selected&&state.selected.row===row&&state.selected.col===col)cell.classList.add("selected");
-      if(conflict(row,col,i,data))cell.classList.add("conflict");
-      cell.textContent=data?(data.owner==="unassigned"?"?":"●"):"";
-      cell.onclick=()=>selectCell(row,col,i);
-      m.appendChild(cell)
-    })
-  })
-}
-function selectCell(row,col,i){
-  state.selected={row,col,i};
-  const data=get(row,col,i)||{owner:"bidder",qty:"",mod:"",notes:""};
-  id("selectedTitle").textContent=`${row} / ${col}`;
-  id("qtyInput").value=data.qty||""; id("modInput").value=data.mod||""; id("noteInput").value=data.notes||"";
-  setOwner(data.owner||"bidder"); renderChips(row); renderMatrix(); updateReadout(); updateStats()
-}
-function setOwner(owner){
-  document.querySelectorAll(".ownerbar button").forEach(b=>b.classList.toggle("active",b.dataset.owner===owner));
-  id("editorCard").className="panel editor "+owner;
-}
+function get(row,col){return state.cells[key(row,col)]||null}
+function set(row,col,data){if(!data||!data.owner)delete state.cells[key(row,col)];else state.cells[key(row,col)]={row,col,...data}}
+function setupPeriod(){const sel=id("periodSelect");sel.innerHTML="";if(state.res==="Quarterly"){["Current year","Next year","Two-year view"].forEach((v,i)=>sel.add(new Option(v,i)));sel.value=0}else{monthNames.forEach((m,i)=>sel.add(new Option(`${m} ${now.getFullYear()}`,i)));sel.value=state.month}sel.onchange=()=>{state.month=Number(sel.value)||0;state.day=1;state.selected=null;render()}}
+function renderMonth(){const h=id("monthPicker");h.innerHTML="";if(state.res!=="Daily"){h.style.display="none";return}h.style.display="grid";h.className="month-card";dows.forEach(d=>{const e=document.createElement("div");e.className="dow";e.textContent=d;h.appendChild(e)});const first=(new Date(now.getFullYear(),state.month,1).getDay()+6)%7,days=new Date(now.getFullYear(),state.month+1,0).getDate();for(let i=0;i<first;i++){const b=document.createElement("button");b.className="day blank";h.appendChild(b)}for(let d=1;d<=days;d++){const b=document.createElement("button");b.className="day";b.textContent=d;if(state.month===now.getMonth()&&d===now.getDate())b.classList.add("today");if(d===state.day)b.classList.add("active");b.onclick=()=>{state.day=d;state.selected=null;render()};h.appendChild(b)}}
+function conflict(row,col,d){return d&&(d.owner==="unassigned"||/conflict|compressed|after-hours|escort/i.test((d.mod||"")+" "+(d.notes||"")))}
+function renderMatrix(){const m=id("matrix"),cs=cols(),rs=rows[state.res];m.style.setProperty("--cols",cs.length);m.innerHTML="";const corner=document.createElement("div");corner.className="corner";m.appendChild(corner);cs.forEach(c=>{const h=document.createElement("div");h.className="head";h.textContent=c;m.appendChild(h)});rs.forEach(row=>{const rh=document.createElement("button");rh.className="rowhead";rh.textContent=row;rh.onclick=()=>selectCell(row,cs[0]);m.appendChild(rh);cs.forEach(col=>{const d=get(row,col),cell=document.createElement("button");cell.className="cell "+(d?d.owner:"empty");if(state.selected&&state.selected.row===row&&state.selected.col===col)cell.classList.add("selected");if(conflict(row,col,d))cell.classList.add("conflict");cell.textContent=d?(d.owner==="unassigned"?"?":"●"):"";cell.onclick=()=>selectCell(row,col);m.appendChild(cell)})})}
+function selectCell(row,col){state.selected={row,col};const d=get(row,col)||{owner:"bidder",qty:"",mod:"",notes:""};id("selectedTitle").textContent=`${row} / ${col}`;id("qtyInput").value=d.qty||"";id("modInput").value=d.mod||"";id("noteInput").value=d.notes||"";setOwner(d.owner||"bidder");renderSignals(row);renderMatrix();updateReadout();updateStats()}
+function setOwner(owner){document.querySelectorAll(".ownerbar button").forEach(b=>b.classList.toggle("active",b.dataset.owner===owner));id("editorCard").className="panel editor "+owner}
 function activeOwner(){const b=document.querySelector(".ownerbar button.active");return b?b.dataset.owner:"bidder"}
-function saveEditor(){
-  if(!state.selected)return;
-  set(state.selected.row,state.selected.col,{owner:activeOwner(),qty:id("qtyInput").value.trim(),mod:id("modInput").value.trim(),notes:id("noteInput").value.trim()});
-  renderMatrix(); updateReadout(); updateStats()
-}
-function renderChips(row){
-  const host=id("quickChips"); host.innerHTML="";
-  (quick[row]||["pathway","access","labor","closeout"]).forEach((label,i)=>{
-    const owner=["bidder","client","property","unassigned"][i%4];
-    const b=document.createElement("button"); b.className="chip "+owner; b.textContent=label;
-    b.onclick=()=>{id("modInput").value=label; setOwner(owner); b.classList.add("active"); saveEditor()};
-    host.appendChild(b)
-  })
-}
-function clearCell(){
-  if(!state.selected)return;
-  set(state.selected.row,state.selected.col,null); id("qtyInput").value=""; id("modInput").value=""; id("noteInput").value=""; renderMatrix(); updateReadout(); updateStats()
-}
-function updateReadout(){
-  if(!state.selected){id("selectedCellRead").textContent="—";id("selectedOwnerRead").textContent="—";id("selectedQtyRead").textContent="—";id("selectedModRead").textContent="—";return}
-  const d=get(state.selected.row,state.selected.col,state.selected.i)||{};
-  id("selectedCellRead").textContent=`${state.selected.row} / ${state.selected.col}`;
-  id("selectedOwnerRead").textContent=cap(d.owner);
-  id("selectedQtyRead").textContent=d.qty||"—";
-  id("selectedModRead").textContent=d.mod||"—"
-}
-function updateStats(){
-  let labor=1,pm=1,risk=1,marked=0,unassigned=0,conflicts=0,causes=[];
-  const cs=cols(state.res), rs=rows[state.res];
-  rs.forEach(row=>cs.forEach((col,i)=>{
-    const d=get(row,col,i); if(!d)return; marked++;
-    const w=weights[d.owner]||weights.bidder; labor+=w.labor; pm+=w.pm; risk+=w.risk;
-    if(d.owner==="unassigned"){unassigned++;causes.push(`${row} / ${col} is unassigned.`)}
-    if(conflict(row,col,i,d)){conflicts++;pm+=.015;risk+=.025}
-    if(d.mod)causes.push(`${row} carries modifier: ${d.mod}.`)
-  }));
-  if(state.res==="Daily"){labor+=.04;causes.unshift("Daily mode emphasizes crew placement, access, and handoff timing.")}
-  if(state.res==="Weekly"){labor+=.03;pm+=.03;causes.unshift("Weekly mode emphasizes production rhythm and crew sequencing.")}
-  if(state.res==="Monthly"){pm+=.05;causes.unshift("Monthly mode emphasizes procurement, milestones, and PM cadence.")}
-  if(state.res==="Quarterly"){risk+=.06;causes.unshift("Quarterly mode emphasizes capital pacing, long-lead risk, and turnover exposure.")}
-  if(state.lens==="Bidder")labor+=.02; if(state.lens==="Client")pm+=.03; if(state.lens==="Job")risk+=.03;
-  id("laborRead").textContent="x"+labor.toFixed(2); id("pmRead").textContent="x"+pm.toFixed(2); id("riskRead").textContent="x"+risk.toFixed(2);
-  id("markedRead").textContent=marked; id("unassignedRead").textContent=unassigned; id("conflictRead").textContent=conflicts;
-  id("headerStats").textContent=`Labor x${labor.toFixed(2)} · PM x${pm.toFixed(2)} · Risk x${risk.toFixed(2)}`;
-  const lens=state.lens==="Bidder"?"Bidder lens is reading controllable labor and production burden.":state.lens==="Client"?"Client lens is reading approvals, carried scope, and promised dates.":"Job lens is reading total operational truth, including unresolved burden.";
-  id("summaryText").textContent=`${lens} ${marked} marked calendar conditions are shaping the job. ${unassigned?unassigned+" unresolved item(s) remain.":"No unresolved ownership cells are marked."}`;
-  id("causeList").innerHTML=causes.slice(0,6).map(c=>`<li>${c}</li>`).join("")
-}
-function periodText(){
-  id("periodRead").textContent=state.res==="Daily"?`${monthNames[state.month]} ${state.day}, ${now.getFullYear()}`:state.res==="Weekly"?`${monthNames[state.month]} weekly board`:state.res==="Monthly"?`${now.getFullYear()} year view`:"Quarterly horizon";
-  id("resolutionRead").textContent=state.res; id("headerMode").textContent=state.res+" Matrix"; id("lensRead").textContent=state.lens
-}
-function render(){setupPeriod(); renderMonth(); renderMatrix(); periodText(); updateReadout(); updateStats()}
+function saveEditor(){if(!state.selected)return;set(state.selected.row,state.selected.col,{owner:activeOwner(),qty:id("qtyInput").value.trim(),mod:id("modInput").value.trim(),notes:id("noteInput").value.trim()});renderMatrix();updateReadout();updateStats()}
+function clearCell(){if(!state.selected)return;set(state.selected.row,state.selected.col,null);id("qtyInput").value="";id("modInput").value="";id("noteInput").value="";renderMatrix();updateReadout();updateStats()}
+function renderSignals(row){const host=id("surveySignals");host.innerHTML="";(survey[row]||["pathway","access","labor","closeout"]).forEach((s,i)=>{const owner=["bidder","client","property","unassigned"][i%4];const box=document.createElement("button");box.className="survey-item chip "+owner;box.innerHTML=`<b>${s}</b><span>${cap(owner)} signal</span>`;box.onclick=()=>{id("modInput").value=s;setOwner(owner);saveEditor()};host.appendChild(box)})}
+function attachSignal(){if(!state.selected)return;const first=(survey[state.selected.row]||["standard"])[0];id("modInput").value=first;id("noteInput").value="Survey signal attached to this operations cell.";saveEditor()}
+function updateReadout(){if(!state.selected){id("selectedCellRead").textContent="—";id("selectedOwnerRead").textContent="—";id("selectedQtyRead").textContent="—";id("selectedModRead").textContent="—";return}const d=get(state.selected.row,state.selected.col)||{};id("selectedCellRead").textContent=`${state.selected.row} / ${state.selected.col}`;id("selectedOwnerRead").textContent=cap(d.owner);id("selectedQtyRead").textContent=d.qty||"—";id("selectedModRead").textContent=d.mod||"—"}
+function updateStats(){let labor=1,pm=1,risk=1,marked=0,unassigned=0,conflicts=0,causes=[];Object.values(state.cells).forEach(d=>{marked++;const w=weights[d.owner]||weights.bidder;labor+=w.labor;pm+=w.pm;risk+=w.risk;if(d.owner==="unassigned"){unassigned++;causes.push(`${d.row} / ${d.col} is unassigned.`)}if(conflict(d.row,d.col,d)){conflicts++;pm+=.015;risk+=.025}if(d.mod)causes.push(`${d.row} carries signal: ${d.mod}.`)});if(state.res==="Daily")labor+=.02;if(state.res==="Weekly"){labor+=.02;pm+=.02}if(state.res==="Monthly")pm+=.03;if(state.res==="Quarterly")risk+=.04;if(state.lens==="Bidder")labor+=.02;if(state.lens==="Client")pm+=.03;if(state.lens==="Job")risk+=.03;id("laborRead").textContent="x"+labor.toFixed(2);id("pmRead").textContent="x"+pm.toFixed(2);id("riskRead").textContent="x"+risk.toFixed(2);id("markedRead").textContent=marked;id("markedTop").textContent=marked;id("unassignedRead").textContent=unassigned;id("headerStats").textContent=`Labor x${labor.toFixed(2)} · PM x${pm.toFixed(2)} · Risk x${risk.toFixed(2)}`;const lens=state.lens==="Bidder"?"Bidder lens: controllable labor and production.":state.lens==="Client"?"Client lens: approvals, dependencies, carried scope.":"Job lens: total operational truth and unresolved burden.";id("summaryText").textContent=`${lens} Operations board has ${marked} scheduled mark(s). Survey signals are attached only to selected cells.`;id("causeList").innerHTML=causes.slice(0,6).map(c=>`<li>${c}</li>`).join("")}
+function periodText(){id("periodRead").textContent=state.res==="Daily"?`${monthNames[state.month]} ${state.day}, ${now.getFullYear()}`:state.res==="Weekly"?`${monthNames[state.month]} weekly`:state.res==="Monthly"?`${now.getFullYear()} year`:"Quarterly horizon";id("resolutionRead").textContent=state.res;id("headerMode").textContent="Operations Board";id("lensRead").textContent=state.lens}
+function render(){setupPeriod();renderMonth();renderMatrix();periodText();updateReadout();updateStats()}
 document.querySelectorAll(".lensbar button").forEach(b=>b.onclick=()=>{state.lens=b.dataset.lens;document.querySelectorAll(".lensbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");periodText();updateStats()});
 document.querySelectorAll(".resbar button").forEach(b=>b.onclick=()=>{state.res=b.dataset.resolution;state.selected=null;document.querySelectorAll(".resbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()});
 document.querySelectorAll(".ownerbar button").forEach(b=>b.onclick=()=>{setOwner(b.dataset.owner);saveEditor()});
 ["qtyInput","modInput","noteInput"].forEach(n=>id(n).addEventListener("input",saveEditor));
-id("clearCellBtn").onclick=clearCell;
-id("applyCommonBtn").onclick=()=>{if(!state.selected)return;const first=(quick[state.selected.row]||["standard"])[0];id("modInput").value=first;id("noteInput").value="Common condition applied for this work domain.";saveEditor()};
+id("clearCellBtn").onclick=clearCell;id("applyCommonBtn").onclick=attachSignal;
 function savePerspective(which){state.saved[which].push({time:new Date().toISOString(),cells:JSON.parse(JSON.stringify(state.cells)),lens:state.lens,res:state.res});id("savedNote").textContent=`Saved ${which} perspective (${state.saved[which].length}).`}
-id("saveBidder").onclick=()=>savePerspective("Bidder"); id("saveClient").onclick=()=>savePerspective("Client"); id("saveProperty").onclick=()=>savePerspective("Property"); id("saveJob").onclick=()=>savePerspective("Job");
+id("saveBidder").onclick=()=>savePerspective("Bidder");id("saveClient").onclick=()=>savePerspective("Client");id("saveProperty").onclick=()=>savePerspective("Property");id("saveJob").onclick=()=>savePerspective("Job");
 id("today").textContent=now.toLocaleDateString(undefined,{month:"short",day:"2-digit",year:"numeric"});
 render();
-const active=(new Date(now.getFullYear(),state.month,state.day).getDay()+6)%7;
-selectCell("Testing",dows[active],active);
 </script>
 </body>
 </html>
