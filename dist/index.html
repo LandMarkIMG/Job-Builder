@@ -1,29 +1,485 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LV Job Builder</title>
 <style>
-:root{--navy:#15324a;--paper:#fbf7ef;--field:#fffdf8;--line:#d9ccb7;--ink:#253243;--muted:#7b8190;--bidder:#2f8a57;--bidderSoft:#dff2e5;--client:#8a5b32;--clientSoft:#efe1d1;--property:#7757a6;--propertySoft:#e7def6;--job:#15324a;--jobSoft:#dde8ef;--warning:#c88422;--danger:#a43d35;--shadow:0 12px 28px rgba(37,50,67,.10)}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f5f1e8,#eee8dc);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:12px;line-height:1.25}.app{max-width:1260px;margin:0 auto;padding:0 8px 26px}.topbar{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:285px 1fr 275px;gap:14px;align-items:center;background:var(--navy);color:white;border:1px solid #0e263b;border-top:0;border-radius:0 0 14px 14px;padding:12px 16px;box-shadow:var(--shadow)}.logo{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;background:#e9f3e8;color:var(--bidder);font-weight:900;margin-right:8px}.brandline{letter-spacing:6px;font-size:10px;color:#c9d8d2;text-transform:uppercase}.brand{font-weight:850;font-size:15px;letter-spacing:.4px}.modebar{text-align:center}button{font-family:inherit}.modebar button,.calendar-tabs button,.smallbtn,.savebtn{border:1px solid var(--line);background:#fffaf0;color:var(--ink);border-radius:18px;padding:5px 11px;font-weight:850;font-size:11px;cursor:pointer;transition:.16s ease}.modebar button.active[data-mode="Team"]{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}.modebar button.active[data-mode="Client"]{background:var(--clientSoft);color:var(--client);border-color:var(--client)}.modebar button.active[data-mode="Job"]{background:var(--jobSoft);color:var(--job);border-color:#879fb0}.topstats{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.20);border-radius:10px;padding:8px 10px;text-align:right}.bigwk{font-weight:950;font-size:14px}.multiline{font-size:11px;color:#d5dee8;margin-top:2px}.subbar{position:sticky;top:64px;z-index:29;display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr 1fr 1.35fr;gap:10px;margin:8px 0 12px 0;padding:9px 14px;background:#fff8ec;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 18px rgba(37,50,67,.06);color:#4b5566;font-weight:760}.subbar strong{color:var(--ink)}.grid{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 8px 22px rgba(37,50,67,.07)}.title{letter-spacing:4px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:10px;margin-bottom:10px}.schedule-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.calendar-tabs button.active{background:#e8f4eb;color:var(--bidder);border-color:#a6cbb5}.calendar-wrap{display:grid;grid-template-columns:98px 1fr;gap:8px}.dayhead{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}.dayhead span{text-align:center;color:#8a8f99;font-size:9px;font-weight:850}.calrow{display:grid;grid-template-columns:98px 1fr;gap:8px;align-items:center;margin:6px 0}.phase{font-weight:900;color:#334153;cursor:pointer}.cells{display:grid;grid-template-columns:repeat(14,1fr);gap:3px}.cell{height:16px;border-radius:5px;background:#eee5d6;border:1px solid #e0d3bf;cursor:pointer}.cell.on.bidder{background:var(--bidder);border-color:var(--bidder)}.cell.on.client{background:var(--client);border-color:var(--client)}.cell.on.property{background:var(--property);border-color:var(--property)}.cell.conflict{outline:2px solid rgba(200,132,34,.45)}.signalbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.signal{border:1px solid var(--line);border-radius:13px;background:#fffdf8;padding:4px 8px;font-size:10px;font-weight:850;color:#596273}.signal.warn{color:var(--warning);border-color:#d6ae72;background:#fff4df}.signal.danger{color:var(--danger);border-color:#d9a09b;background:#fff0ee}.selectorgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.block{border-left:5px solid var(--bidder);position:relative}.block.clientline{border-left-color:var(--client)}.block.propertyline{border-left-color:var(--property)}.block.jobline{border-left-color:var(--navy)}.block.dim{opacity:.52}.block.focus{outline:3px solid rgba(200,132,34,.35)}.blockhead{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:6px}.blocktitle{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#8a8f99;font-weight:950}.section-actions{display:flex;gap:5px}.smallbtn{font-size:10px;padding:4px 8px}.item{display:grid;grid-template-columns:128px minmax(136px,1fr) 155px;gap:6px;border-bottom:1px solid #ede4d6;padding:6px 0;align-items:start}.item:last-child{border-bottom:0}.itemlabel{font-weight:900;color:#334153;text-align:right;padding-top:4px}.chips{display:flex;flex-wrap:wrap;gap:4px}.chip,.ownerchip{border:1px solid var(--line);background:#fffdf8;border-radius:14px;padding:3px 7px;font-weight:850;font-size:10.5px;cursor:pointer;line-height:1.05}.chip.active.bidder,.chip.bidder:hover{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}.chip.active.client,.chip.client:hover{background:var(--clientSoft);color:var(--client);border-color:var(--client)}.chip.active.property,.chip.property:hover{background:var(--propertySoft);color:var(--property);border-color:var(--property)}.chip.active.unassigned,.chip.unassigned:hover{background:var(--jobSoft);color:var(--job);border-color:#879fb0}.ownerrow{display:flex;gap:3px;margin-top:4px;justify-content:flex-end}.ownerchip{font-size:9.5px;padding:3px 5px}.ownerchip.bidder.active{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}.ownerchip.client.active{background:var(--clientSoft);color:var(--client);border-color:var(--client)}.ownerchip.property.active{background:var(--propertySoft);color:var(--property);border-color:var(--property)}.ownerchip.unassigned.active{background:var(--jobSoft);color:var(--job);border-color:#879fb0}.tuners{display:grid;grid-template-columns:42px 1fr;gap:4px}input,textarea{border:1px solid var(--line);border-radius:7px;background:#fffefb;padding:6px;color:#4c5666;font:inherit;font-size:10.5px;min-width:0}textarea{height:39px;resize:vertical}.tuners.bidder input,.tuners.bidder textarea{border-color:#a6cbb5;background:#fbfffc}.tuners.client input,.tuners.client textarea{border-color:#cdb190;background:#fffaf5}.tuners.property input,.tuners.property textarea{border-color:#bca9db;background:#fdfbff}.tuners.unassigned input,.tuners.unassigned textarea{border-color:#879fb0;background:#f8fbfd}.right{position:sticky;top:128px;height:fit-content;display:flex;flex-direction:column;gap:12px}.selectorread{text-align:center}.selectorread .selected{letter-spacing:4px;color:var(--bidder);font-weight:950}.readline{border-top:1px solid var(--line);margin:9px 0;padding-top:8px}.readlabel{letter-spacing:3px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:10px}.readvalue{font-weight:900;margin-top:3px}.stat{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:6px 0;font-weight:760}.stat strong{color:#26354a}.summary{line-height:1.45;font-size:12px}.summary p{margin:.5em 0}.legend b.bidder{color:var(--bidder)}.legend b.client{color:var(--client)}.legend b.property{color:var(--property)}.legend b.job{color:var(--job)}.savebox{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.savebtn{border:0;border-radius:8px;padding:8px;font-weight:950;color:white}.savebtn.team{background:var(--bidder)}.savebtn.client{background:var(--client)}.savebtn.job{background:var(--property)}.savebtn.total{background:var(--navy)}.causal-list{margin:8px 0 0;padding-left:15px}.causal-list li{margin:4px 0}@media(max-width:950px){.topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.right{position:static}.selectorgrid{grid-template-columns:1fr}.item{grid-template-columns:1fr}.itemlabel{text-align:left}.ownerrow{justify-content:flex-start}}
-</style></head><body><div class="app">
-<header class="topbar"><div><span class="logo">LV</span><span class="brandline">Branding Space</span><div class="brand">LV Job Builder</div></div><div class="modebar"><button class="active" data-mode="Team">Team</button><button data-mode="Client">Client</button><button data-mode="Job">Job</button></div><div class="topstats"><div class="bigwk" id="weeks">11 wk</div><div class="multiline" id="topStats">Labor x1.00 · PM x1.00 · Risk x1.00</div></div></header>
-<section class="subbar"><div><strong>JOB</strong> <span contenteditable>Tenant Retrofit 04</span></div><div><strong>TODAY</strong> <span id="today"></span></div><div><strong>RANGE</strong> <span id="range">Jun 07 – Jul 28</span></div><div><strong>CALENDAR</strong> <span id="calread">Weekly</span></div><div><strong>CONFLICTS</strong> <span id="conflicts">0</span></div><div><strong>SAVE MODE</strong> <span id="saveMode">Team</span></div></section>
-<div class="grid"><main><section class="panel"><div class="schedule-head"><div class="title">Clickable Calendar Gravity</div><div class="calendar-tabs"><button class="active" data-calendar="Weekly">Weekly</button><button data-calendar="Monthly">Monthly</button><button data-calendar="Quarterly">Quarterly</button></div></div><div id="calendar"></div><div class="signalbar" id="signals"></div></section><section class="selectorgrid" id="blocks"></section></main><aside class="right"><section class="panel selectorread"><div class="selected">SELECTED SELECTOR</div><div class="readline"><div class="readlabel">Ownership</div><div class="readvalue" id="selOwner">Bidder</div></div><div class="readline"><div class="readlabel">Choice</div><div class="readvalue" id="selChoice">—</div></div><div class="readline"><div class="readlabel">Drops / Strands</div><div class="readvalue" id="selQty">—</div></div><div class="readline"><div class="readlabel">Modifier / Adjective</div><div class="readvalue" id="selMod">—</div></div></section><section class="panel"><div class="title" style="color:var(--bidder)">Live Stats</div><div class="stat"><span>Labor</span><strong id="labor">x1.00</strong></div><div class="stat"><span>PM</span><strong id="pm">x1.00</strong></div><div class="stat"><span>Risk</span><strong id="risk">x1.00</strong></div><div class="stat"><span>Qty load</span><strong id="qtyLoad">0</strong></div><div class="stat"><span>Unassigned</span><strong id="unassigned">0</strong></div><div class="savebox"><button class="savebtn team" onclick="saveAs('Team')">Save Team</button><button class="savebtn client" onclick="saveAs('Client')">Save Client</button><button class="savebtn job" onclick="saveAs('Job')">Save Job</button><button class="savebtn total" onclick="saveAs('Total')">Save Total</button></div></section><section class="panel summary"><div class="title" style="color:var(--bidder)">Floating Summary</div><p class="legend"><b class="bidder">Bidder</b> = labor/control. <b class="client">Client</b> = carried scope. <b class="property">Property</b> = site conditions. <b class="job">Job</b> = unresolved burden.</p><p id="summaryText"></p><ul class="causal-list" id="causeList"></ul></section></aside></div></div>
+:root{
+  --navy:#15324a; --navy2:#24465f;
+  --paper:#fbf7ef; --field:#fffdf8; --line:#d9ccb7; --soft:#efe7d8;
+  --ink:#253243; --muted:#7b8190;
+  --bidder:#2f8a57; --bidderSoft:#dff2e5;
+  --client:#8a5b32; --clientSoft:#efe1d1;
+  --property:#7757a6; --propertySoft:#e7def6;
+  --job:#15324a; --jobSoft:#dde8ef;
+  --warn:#c88422; --gray:#879fb0;
+  --shadow:0 12px 28px rgba(37,50,67,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#f5f1e8,#eee8dc);
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:12px;
+}
+.app{max-width:1280px;margin:0 auto;padding:0 8px 28px}
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:grid;grid-template-columns:290px 1fr 280px;gap:14px;align-items:center;
+  background:var(--navy);color:white;border:1px solid #0e263b;border-top:0;
+  border-radius:0 0 14px 14px;padding:12px 16px;box-shadow:var(--shadow);
+}
+.logo{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;background:#e9f3e8;color:var(--bidder);font-weight:900;margin-right:8px}
+.brandline{letter-spacing:6px;font-size:10px;color:#c9d8d2;text-transform:uppercase}
+.brand{font-weight:850;font-size:15px;letter-spacing:.4px}
+button,select,input,textarea{font-family:inherit}
+.modebar{text-align:center}
+.modebar button,.resbar button,.smallbtn,.savebtn{
+  border:1px solid var(--line);background:#fffaf0;color:var(--ink);
+  border-radius:18px;padding:5px 11px;font-weight:850;font-size:11px;cursor:pointer;
+}
+.modebar button.active[data-mode="Team"]{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
+.modebar button.active[data-mode="Client"]{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
+.modebar button.active[data-mode="Job"]{background:var(--jobSoft);color:var(--job);border-color:#879fb0}
+.topstats{
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.20);
+  border-radius:10px;padding:8px 10px;text-align:right;
+}
+.bigwk{font-weight:950;font-size:14px}.multiline{font-size:11px;color:#d5dee8;margin-top:2px}
+.subbar{
+  position:sticky;top:64px;z-index:39;
+  display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr 1fr 1.35fr;gap:10px;
+  margin:8px 0 12px 0;padding:9px 14px;background:#fff8ec;
+  border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 18px rgba(37,50,67,.06);
+  color:#4b5566;font-weight:760;
+}
+.subbar strong{color:var(--ink)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:14px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 8px 22px rgba(37,50,67,.07)}
+.title{letter-spacing:4px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:10px;margin-bottom:10px}
+.matrix-head{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-bottom:10px}
+.resbar button.active{background:#e8f4eb;color:var(--bidder);border-color:#a6cbb5}
+select{
+  border:1px solid var(--line);border-radius:10px;background:#fffdf8;color:var(--ink);
+  padding:6px 9px;font-size:11px;font-weight:800;
+}
+.month-mini{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:3px;
+  margin-bottom:10px;padding:8px;background:#fffdf8;border:1px solid var(--line);border-radius:12px;
+}
+.month-mini .dow{font-size:9px;color:#89909a;text-align:center;font-weight:900}
+.day{
+  height:22px;border-radius:7px;border:1px solid #e3d8c8;background:#f8f1e4;
+  display:grid;place-items:center;font-size:10px;font-weight:800;cursor:pointer;color:#5d6674;
+}
+.day.blank{opacity:.25;cursor:default}
+.day.today{border-color:var(--bidder);color:var(--bidder)}
+.day.selected{background:var(--navy);color:white;border-color:var(--navy)}
+.matrix{
+  display:grid;
+  grid-template-columns:108px repeat(var(--cols),1fr);
+  gap:4px;
+}
+.mh,.rowlabel,.mcell{
+  min-height:28px;border:1px solid var(--line);border-radius:8px;background:#fffdf8;
+}
+.mh{
+  display:grid;place-items:center;font-size:10px;font-weight:950;color:#707988;
+  background:#f4ecdd;
+}
+.rowlabel{
+  display:flex;align-items:center;justify-content:flex-end;text-align:right;
+  padding:5px 8px;font-weight:950;color:#334153;background:#fff9ee;
+}
+.mcell{
+  cursor:pointer;position:relative;overflow:hidden;transition:.12s ease;
+  display:grid;place-items:center;color:#fff;font-weight:950;font-size:9px;
+}
+.mcell:hover{transform:translateY(-1px);box-shadow:0 5px 12px rgba(37,50,67,.12)}
+.mcell.bidder{background:var(--bidder);border-color:var(--bidder)}
+.mcell.client{background:var(--client);border-color:var(--client)}
+.mcell.property{background:var(--property);border-color:var(--property)}
+.mcell.unassigned{background:#dfe7ed;color:var(--job);border-color:#a2b2bd}
+.mcell.conflict{outline:2px solid rgba(200,132,34,.65)}
+.mcell.empty{background:#fffdf8;color:transparent}
+.matrix-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.tag{border:1px solid var(--line);border-radius:13px;background:#fffdf8;padding:4px 8px;font-size:10px;font-weight:850;color:#596273}
+.tag.bidder{color:var(--bidder);border-color:#a6cbb5;background:#fbfffc}
+.tag.client{color:var(--client);border-color:#cdb190;background:#fffaf5}
+.tag.property{color:var(--property);border-color:#bca9db;background:#fdfbff}
+.tag.warn{color:var(--warn);border-color:#d6ae72;background:#fff4df}
+.selectorgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.block{border-left:5px solid var(--bidder)}
+.block.clientline{border-left-color:var(--client)}.block.propertyline{border-left-color:var(--property)}.block.focus{outline:3px solid rgba(200,132,34,.35)}
+.block.dim{opacity:.55}
+.blockhead{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:6px}
+.blocktitle{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#8a8f99;font-weight:950}
+.section-actions{display:flex;gap:5px}.smallbtn{font-size:10px;padding:4px 8px}
+.item{
+  display:grid;grid-template-columns:122px minmax(136px,1fr) 150px;gap:6px;
+  border-bottom:1px solid #ede4d6;padding:6px 0;align-items:start;
+}
+.item:last-child{border-bottom:0}
+.itemlabel{font-weight:900;color:#334153;text-align:right;padding-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip,.ownerchip{
+  border:1px solid var(--line);background:#fffdf8;border-radius:14px;padding:3px 7px;
+  font-weight:850;font-size:10.5px;cursor:pointer;line-height:1.05;
+}
+.chip.active.bidder,.chip.bidder:hover{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
+.chip.active.client,.chip.client:hover{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
+.chip.active.property,.chip.property:hover{background:var(--propertySoft);color:var(--property);border-color:var(--property)}
+.chip.active.unassigned,.chip.unassigned:hover{background:var(--jobSoft);color:var(--job);border-color:#879fb0}
+.ownerrow{display:flex;gap:3px;margin-top:4px;justify-content:flex-end}
+.ownerchip{font-size:9.5px;padding:3px 5px}
+.ownerchip.bidder.active{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
+.ownerchip.client.active{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
+.ownerchip.property.active{background:var(--propertySoft);color:var(--property);border-color:var(--property)}
+.tuners{display:grid;grid-template-columns:42px 1fr;gap:4px}
+input,textarea{
+  border:1px solid var(--line);border-radius:7px;background:#fffefb;
+  padding:6px;color:#4c5666;font:inherit;font-size:10.5px;min-width:0;
+}
+textarea{height:39px;resize:vertical}
+.tuners.bidder input,.tuners.bidder textarea{border-color:#a6cbb5;background:#fbfffc}
+.tuners.client input,.tuners.client textarea{border-color:#cdb190;background:#fffaf5}
+.tuners.property input,.tuners.property textarea{border-color:#bca9db;background:#fdfbff}
+.right{position:sticky;top:128px;height:fit-content;display:flex;flex-direction:column;gap:12px}
+.selectorread{text-align:center}
+.selectorread .selected{letter-spacing:4px;color:var(--bidder);font-weight:950}
+.readline{border-top:1px solid var(--line);margin:9px 0;padding-top:8px}
+.readlabel{letter-spacing:3px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:10px}
+.readvalue{font-weight:900;margin-top:3px}
+.stat{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:6px 0;font-weight:760}
+.stat strong{color:#26354a}
+.summary{line-height:1.45;font-size:12px}.summary p{margin:.5em 0}
+.legend b.bidder{color:var(--bidder)}.legend b.client{color:var(--client)}.legend b.property{color:var(--property)}.legend b.job{color:var(--job)}
+.savebox{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.savebtn{border:0;border-radius:8px;padding:8px;font-weight:950;color:white}
+.savebtn.team{background:var(--bidder)}.savebtn.client{background:var(--client)}.savebtn.job{background:var(--property)}.savebtn.total{background:var(--navy)}
+.causal-list{margin:8px 0 0;padding-left:15px}.causal-list li{margin:4px 0}
+@media(max-width:980px){
+  .topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.right{position:static}.selectorgrid{grid-template-columns:1fr}
+  .item{grid-template-columns:1fr}.itemlabel{text-align:left}.ownerrow{justify-content:flex-start}
+  .matrix{grid-template-columns:84px repeat(var(--cols),minmax(34px,1fr))}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div><span class="logo">LV</span><span class="brandline">Branding Space</span><div class="brand">LV Job Builder</div></div>
+  <div class="modebar">
+    <button class="active" data-mode="Team">Team</button>
+    <button data-mode="Client">Client</button>
+    <button data-mode="Job">Job</button>
+  </div>
+  <div class="topstats"><div class="bigwk" id="timeRead">Daily</div><div class="multiline" id="topStats">Labor x1.00 · PM x1.00 · Risk x1.00</div></div>
+</header>
+
+<section class="subbar">
+  <div><strong>JOB</strong> <span contenteditable>Tenant Retrofit 04</span></div>
+  <div><strong>TODAY</strong> <span id="today"></span></div>
+  <div><strong>RANGE</strong> <span id="range">Current month</span></div>
+  <div><strong>RESOLUTION</strong> <span id="resRead">Daily</span></div>
+  <div><strong>CONFLICTS</strong> <span id="conflicts">0</span></div>
+  <div><strong>SAVE MODE</strong> <span id="saveMode">Team</span></div>
+</section>
+
+<div class="grid">
+<main>
+<section class="panel">
+  <div class="matrix-head">
+    <div class="title">Operational Scheduling Matrix</div>
+    <div class="resbar">
+      <button class="active" data-res="Daily">Daily</button>
+      <button data-res="Monthly">Monthly</button>
+      <button data-res="Quarterly">Quarterly</button>
+    </div>
+    <select id="periodSelect"></select>
+  </div>
+  <div id="miniCalendar"></div>
+  <div id="matrix"></div>
+  <div class="matrix-legend" id="matrixSignals"></div>
+</section>
+
+<section class="selectorgrid" id="blocks"></section>
+</main>
+
+<aside class="right">
+  <section class="panel selectorread">
+    <div class="selected">SELECTED SELECTOR</div>
+    <div class="readline"><div class="readlabel">Ownership</div><div class="readvalue" id="selOwner">Bidder</div></div>
+    <div class="readline"><div class="readlabel">Choice</div><div class="readvalue" id="selChoice">—</div></div>
+    <div class="readline"><div class="readlabel">Drops / Strands</div><div class="readvalue" id="selQty">—</div></div>
+    <div class="readline"><div class="readlabel">Modifier / Adjective</div><div class="readvalue" id="selMod">—</div></div>
+  </section>
+
+  <section class="panel">
+    <div class="title" style="color:var(--bidder)">Live Stats</div>
+    <div class="stat"><span>Labor</span><strong id="labor">x1.00</strong></div>
+    <div class="stat"><span>PM</span><strong id="pm">x1.00</strong></div>
+    <div class="stat"><span>Risk</span><strong id="risk">x1.00</strong></div>
+    <div class="stat"><span>Qty load</span><strong id="qtyLoad">0</strong></div>
+    <div class="stat"><span>Unassigned</span><strong id="unassigned">0</strong></div>
+    <div class="savebox">
+      <button class="savebtn team" onclick="saveAs('Team')">Save Team</button>
+      <button class="savebtn client" onclick="saveAs('Client')">Save Client</button>
+      <button class="savebtn job" onclick="saveAs('Job')">Save Job</button>
+      <button class="savebtn total" onclick="saveAs('Total')">Save Total</button>
+    </div>
+  </section>
+
+  <section class="panel summary">
+    <div class="title" style="color:var(--bidder)">Floating Summary</div>
+    <p class="legend"><b class="bidder">Bidder</b> = labor/control. <b class="client">Client</b> = carried scope. <b class="property">Property</b> = site conditions. <b class="job">Job</b> = unresolved burden.</p>
+    <p id="summaryText"></p>
+    <ul class="causal-list" id="causeList"></ul>
+  </section>
+</aside>
+</div>
+</div>
+
 <script>
-const phaseData=[{name:'Survey',owner:'bidder',active:[9,10],links:['Site Reality'],signals:['site truth']},{name:'Procure',owner:'client',active:[1,2,3,4],links:['Responsibility Split'],signals:['approval path','client supplied material']},{name:'Rough',owner:'bidder',active:[4,5,6],links:['Scope Modules','Site Reality'],signals:['crew production','pathway']},{name:'Backbone',owner:'property',active:[5,6,7],links:['Scope Modules'],signals:['riser/property friction']},{name:'Devices',owner:'bidder',active:[9,10,11],links:['Scope Modules'],signals:['endpoint load']},{name:'Term',owner:'bidder',active:[11,12],links:['Proof & Closeout'],signals:['termination density']},{name:'Test',owner:'bidder',active:[12,13],links:['Proof & Closeout'],signals:['testing pressure']},{name:'Close',owner:'client',active:[13],links:['Proof & Closeout'],signals:['turnover approval']}];
-const blockData=[{title:'Site Reality',line:'propertyline',lens:['Team','Client','Job'],subjects:[{label:'Occupancy',opts:['Unoccupied','Occupied','Healthcare','Secure'],owner:'property',qty:'3',note:'escort, infection control, tenant hours',weight:{labor:.08,pm:.08,risk:.10},uncommon:['Healthcare','Secure']},{label:'Ceiling',opts:['Open','Drop tile','Hard lid','Mixed'],owner:'property',qty:'%',note:'height, grid condition, access',weight:{labor:.07,pm:.02,risk:.04},uncommon:['Hard lid','Mixed']},{label:'Access',opts:['Clear','Shared trades','Limited','After-hours'],owner:'client',qty:'w',note:'night work, parking, dock',weight:{labor:.05,pm:.09,risk:.08},uncommon:['Limited','After-hours']},{label:'Pathway',opts:['Usable','Partial','Congested','Client-provided'],owner:'client',qty:'u',note:'tray, sleeves, cores, congestion',weight:{labor:.09,pm:.07,risk:.12},uncommon:['Congested','Client-provided']}]},{title:'Scope Modules',line:'',lens:['Team','Job'],subjects:[{label:'Cabling',opts:['Cat6','Cat6A','Fiber','OSP'],owner:'bidder',qty:'drops',note:'cable type, color, pathway class',weight:{labor:.08,pm:.02,risk:.03},uncommon:['Fiber','OSP']},{label:'Endpoints',opts:['Drops','WAPs','Cameras','Access Control','AV/Paging'],owner:'bidder',qty:'devices',note:'mounting height, PoE, exterior',weight:{labor:.07,pm:.03,risk:.04},uncommon:['Cameras','Access Control','AV/Paging']},{label:'Closets',opts:['MDF','MDF + IDF','New rack','Migration'],owner:'property',qty:'room',note:'power, grounding, cooling, cleanup',weight:{labor:.04,pm:.06,risk:.08},uncommon:['Migration','New rack']},{label:'Testing',opts:['Continuity','Certification','OLTS','OTDR'],owner:'bidder',qty:'cert',note:'tester level, reports, traces',weight:{labor:.05,pm:.04,risk:.03},uncommon:['OLTS','OTDR']}]},{title:'Responsibility Split',line:'clientline',lens:['Client','Job'],subjects:[{label:'Pathway Owner',opts:['Contractor','Client','GC','EC','Shared','Unassigned'],owner:'client',qty:'%',note:'assumptions, exclusions, dependencies',weight:{labor:.01,pm:.10,risk:.12},uncommon:['Shared','Unassigned']},{label:'Cable Owner',opts:['Contractor','Client Provided','Mixed','Unassigned'],owner:'client',qty:'%',note:'material standards, warranty boundary',weight:{labor:.02,pm:.07,risk:.09},uncommon:['Client Provided','Mixed','Unassigned']},{label:'Closet Prep',opts:['Ready','Needs Power','Needs Ground','Needs Cooling','Unassigned'],owner:'property',qty:'rooms',note:'client/EC prerequisites',weight:{labor:.01,pm:.08,risk:.10},uncommon:['Needs Power','Needs Ground','Needs Cooling','Unassigned']},{label:'Permits / Access',opts:['None','Badge','Escort','Permit','Unassigned'],owner:'client',qty:'count',note:'lead time, approval path',weight:{labor:.02,pm:.09,risk:.09},uncommon:['Escort','Permit','Unassigned']}]},{title:'Proof & Closeout',line:'',lens:['Team','Client','Job'],subjects:[{label:'Documentation',opts:['Labels','Photos','Redlines','As-builts'],owner:'bidder',qty:'deliver',note:'photo sets, labels, redline standard',weight:{labor:.03,pm:.07,risk:.02},uncommon:['As-builts']},{label:'Meetings',opts:['None','Weekly','Twice Weekly','Daily'],owner:'client',qty:'h',note:'OAC, coordination, minutes',weight:{labor:.01,pm:.12,risk:.03},uncommon:['Twice Weekly','Daily']},{label:'Punch Style',opts:['Single Pass','Phased','Owner Witness','High Rigor'],owner:'client',qty:'p',note:'witnessing, retest, turnover',weight:{labor:.04,pm:.08,risk:.06},uncommon:['Phased','Owner Witness','High Rigor']},{label:'Warranty Pack',opts:['Basic','Reports','Full Binder','Turnover'],owner:'bidder',qty:'c',note:'binder, test reports, closeout',weight:{labor:.03,pm:.04,risk:.02},uncommon:['Full Binder','Turnover']}]}];
-let mode='Team',calendar='Weekly';let selected={owner:'Bidder',choice:'—',qty:'—',mod:'—'};let selectedItems=new Map();let saved={Team:[],Client:[],Job:[],Total:[]};const byId=id=>document.getElementById(id);const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-function renderCalendar(){const el=byId('calendar');el.innerHTML='';const cols=calendar==='Weekly'?14:calendar==='Monthly'?12:8;const head=document.createElement('div');head.className='calendar-wrap';head.innerHTML='<div></div><div class="dayhead" style="grid-template-columns:repeat('+cols+',1fr)">'+Array.from({length:cols},(_,i)=>'<span>'+(calendar==='Weekly'?'D'+(i+1):calendar==='Monthly'?'W'+(i+1):'M'+(i+1))+'</span>').join('')+'</div>';el.appendChild(head);phaseData.forEach(p=>{const row=document.createElement('div');row.className='calrow';const label=document.createElement('div');label.className='phase';label.textContent=p.name;label.onclick=()=>phaseClick(p);const cells=document.createElement('div');cells.className='cells';cells.style.gridTemplateColumns='repeat('+cols+',1fr)';for(let i=0;i<cols;i++){const c=document.createElement('button');c.className='cell';const n=Math.floor(i*(14/cols));if(p.active.includes(n))c.classList.add('on',p.owner);c.onclick=()=>toggleCell(p,n);cells.appendChild(c)}row.append(label,cells);el.appendChild(row)});computeStats()}
-function toggleCell(p,i){p.active=p.active.includes(i)?p.active.filter(x=>x!==i):[...p.active,i].sort((a,b)=>a-b);p.links.forEach(focusBlock);selected={owner:cap(p.owner),choice:p.name+' calendar window',qty:p.active.length,mod:p.signals.join(', ')};renderCalendar();updateReadout()}
-function phaseClick(p){document.querySelectorAll('.block').forEach(b=>b.classList.remove('focus'));p.links.forEach(focusBlock);selected={owner:cap(p.owner),choice:p.name+' phase',qty:p.active.length,mod:p.signals.join(', ')};updateReadout()}
-function focusBlock(title){const b=[...document.querySelectorAll('.block')].find(x=>x.dataset.title===title);if(b)b.classList.add('focus')}
-function renderBlocks(){const wrap=byId('blocks');wrap.innerHTML='';blockData.forEach(block=>{const card=document.createElement('section');card.className='panel block '+block.line;card.dataset.title=block.title;if(!block.lens.includes(mode))card.classList.add('dim');card.innerHTML='<div class="blockhead"><div class="blocktitle">'+block.title+'</div><div class="section-actions"><button class="smallbtn common">Common all</button><button class="smallbtn clear">Clear</button></div></div>';block.subjects.forEach(sub=>{const item=document.createElement('div');item.className='item';const chips=sub.opts.map(o=>{const id=block.title+'|'+sub.label+'|'+o;const owner=o==='Unassigned'?'unassigned':sub.owner;return '<button class="chip '+owner+' '+(selectedItems.has(id)?'active':'')+'" data-id="'+id+'" data-owner="'+owner+'" data-choice="'+o+'">'+o+'</button>'}).join('');item.innerHTML='<div class="itemlabel">'+sub.label+'<div class="ownerrow"><button class="ownerchip bidder '+(sub.owner==='bidder'?'active':'')+'">Bidder</button><button class="ownerchip client '+(sub.owner==='client'?'active':'')+'">Client</button><button class="ownerchip property '+(sub.owner==='property'?'active':'')+'">Property</button><button class="ownerchip unassigned">?</button></div></div><div class="chips">'+chips+'</div><div class="tuners '+sub.owner+'"><input value="'+sub.qty+'"><textarea>'+sub.note+'</textarea></div>';item.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{const id=ch.dataset.id;if(selectedItems.has(id)){selectedItems.delete(id);ch.classList.remove('active')}else{selectedItems.set(id,{block:block.title,label:sub.label,choice:ch.dataset.choice,owner:ch.dataset.owner,weight:sub.weight,qty:item.querySelector('input').value,note:item.querySelector('textarea').value,uncommon:sub.uncommon.includes(ch.dataset.choice)});ch.classList.add('active')}selected={owner:cap(ch.dataset.owner),choice:ch.dataset.choice,qty:item.querySelector('input').value,mod:item.querySelector('textarea').value};computeStats();updateReadout()});item.querySelectorAll('.ownerchip').forEach(oc=>oc.onclick=()=>{item.querySelectorAll('.ownerchip').forEach(x=>x.classList.remove('active'));oc.classList.add('active');const owner=[...oc.classList].find(c=>['bidder','client','property','unassigned'].includes(c));item.querySelector('.tuners').className='tuners '+owner;selected={owner:cap(owner),choice:sub.label+' ownership',qty:item.querySelector('input').value,mod:'ownership lens changed'};updateReadout()});card.appendChild(item)});card.querySelector('.common').onclick=()=>selectCommon(block);card.querySelector('.clear').onclick=()=>clearBlock(block.title);wrap.appendChild(card)})}
-function selectCommon(block){block.subjects.forEach(sub=>sub.opts.filter(o=>!sub.uncommon.includes(o)&&o!=='Unassigned').forEach(o=>{const id=block.title+'|'+sub.label+'|'+o;selectedItems.set(id,{block:block.title,label:sub.label,choice:o,owner:sub.owner,weight:sub.weight,qty:sub.qty,note:sub.note,uncommon:false})}));renderBlocks();computeStats();updateReadout()}
-function clearBlock(title){[...selectedItems.keys()].filter(k=>k.startsWith(title+'|')).forEach(k=>selectedItems.delete(k));renderBlocks();computeStats();updateReadout()}
-function computeConflicts(){let hits={};phaseData.forEach(p=>p.active.forEach(d=>hits[d]=(hits[d]||0)+1));return Object.values(hits).filter(v=>v>1).length}
-function computeStats(){let labor=1,pm=1,risk=1,qty=0,unassigned=0,causes=[];selectedItems.forEach(it=>{labor+=it.weight.labor;pm+=it.weight.pm;risk+=it.weight.risk;qty++;if(it.owner==='client'){pm+=.02;risk+=.02}if(it.owner==='property'){labor+=.02;risk+=.03}if(it.owner==='unassigned'||it.choice==='Unassigned'){unassigned++;risk+=.18;pm+=.08;causes.push(it.label+' is unassigned: probable change-order exposure.')}if(it.uncommon)causes.push(it.choice+' adds extra '+it.owner+' burden.')});const conflicts=computeConflicts();risk+=conflicts*.03;pm+=conflicts*.02;if(calendar==='Weekly'){labor+=.03;causes.push('Weekly view emphasizes crew/access compression.')}if(calendar==='Monthly'){pm+=.04;causes.push('Monthly view emphasizes procurement and coordination cadence.')}if(calendar==='Quarterly'){risk+=.05;causes.push('Quarterly view emphasizes long-lead and turnover risk.')}byId('labor').textContent='x'+labor.toFixed(2);byId('pm').textContent='x'+pm.toFixed(2);byId('risk').textContent='x'+risk.toFixed(2);byId('qtyLoad').textContent=qty;byId('unassigned').textContent=unassigned;byId('conflicts').textContent=conflicts;byId('topStats').textContent='Labor x'+labor.toFixed(2)+' · PM x'+pm.toFixed(2)+' · Risk x'+risk.toFixed(2);byId('signals').innerHTML=(conflicts?'<span class="signal warn">'+conflicts+' schedule conflict windows</span>':'')+(unassigned?'<span class="signal danger">'+unassigned+' unresolved ownership items</span>':'')+'<span class="signal">'+mode+' lens active</span><span class="signal">'+calendar+' horizon</span>';writeSummary(labor,pm,risk,qty,unassigned,causes)}
-function writeSummary(labor,pm,risk,qty,unassigned,causes){let lead=mode==='Team'?'Team mode shows install burden: crew production, testing pressure, and controllable labor.':mode==='Client'?'Client mode shows carried scope: approvals, exclusions, dependencies, and documentation burden.':'Job mode exposes total operational truth, including unassigned scope and change-order risk.';lead+=qty===0?' Select common items or click chips to build the causal graph.':' Current field has '+qty+' active selectors.';if(unassigned>0)lead+=' '+unassigned+' item(s) remain unassigned.';byId('summaryText').textContent=lead;byId('causeList').innerHTML=causes.slice(0,5).map(c=>'<li>'+c+'</li>').join('')}
-function updateReadout(){byId('selOwner').textContent=selected.owner;byId('selChoice').textContent=selected.choice;byId('selQty').textContent=selected.qty;byId('selMod').textContent=selected.mod}
-function saveAs(m){saved[m].push({at:new Date().toISOString(),items:[...selectedItems.values()],mode,calendar});byId('saveMode').textContent=m;selected={choice:'Saved '+m+' perspective',owner:m==='Team'?'Bidder':m==='Client'?'Client':m==='Job'?'Property':'Job',qty:[...selectedItems].length,mod:'right rail now tracks saved perspective'};updateReadout()}
-document.querySelectorAll('.modebar button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.modebar button').forEach(x=>x.classList.remove('active'));b.classList.add('active');byId('saveMode').textContent=mode;renderBlocks();computeStats()});document.querySelectorAll('.calendar-tabs button').forEach(b=>b.onclick=()=>{calendar=b.dataset.calendar;document.querySelectorAll('.calendar-tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');byId('calread').textContent=calendar;renderCalendar();computeStats()});byId('today').textContent=new Date().toLocaleDateString(undefined,{month:'short',day:'2-digit',year:'numeric'});renderCalendar();renderBlocks();computeStats();updateReadout();
-</script></body></html>
+const now=new Date();
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dows=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+let mode='Team', resolution='Daily', selectedDay=now.getDate(), selectedMonth=now.getMonth(), selected={owner:'Bidder',choice:'—',qty:'—',mod:'—'};
+let selectedItems=new Map();
+let matrixMarks={};
+
+const rowsByResolution={
+  Daily:['OSP','MDF','IDF','Rough-in','Terminating','Installing','Activating','Testing'],
+  Monthly:['Survey','Procurement','Rough','Backbone','Devices','Termination','Testing','Closeout'],
+  Quarterly:['Capital pacing','Lease turnover','Region staging','Long-lead procurement','Multi-site deployment','Infrastructure upgrades','Documentation strategy','Turnover risk']
+};
+const columnsByResolution={
+  Daily:dows,
+  Monthly:months,
+  Quarterly:['Q1','Q2','Q3','Q4']
+};
+const rowLinks={
+  OSP:['Scope Modules','Site Reality'], MDF:['Scope Modules'], IDF:['Scope Modules'], 'Rough-in':['Site Reality','Scope Modules'], Terminating:['Scope Modules','Proof & Closeout'], Installing:['Scope Modules'], Activating:['Proof & Closeout'], Testing:['Proof & Closeout'],
+  Survey:['Site Reality'], Procurement:['Responsibility Split'], Rough:['Scope Modules','Site Reality'], Backbone:['Scope Modules'], Devices:['Scope Modules'], Termination:['Proof & Closeout'], Closeout:['Proof & Closeout'],
+  'Capital pacing':['Responsibility Split'], 'Lease turnover':['Proof & Closeout'], 'Region staging':['Responsibility Split'], 'Long-lead procurement':['Responsibility Split','Scope Modules'], 'Multi-site deployment':['Site Reality','Responsibility Split'], 'Infrastructure upgrades':['Scope Modules'], 'Documentation strategy':['Proof & Closeout'], 'Turnover risk':['Proof & Closeout']
+};
+const ownerCycle=['empty','bidder','client','property','unassigned'];
+const blockData=[
+ {title:'Site Reality', line:'propertyline', lens:['Team','Client','Job'], subjects:[
+  {label:'Occupancy', opts:['Unoccupied','Occupied','Healthcare','Secure'], owner:'property', qty:'3', note:'escort, infection control, tenant hours', weight:{labor:.08,pm:.08,risk:.10}, uncommon:['Healthcare','Secure']},
+  {label:'Ceiling', opts:['Open','Drop tile','Hard lid','Mixed'], owner:'property', qty:'%', note:'height, grid condition, access', weight:{labor:.07,pm:.02,risk:.04}, uncommon:['Hard lid','Mixed']},
+  {label:'Access', opts:['Clear','Shared trades','Limited','After-hours'], owner:'client', qty:'w', note:'night work, parking, dock', weight:{labor:.05,pm:.09,risk:.08}, uncommon:['Limited','After-hours']},
+  {label:'Pathway', opts:['Usable','Partial','Congested','Client-provided'], owner:'client', qty:'u', note:'tray, sleeves, cores, congestion', weight:{labor:.09,pm:.07,risk:.12}, uncommon:['Congested','Client-provided']}
+ ]},
+ {title:'Scope Modules', line:'', lens:['Team','Job'], subjects:[
+  {label:'Cabling', opts:['Cat6','Cat6A','Fiber','OSP'], owner:'bidder', qty:'drops', note:'cable type, color, pathway class', weight:{labor:.08,pm:.02,risk:.03}, uncommon:['Fiber','OSP']},
+  {label:'Endpoints', opts:['Drops','WAPs','Cameras','Access Control','AV/Paging'], owner:'bidder', qty:'devices', note:'mounting height, PoE, exterior', weight:{labor:.07,pm:.03,risk:.04}, uncommon:['Cameras','Access Control','AV/Paging']},
+  {label:'Closets', opts:['MDF','MDF + IDF','New rack','Migration'], owner:'property', qty:'room', note:'power, grounding, cooling, cleanup', weight:{labor:.04,pm:.06,risk:.08}, uncommon:['Migration','New rack']},
+  {label:'Testing', opts:['Continuity','Certification','OLTS','OTDR'], owner:'bidder', qty:'cert', note:'tester level, reports, traces', weight:{labor:.05,pm:.04,risk:.03}, uncommon:['OLTS','OTDR']}
+ ]},
+ {title:'Responsibility Split', line:'clientline', lens:['Client','Job'], subjects:[
+  {label:'Pathway Owner', opts:['Contractor','Client','GC','EC','Shared','Unassigned'], owner:'client', qty:'%', note:'assumptions, exclusions, dependencies', weight:{labor:.01,pm:.10,risk:.12}, uncommon:['Shared','Unassigned']},
+  {label:'Cable Owner', opts:['Contractor','Client Provided','Mixed','Unassigned'], owner:'client', qty:'%', note:'material standards, warranty boundary', weight:{labor:.02,pm:.07,risk:.09}, uncommon:['Client Provided','Mixed','Unassigned']},
+  {label:'Closet Prep', opts:['Ready','Needs Power','Needs Ground','Needs Cooling','Unassigned'], owner:'property', qty:'rooms', note:'client/EC prerequisites', weight:{labor:.01,pm:.08,risk:.10}, uncommon:['Needs Power','Needs Ground','Needs Cooling','Unassigned']},
+  {label:'Permits / Access', opts:['None','Badge','Escort','Permit','Unassigned'], owner:'client', qty:'count', note:'lead time, approval path', weight:{labor:.02,pm:.09,risk:.09}, uncommon:['Escort','Permit','Unassigned']}
+ ]},
+ {title:'Proof & Closeout', line:'', lens:['Team','Client','Job'], subjects:[
+  {label:'Documentation', opts:['Labels','Photos','Redlines','As-builts'], owner:'bidder', qty:'deliver', note:'photo sets, labels, redline standard', weight:{labor:.03,pm:.07,risk:.02}, uncommon:['As-builts']},
+  {label:'Meetings', opts:['None','Weekly','Twice Weekly','Daily'], owner:'client', qty:'h', note:'OAC, coordination, minutes', weight:{labor:.01,pm:.12,risk:.03}, uncommon:['Twice Weekly','Daily']},
+  {label:'Punch Style', opts:['Single Pass','Phased','Owner Witness','High Rigor'], owner:'client', qty:'p', note:'witnessing, retest, turnover', weight:{labor:.04,pm:.08,risk:.06}, uncommon:['Phased','Owner Witness','High Rigor']},
+  {label:'Warranty Pack', opts:['Basic','Reports','Full Binder','Turnover'], owner:'bidder', qty:'c', note:'binder, test reports, closeout', weight:{labor:.03,pm:.04,risk:.02}, uncommon:['Full Binder','Turnover']}
+ ]}
+];
+
+function byId(id){return document.getElementById(id)}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function matrixKey(row,col){return resolution+'|'+selectedMonth+'|'+row+'|'+col}
+
+function setupPeriodSelect(){
+ const sel=byId('periodSelect'); sel.innerHTML='';
+ if(resolution==='Daily'){
+  months.forEach((m,i)=>sel.add(new Option(m+' '+now.getFullYear(), i)));
+  sel.value=selectedMonth;
+ } else if(resolution==='Monthly') {
+  months.forEach((m,i)=>sel.add(new Option(m+' focus', i)));
+  sel.value=selectedMonth;
+ } else {
+  ['Current year','Next year','Two-year view'].forEach((q,i)=>sel.add(new Option(q,i)));
+ }
+ sel.onchange=()=>{selectedMonth=Number(sel.value)||0; selectedDay=1; renderAll();}
+}
+function renderMiniCalendar(){
+ const mini=byId('miniCalendar'); mini.innerHTML='';
+ if(resolution!=='Daily'){ mini.style.display='none'; return; }
+ mini.style.display='grid'; mini.className='month-mini';
+ dows.forEach(d=>{let e=document.createElement('div');e.className='dow';e.textContent=d;mini.appendChild(e)});
+ const y=now.getFullYear(), m=selectedMonth;
+ const first=(new Date(y,m,1).getDay()+6)%7;
+ const days=new Date(y,m+1,0).getDate();
+ for(let i=0;i<first;i++){let b=document.createElement('button');b.className='day blank';mini.appendChild(b)}
+ for(let d=1;d<=days;d++){
+  let b=document.createElement('button');b.className='day';b.textContent=d;
+  if(m===now.getMonth() && d===now.getDate()) b.classList.add('today');
+  if(d===selectedDay) b.classList.add('selected');
+  b.onclick=()=>{selectedDay=d; selected.choice='Day '+d+' selected'; selected.owner='Job'; selected.qty=dows[(new Date(y,m,d).getDay()+6)%7]; selected.mod='calendar day highlight'; updateReadout(); renderAll();}
+  mini.appendChild(b);
+ }
+}
+function renderMatrix(){
+ const matrix=byId('matrix'); const rows=rowsByResolution[resolution], cols=columnsByResolution[resolution];
+ matrix.style.setProperty('--cols', cols.length);
+ matrix.innerHTML=`<div></div>` + cols.map(c=>`<div class="mh">${c}</div>`).join('');
+ rows.forEach(row=>{
+  const rl=document.createElement('div'); rl.className='rowlabel'; rl.textContent=row; rl.onclick=()=>activateRow(row); matrix.appendChild(rl);
+  cols.forEach((col,idx)=>{
+    const cell=document.createElement('button'); cell.className='mcell empty';
+    const key=matrixKey(row,col);
+    let mark=matrixMarks[key] || inferMark(row,col,idx);
+    if(mark && mark!=='empty') {cell.classList.remove('empty'); cell.classList.add(mark); cell.textContent=mark==='unassigned'?'?':'●';}
+    if(isConflict(row,col,idx,mark)) cell.classList.add('conflict');
+    cell.onclick=()=>cycleCell(row,col,cell);
+    matrix.appendChild(cell);
+  });
+ });
+}
+function inferMark(row,col,idx){
+ if(resolution==='Daily'){
+  const dowIndex=(new Date(now.getFullYear(),selectedMonth,selectedDay).getDay()+6)%7;
+  if(idx===dowIndex && ['Rough-in','Installing','Testing'].includes(row)) return row==='Testing'?'bidder':row==='Installing'?'bidder':'property';
+  if(idx===dowIndex+1 && row==='Activating') return 'client';
+ }
+ if(resolution==='Monthly'){
+  if(['Procurement','Closeout'].includes(row) && idx===selectedMonth) return 'client';
+  if(['Rough','Devices','Testing'].includes(row) && idx===selectedMonth) return 'bidder';
+ }
+ if(resolution==='Quarterly'){
+  if(['Long-lead procurement','Lease turnover','Turnover risk'].includes(row) && idx===1) return 'client';
+  if(['Infrastructure upgrades','Multi-site deployment'].includes(row) && idx===1) return 'property';
+ }
+ return 'empty';
+}
+function isConflict(row,col,idx,mark){
+ if(mark==='empty') return false;
+ if(resolution==='Daily') return ['Testing','Activating'].includes(row) && columnsByResolution.Daily[idx]===dows[(new Date(now.getFullYear(),selectedMonth,selectedDay).getDay()+6)%7];
+ if(resolution==='Monthly') return row==='Testing' && idx===selectedMonth;
+ if(resolution==='Quarterly') return ['Turnover risk','Long-lead procurement'].includes(row) && idx===1;
+}
+function cycleCell(row,col,cell){
+ const key=matrixKey(row,col); let cur=matrixMarks[key] || 'empty';
+ let next=ownerCycle[(ownerCycle.indexOf(cur)+1)%ownerCycle.length];
+ matrixMarks[key]=next;
+ selected.owner=next==='empty'?'None':cap(next);
+ selected.choice=row+' / '+col;
+ selected.qty=resolution;
+ selected.mod=next==='empty'?'cleared':next+' ownership schedule cell';
+ activateRow(row);
+ renderAll(false);
+}
+function activateRow(row){
+ document.querySelectorAll('.block').forEach(b=>b.classList.remove('focus'));
+ (rowLinks[row]||[]).forEach(title=>{
+  const b=[...document.querySelectorAll('.block')].find(x=>x.dataset.title===title);
+  if(b) b.classList.add('focus');
+ });
+ selected.choice=row+' row opened';
+ selected.mod=(rowLinks[row]||[]).join(', ') || 'no linked lower tuners';
+ updateReadout();
+}
+function renderBlocks(){
+ const wrap=byId('blocks'); wrap.innerHTML='';
+ blockData.forEach(block=>{
+  const card=document.createElement('section'); card.className='panel block '+block.line; card.dataset.title=block.title;
+  if(!block.lens.includes(mode)) card.classList.add('dim');
+  card.innerHTML=`<div class="blockhead"><div class="blocktitle">${block.title}</div><div class="section-actions"><button class="smallbtn common">Common all</button><button class="smallbtn clear">Clear</button></div></div>`;
+  block.subjects.forEach(sub=>{
+    const item=document.createElement('div'); item.className='item';
+    const chips=sub.opts.map(o=>{
+      const owner=o==='Unassigned'?'unassigned':sub.owner;
+      const id=block.title+'|'+sub.label+'|'+o;
+      return `<button class="chip ${owner} ${selectedItems.has(id)?'active':''}" data-id="${id}" data-owner="${owner}" data-choice="${o}">${o}</button>`;
+    }).join('');
+    item.innerHTML=`<div class="itemlabel">${sub.label}<div class="ownerrow">
+      <button class="ownerchip bidder ${sub.owner==='bidder'?'active':''}" data-owner="bidder">Bidder</button>
+      <button class="ownerchip client ${sub.owner==='client'?'active':''}" data-owner="client">Client</button>
+      <button class="ownerchip property ${sub.owner==='property'?'active':''}" data-owner="property">Property</button>
+    </div></div><div class="chips">${chips}</div><div class="tuners ${sub.owner}"><input value="${sub.qty}"><textarea>${sub.note}</textarea></div>`;
+    item.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+      const id=ch.dataset.id;
+      if(selectedItems.has(id)){selectedItems.delete(id);ch.classList.remove('active')}
+      else{selectedItems.set(id,{block:block.title,label:sub.label,choice:ch.dataset.choice,owner:ch.dataset.owner,weight:sub.weight,qty:item.querySelector('input').value,note:item.querySelector('textarea').value,uncommon:sub.uncommon.includes(ch.dataset.choice)}) ; ch.classList.add('active')}
+      selected.owner=cap(ch.dataset.owner); selected.choice=ch.dataset.choice; selected.qty=item.querySelector('input').value; selected.mod=item.querySelector('textarea').value;
+      computeStats(); updateReadout();
+    });
+    item.querySelectorAll('.ownerchip').forEach(oc=>oc.onclick=()=>{
+      item.querySelectorAll('.ownerchip').forEach(x=>x.classList.remove('active')); oc.classList.add('active');
+      item.querySelector('.tuners').className='tuners '+oc.dataset.owner;
+      selected.owner=cap(oc.dataset.owner); selected.choice=sub.label+' ownership'; selected.qty=item.querySelector('input').value; selected.mod='ownership lens changed'; updateReadout();
+    });
+    card.appendChild(item);
+  });
+  card.querySelector('.common').onclick=()=>selectCommon(block);
+  card.querySelector('.clear').onclick=()=>clearBlock(block.title);
+  wrap.appendChild(card);
+ });
+}
+function selectCommon(block){
+ block.subjects.forEach(sub=>sub.opts.filter(o=>!sub.uncommon.includes(o)&&o!=='Unassigned').forEach(o=>{
+  selectedItems.set(block.title+'|'+sub.label+'|'+o,{block:block.title,label:sub.label,choice:o,owner:sub.owner,weight:sub.weight,qty:sub.qty,note:sub.note,uncommon:false});
+ }));
+ renderBlocks(); computeStats(); updateReadout();
+}
+function clearBlock(title){
+ [...selectedItems.keys()].filter(k=>k.startsWith(title+'|')).forEach(k=>selectedItems.delete(k));
+ renderBlocks(); computeStats(); updateReadout();
+}
+function computeStats(){
+ let labor=1, pm=1, risk=1, qty=0, unassigned=0, causes=[];
+ selectedItems.forEach(it=>{
+  labor+=it.weight.labor; pm+=it.weight.pm; risk+=it.weight.risk; qty++;
+  if(it.owner==='client'){pm+=.02;risk+=.02}
+  if(it.owner==='property'){labor+=.02;risk+=.03}
+  if(it.owner==='unassigned'){unassigned++;risk+=.18;pm+=.08;causes.push(`${it.label} is unassigned: probable change-order exposure.`)}
+  if(it.uncommon) causes.push(`${it.choice} adds extra ${it.owner} burden.`);
+ });
+ let matrixCount=0, conflicts=0;
+ Object.entries(matrixMarks).forEach(([k,v])=>{
+  if(v && v!=='empty'){ matrixCount++; qty++; if(v==='bidder') labor+=.02; if(v==='client') pm+=.03; if(v==='property') risk+=.035; if(v==='unassigned'){unassigned++;risk+=.16;pm+=.05}}
+ });
+ document.querySelectorAll('.mcell.conflict').forEach(()=>conflicts++);
+ if(resolution==='Daily'){labor+=.04;causes.push('Daily mode emphasizes crew distribution, access, and field sequencing.')}
+ if(resolution==='Monthly'){pm+=.05;causes.push('Monthly mode emphasizes procurement, milestones, and coordination cadence.')}
+ if(resolution==='Quarterly'){risk+=.06;causes.push('Quarterly mode emphasizes capital pacing, long-lead risk, and turnover exposure.')}
+ risk+=conflicts*.025; pm+=conflicts*.015;
+ byId('labor').textContent='x'+labor.toFixed(2); byId('pm').textContent='x'+pm.toFixed(2); byId('risk').textContent='x'+risk.toFixed(2);
+ byId('qtyLoad').textContent=qty; byId('unassigned').textContent=unassigned; byId('conflicts').textContent=conflicts;
+ byId('topStats').textContent=`Labor x${labor.toFixed(2)} · PM x${pm.toFixed(2)} · Risk x${risk.toFixed(2)}`;
+ byId('matrixSignals').innerHTML=`<span class="tag bidder">Bidder cells = labor control</span><span class="tag client">Client cells = approvals/dependencies</span><span class="tag property">Property cells = site friction</span><span class="tag warn">${conflicts} conflict windows</span>`;
+ writeSummary(labor,pm,risk,qty,unassigned,causes);
+}
+function writeSummary(labor,pm,risk,qty,unassigned,causes){
+ const lead=mode==='Team'
+  ? `Team mode is reading the ${resolution.toLowerCase()} matrix as a crew and production board.`
+  : mode==='Client'
+  ? `Client mode is reading the ${resolution.toLowerCase()} matrix for approvals, carried scope, and promised dates.`
+  : `Job mode is reading the ${resolution.toLowerCase()} matrix for unresolved burden and change-order exposure.`;
+ byId('summaryText').textContent=`${lead} ${qty} active schedule/selector marks are shaping labor x${labor.toFixed(2)}, PM x${pm.toFixed(2)}, risk x${risk.toFixed(2)}. ${unassigned?unassigned+' unassigned items remain.':''}`;
+ byId('causeList').innerHTML=causes.slice(0,5).map(c=>`<li>${c}</li>`).join('');
+}
+function updateReadout(){
+ byId('selOwner').textContent=selected.owner; byId('selChoice').textContent=selected.choice; byId('selQty').textContent=selected.qty; byId('selMod').textContent=selected.mod;
+}
+function renderAll(rebuildBlocks=true){
+ byId('resRead').textContent=resolution; byId('timeRead').textContent=resolution;
+ byId('range').textContent=resolution==='Daily'?months[selectedMonth]+' '+now.getFullYear():resolution==='Monthly'?'Jan – Dec':resolution==='Quarterly'?'Q1 – Q4':'';
+ setupPeriodSelect(); renderMiniCalendar(); renderMatrix(); if(rebuildBlocks) renderBlocks(); computeStats(); updateReadout();
+}
+function saveAs(m){byId('saveMode').textContent=m; selected.choice='Saved '+m+' perspective'; selected.owner=m; selected.mod='right rail tracks saved perspective'; updateReadout();}
+document.querySelectorAll('.modebar button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode; document.querySelectorAll('.modebar button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); byId('saveMode').textContent=mode; renderAll();});
+document.querySelectorAll('.resbar button').forEach(b=>b.onclick=()=>{resolution=b.dataset.res; document.querySelectorAll('.resbar button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderAll();});
+byId('today').textContent=now.toLocaleDateString(undefined,{month:'short',day:'2-digit',year:'numeric'});
+renderAll();
+</script>
+</body>
+</html>
