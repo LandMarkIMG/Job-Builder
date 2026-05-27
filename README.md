@@ -1,19 +1,14 @@
+# Chordal Resonance Chromatic V2
 
-# Chordal Resonance Chromatic
-
-A synesthetic contemplative interface:
-
-- Sonic harmonic resonance
-- Slow chromatic field inheritance
-- Inverse-register hue balancing
-- Cultural symbolic color associations
-- Cushioned temporal transitions
-- Pair / triad coherence system
-
-Conceptual basis:
-Lower frequencies warm and ground.
-Higher frequencies cool and widen.
-Color inherits harmonic dominance gradually rather than switching abruptly.
+Fixes:
+- More reliable Web Audio start/resume flow
+- Explicit Begin / Resume Attunement button
+- Center Pulse test button
+- Stop Sound button
+- Live Hertz readout on every center
+- Dominant Hz readout in right rail
+- Scale center readout
+- Inverse dominant-register display
 
 Vercel:
 Framework: Other
