@@ -1,14 +1,302 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>lv-job-builder-framework</title>
-    <script type="module" crossorigin src="/assets/index-DdXy598d.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-WcqONtvb.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LV Job Builder</title>
+<style>
+:root{
+  --navy:#15324a;
+  --navy2:#24465f;
+  --paper:#fbf7ef;
+  --field:#fffdf8;
+  --line:#d9ccb7;
+  --soft:#efe7d8;
+  --ink:#253243;
+  --muted:#7b8190;
+  --bidder:#2f8a57;
+  --bidderSoft:#dff2e5;
+  --client:#8a5b32;
+  --clientSoft:#efe1d1;
+  --property:#7757a6;
+  --propertySoft:#e7def6;
+  --amber:#c88422;
+  --shadow:0 12px 28px rgba(37,50,67,.10);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#f5f1e8,#eee8dc);
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:12px;
+}
+.app{max-width:1260px;margin:0 auto;}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:grid;grid-template-columns:300px 1fr 265px;gap:14px;align-items:center;
+  background:var(--navy);color:white;
+  border:1px solid #0e263b;border-top:0;
+  border-radius:0 0 14px 14px;
+  padding:12px 16px;box-shadow:var(--shadow);
+}
+.brandline{letter-spacing:6px;font-size:10px;color:#c9d8d2;text-transform:uppercase}
+.brand{font-weight:800;font-size:15px;letter-spacing:.4px}
+.logo{
+  display:inline-grid;place-items:center;width:24px;height:24px;
+  border-radius:8px;background:#e9f3e8;color:var(--bidder);font-weight:900;margin-right:8px;
+}
+.modebar{text-align:center}
+.modebar button,.calendar-tabs button,.smallbtn{
+  border:1px solid var(--line);background:#fffaf0;color:var(--ink);
+  border-radius:18px;padding:5px 11px;font-weight:800;font-size:11px;cursor:pointer;
+}
+.modebar button.active[data-mode="Team"],.ownerchip.bidder.active{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
+.modebar button.active[data-mode="Client"],.ownerchip.client.active{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
+.modebar button.active[data-mode="Job"],.ownerchip.property.active{background:var(--propertySoft);color:var(--property);border-color:var(--property)}
+.topstats{
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.20);
+  border-radius:10px;padding:8px 10px;text-align:right;
+}
+.bigwk{font-weight:900;font-size:14px}.multiline{font-size:11px;color:#d5dee8;margin-top:2px}
+.subbar{
+  position:sticky;top:64px;z-index:19;
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr 1.2fr;gap:10px;
+  margin:8px 0 12px 0;padding:9px 14px;background:#fff8ec;
+  border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 18px rgba(37,50,67,.06);
+  color:#4b5566;font-weight:700;
+}
+.subbar strong{color:var(--ink)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 275px;gap:14px;padding:0 8px 28px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 8px 22px rgba(37,50,67,.07)}
+.title{letter-spacing:4px;text-transform:uppercase;font-weight:900;color:#8a8f99;font-size:10px;margin-bottom:10px}
+.schedule-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.calendar-tabs button.active{background:#e8f4eb;color:var(--bidder);border-color:#a6cbb5}
+.ganttrow{display:grid;grid-template-columns:92px 1fr 94px;gap:10px;align-items:center;margin:8px 0}
+.phase{font-weight:900;color:#334153}
+.rail{height:11px;border-radius:12px;background:#ece3d2;border:1px solid #dfd3c0;position:relative;overflow:hidden}
+.fill{position:absolute;height:100%;border-radius:12px;cursor:pointer}
+.fill.bidder{background:var(--bidder)}.fill.client{background:var(--client)}.fill.property{background:var(--property)}
+.gantt-controls{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.gantt-controls input{width:100%;accent-color:var(--navy)}
+.signalrow{display:none}
+.selectorgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.block{border-left:5px solid var(--bidder);position:relative}
+.block.clientline{border-left-color:var(--client)}.block.propertyline{border-left-color:var(--property)}
+.blockhead{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:8px}
+.blocktitle{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#8a8f99;font-weight:900}
+.section-actions{display:flex;gap:5px}
+.smallbtn{font-size:10px;padding:4px 8px}
+.item{
+  display:grid;grid-template-columns:160px 58px 1fr;gap:6px;
+  border-bottom:1px solid #ede4d6;padding:7px 0;align-items:start;
+}
+.item:last-child{border-bottom:0}
+.itemlabel{font-weight:900;color:#334153;text-align:right;padding-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip,.ownerchip{
+  border:1px solid var(--line);background:#fffdf8;border-radius:14px;padding:4px 8px;
+  font-weight:800;font-size:11px;cursor:pointer;line-height:1.1;
+}
+.chip.active.bidder,.chip.bidder:hover{background:var(--bidderSoft);color:var(--bidder);border-color:var(--bidder)}
+.chip.active.client,.chip.client:hover{background:var(--clientSoft);color:var(--client);border-color:var(--client)}
+.chip.active.property,.chip.property:hover{background:var(--propertySoft);color:var(--property);border-color:var(--property)}
+.ownerrow{display:flex;gap:4px;margin-top:5px}.ownerchip{font-size:10px;padding:3px 6px}
+.tuners{display:grid;grid-template-columns:52px 1fr;gap:5px}
+input,textarea{
+  border:1px solid var(--line);border-radius:8px;background:#fffefb;
+  padding:7px;color:#4c5666;font:inherit;font-size:11px;min-width:0;
+}
+textarea{height:48px;resize:vertical}
+.right{position:sticky;top:128px;height:fit-content;display:flex;flex-direction:column;gap:12px}
+.selectorread{text-align:center}
+.selectorread .selected{letter-spacing:4px;color:var(--bidder);font-weight:900}
+.readline{border-top:1px solid var(--line);margin:10px 0;padding-top:9px}
+.readlabel{letter-spacing:3px;color:#7d8492;text-transform:uppercase;font-weight:900;font-size:10px}
+.readvalue{font-weight:900;margin-top:3px}
+.stat{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:6px 0;font-weight:700}
+.stat strong{color:#26354a}
+.summary{line-height:1.48;font-size:12px}
+.legend b.bidder{color:var(--bidder)}.legend b.client{color:var(--client)}.legend b.property{color:var(--property)}
+.savebox{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.savebox button{border:0;border-radius:10px;padding:8px;font-weight:900;color:white;cursor:pointer}
+.savebox button:nth-child(1){background:var(--bidder)}.savebox button:nth-child(2){background:var(--client)}.savebox button:nth-child(3){background:var(--property)}.savebox button:nth-child(4){background:var(--navy)}
+@media(max-width:900px){
+  .topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.right{position:static}.selectorgrid{grid-template-columns:1fr}.item{grid-template-columns:1fr}
+  .itemlabel{text-align:left}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div><span class="logo">LV</span><span class="brandline">Branding Space</span><div class="brand">LV Job Builder</div></div>
+  <div class="modebar">
+    <button class="active" data-mode="Team">Team</button>
+    <button data-mode="Client">Client</button>
+    <button data-mode="Job">Job</button>
+  </div>
+  <div class="topstats"><div class="bigwk" id="weeks">11 wk</div><div class="multiline" id="topStats">Labor x1.28 · PM x1.40 · Risk x1.18</div></div>
+</header>
+
+<section class="subbar">
+  <div><strong>JOB</strong> <span contenteditable>Tenant Retrofit 04</span></div>
+  <div><strong>TODAY</strong> <span id="today"></span></div>
+  <div><strong>RANGE</strong> <span id="range">Jun 07 – Jul 28</span></div>
+  <div><strong>CALENDAR</strong> <span id="calread">Weekly</span></div>
+  <div><strong>OVERLAPS</strong> <span id="overlap">6</span></div>
+  <div><strong>SAVE MODE</strong> <span id="saveMode">Client</span></div>
+</section>
+
+<div class="grid">
+<main>
+<section class="panel">
+  <div class="schedule-head">
+    <div class="title">Nested Schedule Gravity</div>
+    <div class="calendar-tabs">
+      <button class="active" data-calendar="Weekly">Weekly</button>
+      <button data-calendar="Monthly">Monthly</button>
+      <button data-calendar="Quarterly">Quarterly</button>
+    </div>
+  </div>
+  <div id="gantt"></div>
+</section>
+
+<section class="selectorgrid" id="blocks"></section>
+</main>
+
+<aside class="right">
+  <section class="panel selectorread">
+    <div class="selected">SELECTED SELECTOR</div>
+    <div class="readline"><div class="readlabel">Ownership</div><div class="readvalue" id="selOwner">Bidder</div></div>
+    <div class="readline"><div class="readlabel">Choice</div><div class="readvalue" id="selChoice">—</div></div>
+    <div class="readline"><div class="readlabel">Drops / Strands</div><div class="readvalue" id="selQty">—</div></div>
+    <div class="readline"><div class="readlabel">Modifier / Adjective</div><div class="readvalue" id="selMod">—</div></div>
+  </section>
+
+  <section class="panel">
+    <div class="title" style="color:var(--bidder)">Live Stats</div>
+    <div class="stat"><span>Labor</span><strong id="labor">x1.28</strong></div>
+    <div class="stat"><span>PM</span><strong id="pm">x1.40</strong></div>
+    <div class="stat"><span>Risk</span><strong id="risk">x1.18</strong></div>
+    <div class="stat"><span>Qty load</span><strong id="qtyLoad">0</strong></div>
+    <div class="savebox">
+      <button onclick="saveAs('Team')">Save Team</button>
+      <button onclick="saveAs('Client')">Save Client</button>
+      <button onclick="saveAs('Job')">Save Job</button>
+      <button onclick="saveAs('Total')">Save Total</button>
+    </div>
+  </section>
+
+  <section class="panel summary">
+    <div class="title" style="color:var(--bidder)">Floating Summary</div>
+    <p class="legend"><b class="bidder">Bidder</b> = labor/control. <b class="client">Client</b> = carried scope. <b class="property">Property</b> = site conditions.</p>
+    <p id="summaryText">Build the job by choosing phases, ownership, selectors, and tuners.</p>
+  </section>
+</aside>
+</div>
+</div>
+
+<script>
+const phases=[
+ ['Survey','bidder',58,72],['Procure','client',9,34],['Rough','bidder',25,52],
+ ['Backbone','property',38,58],['Devices','bidder',57,76],['Term','bidder',69,84],
+ ['Test','bidder',78,91],['Close','client',84,92]
+];
+const blocks=[
+ {title:'Site Reality', line:'propertyline', subjects:[
+  ['Occupancy',['Unoccupied','Occupied','Healthcare','Secure'],'property','3','escort, infection control, tenant hours'],
+  ['Ceiling',['Open','Drop tile','Hard lid','Mixed'],'property','%','height, grid condition, access'],
+  ['Access',['Clear','Shared trades','Limited','After-hours'],'client','w','night work, parking, dock'],
+  ['Pathway',['Usable','Partial','Congested','Client-provided'],'client','u','tray, sleeves, cores, congestion']
+ ]},
+ {title:'Scope Modules', line:'', subjects:[
+  ['Cabling',['Cat6','Cat6A','Fiber','OSP'],'bidder','drops','cable type, color, pathway class'],
+  ['Endpoints',['Drops','WAPs','Cameras','Access Control','AV/Paging'],'bidder','devices','mounting height, PoE, exterior'],
+  ['Closets',['MDF','MDF + IDF','New rack','Migration'],'property','room','power, grounding, cooling, cleanup'],
+  ['Testing',['Continuity','Certification','OLTS','OTDR'],'bidder','cert','tester level, reports, traces']
+ ]},
+ {title:'Responsibility Split', line:'clientline', subjects:[
+  ['Pathway Owner',['Contractor','Client','GC','EC','Shared'],'client','%','assumptions, exclusions, dependencies'],
+  ['Cable Owner',['Contractor','Client Provided','Mixed'],'client','%','material standards, warranty boundary'],
+  ['Closet Prep',['Ready','Needs Power','Needs Ground','Needs Cooling'],'property','rooms','client/EC prerequisites'],
+  ['Permits / Access',['None','Badge','Escort','Permit'],'client','count','lead time, approval path']
+ ]},
+ {title:'Proof & Closeout', line:'', subjects:[
+  ['Documentation',['Labels','Photos','Redlines','As-builts'],'bidder','deliver','photo sets, labels, redline standard'],
+  ['Meetings',['None','Weekly','Twice Weekly','Daily'],'client','h','OAC, coordination, minutes'],
+  ['Punch Style',['Single Pass','Phased','Owner Witness','High Rigor'],'client','p','witnessing, retest, turnover'],
+  ['Warranty Pack',['Basic','Reports','Full Binder','Turnover'],'bidder','c','binder, test reports, closeout']
+ ]}
+];
+let selected={owner:'Bidder',choice:'—',qty:'—',mod:'—'};
+let stats={labor:1.28,pm:1.40,risk:1.18,qty:0};
+
+function renderGantt(){
+ const g=document.getElementById('gantt'); g.innerHTML='';
+ phases.forEach((p,i)=>{
+  const row=document.createElement('div'); row.className='ganttrow';
+  row.innerHTML=`<div class="phase">${p[0]}</div><div class="rail"><div class="fill ${p[1]}" style="left:${p[2]}%;width:${p[3]-p[2]}%"></div></div>
+  <div class="gantt-controls"><input type="range" min="0" max="95" value="${p[2]}"><input type="range" min="1" max="55" value="${p[3]-p[2]}"></div>`;
+  row.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{ document.getElementById('range').textContent='Adjusted by '+p[0]; bumpStats(.01,.015,.01); }));
+  row.querySelector('.fill').onclick=()=>openByPhase(p[0]);
+  g.appendChild(row);
+ });
+}
+function openByPhase(phase){
+ const map={Procure:'Responsibility Split',Rough:'Scope Modules',Backbone:'Scope Modules',Devices:'Scope Modules',Term:'Scope Modules',Test:'Proof & Closeout',Close:'Proof & Closeout',Survey:'Site Reality'};
+ document.querySelectorAll('.block').forEach(b=>b.style.outline='0');
+ [...document.querySelectorAll('.block')].find(b=>b.dataset.title===map[phase])?.style.setProperty('outline','3px solid rgba(200,132,34,.35)');
+ selected.choice=phase+' phase'; selected.mod='opened linked tuners'; updateReadout();
+}
+function renderBlocks(){
+ const wrap=document.getElementById('blocks'); wrap.innerHTML='';
+ blocks.forEach(block=>{
+  const card=document.createElement('section'); card.className='panel block '+block.line; card.dataset.title=block.title;
+  card.innerHTML=`<div class="blockhead"><div class="blocktitle">${block.title}</div><div class="section-actions"><button class="smallbtn selectall">Select all</button><button class="smallbtn clear">Clear</button></div></div>`;
+  block.subjects.forEach(sub=>{
+    const item=document.createElement('div'); item.className='item';
+    const chips=sub[1].map((c,idx)=>`<button class="chip ${sub[2]} ${idx===0?'active':''}" data-owner="${sub[2]}" data-choice="${c}">${c}</button>`).join('');
+    item.innerHTML=`<div class="itemlabel">${sub[0]}<div class="ownerrow"><button class="ownerchip bidder">Bidder</button><button class="ownerchip client">Client</button><button class="ownerchip property">Property</button></div></div>
+    <div class="chips">${chips}</div><div class="tuners"><input value="${sub[3]}"><textarea>${sub[4]}</textarea></div>`;
+    item.querySelectorAll('.chip').forEach(ch=>ch.onclick=()=>{
+      item.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+      ch.classList.add('active');
+      selected.owner=cap(ch.dataset.owner); selected.choice=ch.dataset.choice;
+      selected.qty=item.querySelector('input').value; selected.mod=item.querySelector('textarea').value;
+      bumpStats(ch.dataset.owner==='bidder'?0.02:0.01,ch.dataset.owner==='client'?0.03:0.01,ch.dataset.owner==='property'?0.025:0.01,1);
+      updateReadout();
+    });
+    item.querySelectorAll('.ownerchip').forEach(oc=>oc.onclick=()=>{selected.owner=cap([...oc.classList].find(c=>['bidder','client','property'].includes(c))); updateReadout();});
+    card.appendChild(item);
+  });
+  card.querySelector('.selectall').onclick=()=>{ card.querySelectorAll('.chip').forEach(c=>c.classList.add('active')); bumpStats(.04,.04,.04,block.subjects.length); updateReadout(); };
+  card.querySelector('.clear').onclick=()=>{ card.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); updateReadout(); };
+  wrap.appendChild(card);
+ });
+}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function bumpStats(l,p,r,q=0){stats.labor+=l;stats.pm+=p;stats.risk+=r;stats.qty+=q;drawStats()}
+function drawStats(){
+ document.getElementById('labor').textContent='x'+stats.labor.toFixed(2);
+ document.getElementById('pm').textContent='x'+stats.pm.toFixed(2);
+ document.getElementById('risk').textContent='x'+stats.risk.toFixed(2);
+ document.getElementById('qtyLoad').textContent=stats.qty;
+ document.getElementById('topStats').textContent=`Labor x${stats.labor.toFixed(2)} · PM x${stats.pm.toFixed(2)} · Risk x${stats.risk.toFixed(2)}`;
+ document.getElementById('summaryText').textContent=`${selected.choice} under ${selected.owner} ownership is shaping labor x${stats.labor.toFixed(2)}, PM x${stats.pm.toFixed(2)}, risk x${stats.risk.toFixed(2)}.`;
+}
+function updateReadout(){
+ document.getElementById('selOwner').textContent=selected.owner;
+ document.getElementById('selChoice').textContent=selected.choice;
+ document.getElementById('selQty').textContent=selected.qty;
+ document.getElementById('selMod').textContent=selected.mod;
+ drawStats();
+}
+function saveAs(mode){document.getElementById('saveMode').textContent=mode; selected.choice='Saved '+mode+' perspective'; updateReadout();}
+document.querySelectorAll('.modebar button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.modebar button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('saveMode').textContent=b.dataset.mode});
+document.querySelectorAll('.calendar-tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.calendar-tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('calread').textContent=b.dataset.calendar;});
+document.getElementById('today').textContent=new Date().toLocaleDateString(undefined,{month:'short',day:'2-digit',year:'numeric'});
+renderGantt(); renderBlocks(); updateReadout();
+</script>
+</body>
 </html>
