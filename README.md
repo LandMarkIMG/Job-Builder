@@ -1,18 +1,22 @@
 
-# Chordal Resonance Sonic
+# Chordal Resonance Chromatic
 
-Sound-enabled contemplative resonance interface.
+A synesthetic contemplative interface:
 
-Features:
-- Web Audio API harmonic drone
-- Responsive tone balancing
-- Pair harmony calculations
-- Triadic coherence system
-- Harmonize interaction
-- Static Vercel deployment
+- Sonic harmonic resonance
+- Slow chromatic field inheritance
+- Inverse-register hue balancing
+- Cultural symbolic color associations
+- Cushioned temporal transitions
+- Pair / triad coherence system
+
+Conceptual basis:
+Lower frequencies warm and ground.
+Higher frequencies cool and widen.
+Color inherits harmonic dominance gradually rather than switching abruptly.
 
 Vercel:
-Framework Preset: Other
-Install Command: echo "Skipping install"
-Build Command: echo "Using prebuilt dist"
-Output Directory: dist
+Framework: Other
+Install: echo "Skipping install"
+Build: echo "Using prebuilt dist"
+Output: dist

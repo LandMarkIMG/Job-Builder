@@ -3,121 +3,224 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Chordal Resonance Sonic</title>
+<title>Chordal Resonance Chromatic</title>
 <style>
 :root{
---bg:#070914;--panel:rgba(255,255,255,.07);--line:rgba(255,255,255,.14);
---gold:#e7c46f;--violet:#9b7cff;--blue:#74b8ff;--rose:#ff90b8;--green:#8fe5ab;--amber:#f5b05c;
---text:#f7f2e8;--muted:#b8bfd3;
+--bg:#060814;
+--panel:rgba(255,255,255,.07);
+--line:rgba(255,255,255,.13);
+--text:#f8f4eb;
+--muted:#bcc4d8;
+--gold:#e7c46f;
 }
 *{box-sizing:border-box}
-body{
-margin:0;background:
-radial-gradient(circle at 50% 50%,rgba(231,196,111,.12),transparent 25%),
-radial-gradient(circle at 20% 20%,rgba(155,124,255,.18),transparent 30%),
-linear-gradient(180deg,#05060f,var(--bg));
-color:var(--text);
+html,body{
+margin:0;
+min-height:100%;
+overflow:hidden;
 font-family:Inter,system-ui,sans-serif;
+background:#05070f;
+color:var(--text);
+transition:background 3.8s cubic-bezier(.22,1,.36,1);
 }
-.app{max-width:1200px;margin:auto;padding:20px}
+body:before{
+content:"";
+position:fixed;
+inset:-20%;
+background:
+radial-gradient(circle at var(--x1,20%) var(--y1,20%), hsla(var(--h1,220),80%,60%,.22), transparent 28%),
+radial-gradient(circle at var(--x2,80%) var(--y2,30%), hsla(var(--h2,40),80%,60%,.18), transparent 30%),
+radial-gradient(circle at var(--x3,50%) var(--y3,80%), hsla(var(--h3,300),80%,65%,.15), transparent 34%);
+filter:blur(40px);
+transition:all 5s cubic-bezier(.22,1,.36,1);
+pointer-events:none;
+}
+.app{
+position:relative;
+z-index:2;
+max-width:1280px;
+margin:auto;
+padding:20px;
+}
 .header,.rail,.stage{
 border:1px solid var(--line);
 background:var(--panel);
-backdrop-filter:blur(12px);
+backdrop-filter:blur(16px);
 border-radius:28px;
-box-shadow:0 18px 50px rgba(0,0,0,.28);
+box-shadow:0 20px 60px rgba(0,0,0,.3);
 }
-.header{padding:20px;margin-bottom:18px}
-h1{margin:0;font-size:48px}
-.sub{color:var(--muted);max-width:760px;line-height:1.5}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}
+.header{
+padding:22px;
+margin-bottom:18px;
+}
+.kicker{
+letter-spacing:5px;
+font-size:11px;
+font-weight:900;
+text-transform:uppercase;
+color:var(--gold);
+}
+h1{
+margin:6px 0;
+font-size:54px;
+line-height:.95;
+}
+.sub{
+max-width:760px;
+line-height:1.55;
+color:var(--muted);
+}
+.layout{
+display:grid;
+grid-template-columns:minmax(0,1fr) 330px;
+gap:18px;
+}
 .stage{
-position:relative;min-height:760px;overflow:hidden;
-background:
-radial-gradient(circle at center,rgba(255,255,255,.05),transparent 20%);
+position:relative;
+min-height:760px;
+overflow:hidden;
 }
 .center{
-position:absolute;left:50%;top:50%;
+position:absolute;
+left:50%;
+top:50%;
 transform:translate(-50%,-50%);
-width:180px;height:180px;border-radius:50%;
-border:1px solid rgba(231,196,111,.5);
-display:grid;place-items:center;text-align:center;
-background:radial-gradient(circle,rgba(231,196,111,.22),rgba(255,255,255,.03));
-z-index:5;
-}
-.center strong{font-size:28px;color:var(--gold)}
-.node{
-position:absolute;width:150px;
-margin:-60px 0 0 -75px;
-padding:12px;border-radius:24px;
-background:rgba(8,10,24,.72);
-border:1px solid var(--line);
+width:190px;
+height:190px;
+border-radius:50%;
+border:1px solid rgba(255,255,255,.22);
+display:grid;
+place-items:center;
+text-align:center;
+background:
+radial-gradient(circle,rgba(255,255,255,.18),rgba(255,255,255,.03));
+box-shadow:
+0 0 60px rgba(255,255,255,.08),
+inset 0 0 40px rgba(255,255,255,.05);
 z-index:6;
-transition:.25s ease;
 }
-.node:hover{transform:translateY(-3px)}
-.title{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
-.tone{font-size:12px;color:var(--muted);margin-top:4px}
-input[type=range]{width:100%;margin-top:10px}
+.center strong{
+font-size:28px;
+}
+.center span{
+color:var(--muted);
+}
+.node{
+position:absolute;
+width:150px;
+margin:-60px 0 0 -75px;
+padding:12px;
+border-radius:24px;
+background:rgba(8,10,24,.72);
+border:1px solid rgba(255,255,255,.12);
+transition:all 1.8s cubic-bezier(.22,1,.36,1);
+z-index:7;
+}
+.node:hover{
+transform:translateY(-3px) scale(1.02);
+}
+.title{
+font-size:12px;
+font-weight:900;
+letter-spacing:2px;
+text-transform:uppercase;
+}
+.tone{
+margin-top:4px;
+font-size:12px;
+color:var(--muted);
+}
+input[type=range]{
+width:100%;
+margin-top:10px;
+accent-color:white;
+}
 .line{
-position:absolute;height:1px;
-background:linear-gradient(90deg,transparent,rgba(231,196,111,.7),transparent);
-opacity:.55;transform-origin:left center;
+position:absolute;
+height:1px;
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+transform-origin:left center;
+opacity:.45;
 }
-.rail{padding:16px;display:flex;flex-direction:column;gap:12px}
+.rail{
+padding:16px;
+display:flex;
+flex-direction:column;
+gap:14px;
+}
 .panelTitle{
-font-size:11px;font-weight:900;
-letter-spacing:4px;text-transform:uppercase;
+font-size:11px;
+font-weight:900;
+letter-spacing:4px;
+text-transform:uppercase;
 color:var(--gold);
 }
 .stat{
-display:flex;justify-content:space-between;
-padding:8px 0;border-bottom:1px solid rgba(255,255,255,.1);
-color:var(--muted)
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid rgba(255,255,255,.1);
+color:var(--muted);
 }
-.stat strong{color:var(--text)}
-button{
-border:1px solid rgba(231,196,111,.45);
-background:linear-gradient(135deg,rgba(231,196,111,.18),rgba(155,124,255,.08));
+.stat strong{
 color:var(--text);
-padding:12px;border-radius:16px;
-font-weight:900;cursor:pointer;
 }
-.reading{color:var(--muted);line-height:1.55}
+button{
+border:1px solid rgba(255,255,255,.18);
+background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+color:var(--text);
+padding:12px;
+border-radius:16px;
+font-weight:900;
+cursor:pointer;
+transition:1.5s cubic-bezier(.22,1,.36,1);
+}
+.reading{
+line-height:1.6;
+color:var(--muted);
+}
 @media(max-width:980px){
 .layout{grid-template-columns:1fr}
-.stage{min-height:900px}
+.stage{min-height:920px}
 }
 </style>
 </head>
 <body>
 <div class="app">
 <div class="header">
-<h1>Chordal Resonance • Sonic</h1>
+<div class="kicker">chromatic resonance field</div>
+<h1>Chordal Resonance<br/>Chromatic</h1>
 <div class="sub">
-Each center speaks in tone. Twin pairs form intervals. Triads become chords.
-The One is heard as a quiet overtone threading through all relation.
+Color is not assigned statically.  
+The field slowly inherits tonal dominance, cultural harmonic association, interval tension,
+and inverse-register balance. Warm lower frequencies ground. Higher harmonics cool and widen.
 </div>
 </div>
 
 <div class="layout">
 <div class="stage" id="stage">
-<div class="center"><div><strong>The One</strong><br/><span id="modeRead">listening</span></div></div>
+<div class="center">
+<div>
+<strong>The One</strong><br/>
+<span id="modeRead">listening</span>
+</div>
+</div>
 </div>
 
 <div class="rail">
 <div>
-<div class="panelTitle">Resonance</div>
+<div class="panelTitle">Field Resonance</div>
 <div class="stat"><span>Pair Harmony</span><strong id="pairRead">0%</strong></div>
-<div class="stat"><span>Triad Coherence</span><strong id="triadRead">0%</strong></div>
-<div class="stat"><span>Mode</span><strong id="modeText">Quiet</strong></div>
+<div class="stat"><span>Triadic Coherence</span><strong id="triadRead">0%</strong></div>
+<div class="stat"><span>Dominant Register</span><strong id="registerRead">Low</strong></div>
+<div class="stat"><span>Chromatic Drift</span><strong id="driftRead">Stable</strong></div>
 </div>
 
 <button id="audioBtn">Begin Attunement</button>
-<button id="harmonizeBtn">Harmonize Toward Chord</button>
+<button id="harmonizeBtn">Harmonize Field</button>
 
 <div class="reading" id="reading">
-The field is quiet. Begin attunement to let the chord breathe.
+The field is waiting. Color has not yet inherited the chord.
 </div>
 </div>
 </div>
@@ -125,13 +228,13 @@ The field is quiet. Begin attunement to let the chord breathe.
 
 <script>
 const centers=[
-{id:"root",name:"Root",tone:"embodiment",freq:110,color:"#8fe5ab",x:50,y:84},
-{id:"sacral",name:"Sacral",tone:"current",freq:146.83,color:"#ff90b8",x:20,y:66},
-{id:"solar",name:"Solar",tone:"will",freq:164.81,color:"#f5b05c",x:20,y:34},
-{id:"heart",name:"Heart",tone:"relation",freq:220,color:"#e7c46f",x:50,y:16},
-{id:"throat",name:"Throat",tone:"voice",freq:246.94,color:"#74b8ff",x:80,y:34},
-{id:"third",name:"Third Eye",tone:"pattern",freq:293.66,color:"#9b7cff",x:80,y:66},
-{id:"crown",name:"Crown",tone:"reception",freq:329.63,color:"#ffffff",x:50,y:50}
+{id:"root",name:"Root",tone:"embodiment",freq:110,hue:28,x:50,y:84,culture:"earth / ancestry"},
+{id:"sacral",name:"Sacral",tone:"current",freq:146.8,hue:340,x:20,y:66,culture:"desire / vitality"},
+{id:"solar",name:"Solar",tone:"will",freq:164.8,hue:42,x:20,y:34,culture:"agency / radiance"},
+{id:"heart",name:"Heart",tone:"relation",freq:220,hue:120,x:50,y:16,culture:"compassion / synthesis"},
+{id:"throat",name:"Throat",tone:"voice",freq:246.9,hue:205,x:80,y:34,culture:"truth / transmission"},
+{id:"third",name:"Third Eye",tone:"pattern",freq:293.6,hue:255,x:80,y:66,culture:"vision / mystery"},
+{id:"crown",name:"Crown",tone:"reception",freq:329.6,hue:285,x:50,y:50,culture:"silence / transcendence"}
 ];
 
 let values=Object.fromEntries(centers.map(c=>[c.id,60]));
@@ -139,7 +242,7 @@ let ctx,master,oscillators={};
 
 const stage=document.getElementById("stage");
 
-function drawLine(a,b){
+function line(a,b){
 const ax=a.x/100*stage.clientWidth;
 const ay=a.y/100*stage.clientHeight;
 const bx=b.x/100*stage.clientWidth;
@@ -160,7 +263,10 @@ function render(){
 [...stage.querySelectorAll(".node,.line")].forEach(e=>e.remove());
 
 [["root","crown"],["sacral","third"],["solar","throat"]].forEach(([a,b])=>{
-stage.appendChild(drawLine(centers.find(c=>c.id===a),centers.find(c=>c.id===b)));
+stage.appendChild(line(
+centers.find(c=>c.id===a),
+centers.find(c=>c.id===b)
+));
 });
 
 centers.forEach(c=>{
@@ -168,15 +274,18 @@ const n=document.createElement("div");
 n.className="node";
 n.style.left=c.x+"%";
 n.style.top=c.y+"%";
+n.id="node-"+c.id;
+
 n.innerHTML=`
-<div class="title" style="color:${c.color}">${c.name}</div>
-<div class="tone">${c.tone}</div>
+<div class="title">${c.name}</div>
+<div class="tone">${c.culture}</div>
 <input type="range" min="0" max="100" value="${values[c.id]}" data-id="${c.id}">
 `;
+
 stage.appendChild(n);
 });
 
-document.querySelectorAll("input[type=range]").forEach(i=>{
+document.querySelectorAll("input").forEach(i=>{
 i.addEventListener("input",e=>{
 values[e.target.dataset.id]=Number(e.target.value);
 update();
@@ -189,7 +298,9 @@ update();
 function pairHarmony(){
 const pairs=[["root","crown"],["sacral","third"],["solar","throat"]];
 let s=0;
-pairs.forEach(([a,b])=>s+=100-Math.abs(values[a]-values[b]));
+pairs.forEach(([a,b])=>{
+s+=100-Math.abs(values[a]-values[b]);
+});
 return Math.round(s/pairs.length);
 }
 
@@ -208,14 +319,71 @@ total+=100-dev;
 return Math.round(total/triads.length);
 }
 
+function dominantRegister(){
+const low=(values.root+values.sacral+values.solar)/3;
+const high=(values.throat+values.third+values.crown)/3;
+return {low,high};
+}
+
+function applyChromatics(){
+const dom=dominantRegister();
+
+let warmth=dom.low;
+let cool=dom.high;
+
+const inverseHue=((cool*2.2)+(360-warmth*1.4))%360;
+
+document.body.style.background=
+`linear-gradient(180deg,
+hsl(${inverseHue},42%,7%),
+hsl(${(inverseHue+50)%360},38%,10%)
+)`;
+
+document.documentElement.style.setProperty("--h1", inverseHue);
+document.documentElement.style.setProperty("--h2", (inverseHue+120)%360);
+document.documentElement.style.setProperty("--h3", (inverseHue+220)%360);
+
+document.documentElement.style.setProperty("--x1", `${20+warmth*.3}%`);
+document.documentElement.style.setProperty("--y1", `${20+cool*.2}%`);
+document.documentElement.style.setProperty("--x2", `${80-cool*.25}%`);
+document.documentElement.style.setProperty("--y2", `${25+warmth*.15}%`);
+document.documentElement.style.setProperty("--x3", `${50+Math.sin(cool)*8}%`);
+document.documentElement.style.setProperty("--y3", `${80-warmth*.25}%`);
+
+centers.forEach(c=>{
+const val=values[c.id];
+const hue=(c.hue + inverseHue*.2)%360;
+const sat=40+val*.45;
+const light=38+val*.12;
+
+const node=document.getElementById("node-"+c.id);
+if(node){
+node.style.borderColor=`hsla(${hue},${sat}%,${light}%,.55)`;
+node.style.boxShadow=`0 0 ${8+val*.25}px hsla(${hue},${sat}%,${light}%,.18)`;
+node.querySelector(".title").style.color=`hsl(${hue},${sat}%,${light+12}%)`;
+}
+});
+}
+
 function updateAudio(){
 if(!ctx)return;
+
+const dom=dominantRegister();
+
 centers.forEach(c=>{
 const osc=oscillators[c.id];
 if(!osc)return;
+
 const v=values[c.id]/100;
-osc.gain.gain.value=0.001+v*0.045;
-osc.osc.frequency.value=c.freq*(0.9+v*0.2);
+
+osc.gain.gain.value=0.001+v*.04;
+
+const inverseShift=
+dom.high>dom.low
+? (1-(c.freq/350))*18
+: (c.freq/350)*12;
+
+osc.osc.frequency.value=c.freq+inverseShift;
 });
 }
 
@@ -227,71 +395,94 @@ const total=Math.round((pair+triad)/2);
 document.getElementById("pairRead").textContent=pair+"%";
 document.getElementById("triadRead").textContent=triad+"%";
 
-let mode="Quiet";
-let reading="The field is quiet. Begin attunement to let the chord breathe.";
+const dom=dominantRegister();
 
-if(total>88){
-mode="Singing";
-reading="The chord sings. Difference remains, yet coherence passes through all centers.";
-}else if(total>72){
-mode="Warming";
-reading="The twins are answering each other. The field is beginning to self-tune.";
-}else if(total>55){
-mode="Listening";
-reading="A few centers still seek hierarchy. Invite them into relation instead.";
-}
+document.getElementById("registerRead").textContent=
+dom.low>dom.high ? "Low / Warm" : "High / Cool";
 
-document.getElementById("modeText").textContent=mode;
-document.getElementById("modeRead").textContent=mode.toLowerCase();
-document.getElementById("reading").textContent=reading;
+document.getElementById("driftRead").textContent=
+total>84 ? "Stable" :
+total>66 ? "Breathing" :
+"Storming";
 
+document.getElementById("modeRead").textContent=
+total>88 ? "singing" :
+total>70 ? "warming" :
+total>55 ? "listening" :
+"quiet";
+
+document.getElementById("reading").innerHTML=
+total>88
+? "The field coheres. Warmth and coolness exchange without domination."
+: total>70
+? "Color is inheriting the chord gently. The field is beginning to self-regulate."
+: total>55
+? "Several centers still seek hierarchy rather than resonance."
+: "The field is fragmented. Tune pairs before triads.";
+
+applyChromatics();
 updateAudio();
 }
 
 async function startAudio(){
 if(ctx)return;
+
 ctx=new (window.AudioContext||window.webkitAudioContext)();
 master=ctx.createGain();
-master.gain.value=.18;
+master.gain.value=.16;
 master.connect(ctx.destination);
 
 centers.forEach(c=>{
 const osc=ctx.createOscillator();
 const gain=ctx.createGain();
+
 osc.type="sine";
 osc.frequency.value=c.freq;
+
 gain.gain.value=.02;
+
 osc.connect(gain);
 gain.connect(master);
 osc.start();
 
 const overtone=ctx.createOscillator();
 const og=ctx.createGain();
+
 overtone.type="triangle";
 overtone.frequency.value=c.freq*2;
-og.gain.value=.003;
+
+og.gain.value=.0025;
+
 overtone.connect(og);
 og.connect(master);
+
 overtone.start();
 
 oscillators[c.id]={osc,gain,overtone,og};
 });
 
 updateAudio();
+
 document.getElementById("audioBtn").textContent="Attunement Active";
 }
 
 document.getElementById("audioBtn").onclick=startAudio;
 
 document.getElementById("harmonizeBtn").onclick=()=>{
-const avg=Math.round(Object.values(values).reduce((a,b)=>a+b,0)/Object.values(values).length);
+const avg=Math.round(
+Object.values(values).reduce((a,b)=>a+b,0)/
+Object.values(values).length
+);
+
 Object.keys(values).forEach(k=>{
-values[k]=Math.round(values[k]*.55+avg*.45);
+values[k]=Math.round(values[k]*.58+avg*.42);
 });
+
 render();
 };
 
 window.addEventListener("resize",render);
+
 render();
 </script>
 </body>
