@@ -1,6 +1,6 @@
 {
-  "name": "lv-job-builder-v2-ops-survey-split",
-  "version": "0.8.0",
+  "name": "lv-remote-pm-cockpit",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "echo \"Using prebuilt dist\""

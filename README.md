@@ -1,14 +1,22 @@
-# LV Job Builder V2 - Operations / Survey Split
+# LV Remote PM Cockpit
 
-This pass separates the concepts:
+Static Vercel prototype for remote LV project management.
 
-- Operations Scheduling Board starts blank.
-- Survey Intake Signals are separate and attach to selected cells.
-- No arbitrary static pre-colored day cells.
-- Smaller, denser UI.
-- Calendar matrix remains the scheduling engine.
-- Bidder / Client / Job remain global interpretation lenses.
-- Right rail remains the consequence readout.
+Core model:
+- Jotform / field forms = intake stream
+- Database = job memory
+- App = PM cockpit
+- Right rail = what matters now
+- Saves = restorable operational snapshots
+
+Includes:
+- Two-day access / operations matrix
+- Unit status table
+- Photo deliverable tracking
+- IDF / fiber / SFP tracking fields
+- PM / Client / Job global lenses
+- Simulated Jotform intake button
+- Saved views in floating summary rail
 
 Vercel:
 Framework Preset: Other

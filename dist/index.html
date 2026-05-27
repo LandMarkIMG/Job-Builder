@@ -3,225 +3,61 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LV Job Builder V2</title>
+<title>LV Remote PM Cockpit</title>
 <style>
-:root{
-  --navy:#15324a; --paper:#f4eee3; --panel:#fffaf1; --field:#fffdf8; --line:#d8c9b5;
-  --ink:#263444; --muted:#7b8490;
-  --bidder:#2f8a57; --bidder-soft:#dff2e5;
-  --client:#8a5b32; --client-soft:#efe1d1;
-  --property:#7757a6; --property-soft:#e7def6;
-  --job:#4b5d70; --job-soft:#dfe8ee;
-  --warn:#c88422; --shadow:0 10px 24px rgba(37,50,67,.09);
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7f2ea,#ece4d7);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11px}
-button,select,input,textarea{font:inherit}
-button{cursor:pointer}
-.app{max-width:1320px;margin:0 auto;padding:0 8px 24px}
-.topbar{
-  position:sticky;top:0;z-index:50;display:grid;grid-template-columns:280px 1fr 290px;gap:10px;align-items:center;
-  padding:9px 13px;background:var(--navy);color:#fff;border-radius:0 0 13px 13px;box-shadow:var(--shadow)
-}
-.kicker{letter-spacing:5px;font-size:9px;color:#cbd9d4;text-transform:uppercase}
-.brand{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:900}
-.logo{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#e9f3e8;color:var(--bidder);font-weight:950}
-.lensbar,.resbar,.ownerbar,.chips{display:flex;gap:4px;flex-wrap:wrap}
-.lensbar{justify-content:center}
-button.pill,.lensbar button,.resbar button,.ownerbar button,.chip{
-  border:1px solid var(--line);background:#fffaf0;color:var(--ink);border-radius:999px;padding:4px 9px;font-weight:850;font-size:10px
-}
-.lensbar button.active[data-lens="Bidder"],.ownerbar button.active[data-owner="bidder"],.chip.bidder.active{background:var(--bidder-soft);color:var(--bidder);border-color:var(--bidder)}
-.lensbar button.active[data-lens="Client"],.ownerbar button.active[data-owner="client"],.chip.client.active{background:var(--client-soft);color:var(--client);border-color:var(--client)}
-.lensbar button.active[data-lens="Job"],.ownerbar button.active[data-owner="unassigned"],.chip.unassigned.active{background:var(--job-soft);color:var(--job);border-color:#899aaa}
-.ownerbar button.active[data-owner="property"],.chip.property.active{background:var(--property-soft);color:var(--property);border-color:var(--property)}
-.header-stat{justify-self:end;width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:6px 8px;text-align:right}
-.header-stat strong{font-size:13px}.header-stat div:last-child{color:#d8e1e8;font-size:10px;margin-top:1px}
-.subbar{
-  position:sticky;top:51px;z-index:45;display:grid;grid-template-columns:1.25fr .95fr .95fr .9fr .9fr 1fr;gap:8px;
-  margin:7px 0 10px;padding:7px 11px;background:#fff8ec;border:1px solid var(--line);border-radius:11px;box-shadow:0 7px 15px rgba(37,50,67,.05);font-weight:760;color:#4b5566
-}
-.subbar strong{color:var(--ink)}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:12px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:10px;box-shadow:0 7px 18px rgba(37,50,67,.06)}
-.title{letter-spacing:3.2px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:9px;margin-bottom:8px}
-.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-bottom:8px}
-.resbar button.active{background:#e8f4eb;color:var(--bidder);border-color:#a6cbb5}
-select,input,textarea{border:1px solid var(--line);border-radius:7px;background:var(--field);color:#4c5666;padding:5px 6px}
-select{font-size:10px;font-weight:850;min-width:130px}
-.month-card{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:8px;padding:6px;background:var(--field);border:1px solid var(--line);border-radius:10px}
-.dow{font-size:8px;color:#89909a;text-align:center;font-weight:950}
-.day{height:18px;border-radius:6px;border:1px solid #e3d8c8;background:#f8f1e4;color:#5d6674;font-size:9px;font-weight:850}
-.day.blank{opacity:.18;pointer-events:none}.day.today{border-color:var(--bidder);color:var(--bidder)}.day.active{background:var(--navy);color:white;border-color:var(--navy)}
-.matrix-wrap{overflow:auto}
-.matrix{--cols:7;display:grid;grid-template-columns:104px repeat(var(--cols),minmax(56px,1fr));gap:3px;min-width:640px}
-.corner,.head,.rowhead,.cell{border:1px solid var(--line);border-radius:7px;min-height:25px;background:var(--field)}
-.head{display:grid;place-items:center;background:#f0e6d6;color:#667181;font-size:9px;font-weight:950}
-.rowhead{display:flex;align-items:center;justify-content:flex-end;text-align:right;padding:4px 6px;background:#fff9ee;font-weight:950;color:#334153}
-.cell{position:relative;display:grid;place-items:center;color:white;font-size:8px;font-weight:950;transition:.1s ease;outline:0}
-.cell:hover{box-shadow:0 4px 10px rgba(37,50,67,.12)}
-.cell.empty{color:#bac1c9;background:var(--field)}
-.cell.empty::before{content:"+";opacity:.35}
-.cell.bidder{background:var(--bidder);border-color:var(--bidder)}
-.cell.client{background:var(--client);border-color:var(--client)}
-.cell.property{background:var(--property);border-color:var(--property)}
-.cell.unassigned{background:var(--job-soft);color:var(--job);border-color:#9dafbb}
-.cell.selected{box-shadow:0 0 0 2px rgba(20,50,74,.34)}
-.cell.conflict:after{content:"";position:absolute;inset:2px;border:2px solid rgba(200,132,34,.88);border-radius:5px;pointer-events:none}
-.legend{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.tag{border:1px solid var(--line);border-radius:999px;background:var(--field);padding:3px 7px;font-size:9px;font-weight:850;color:#596273}
-.tag.bidder{color:var(--bidder);border-color:#a6cbb5;background:#fbfffc}.tag.client{color:var(--client);border-color:#cdb190;background:#fffaf5}.tag.property{color:var(--property);border-color:#bca9db;background:#fdfbff}.tag.warn{color:var(--warn);border-color:#d6ae72;background:#fff4df}
-.lower{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.editor{border-left:4px solid var(--bidder)}.editor.client{border-left-color:var(--client)}.editor.property{border-left-color:var(--property)}.editor.unassigned{border-left-color:var(--job)}
-.editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:7px}
-.editor-title{font-weight:950;color:#334153}
-.formgrid{display:grid;grid-template-columns:62px 1fr;gap:5px;align-items:start;margin-top:8px}
-.formgrid label{font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:1.8px;color:#7d8492;padding-top:6px;text-align:right}
-textarea{min-height:50px;resize:vertical}
-.hint{font-size:10px;color:#737d89;line-height:1.35;margin:7px 0 0}
-.survey-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
-.survey-item{border:1px solid #eadfce;background:#fffdf8;border-radius:9px;padding:6px}
-.survey-item b{display:block;font-size:10px;margin-bottom:4px}
-.right{position:sticky;top:106px;align-self:start;display:flex;flex-direction:column;gap:10px}
-.readout{text-align:center}.readout-main{font-size:10px;letter-spacing:3px;font-weight:950;color:var(--bidder);text-transform:uppercase}
-.readline{border-top:1px solid var(--line);margin:7px 0;padding-top:6px}.readlabel{letter-spacing:2.5px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:9px}.readvalue{font-weight:900;margin-top:2px;overflow-wrap:anywhere}
-.stat{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:5px 0;font-weight:760}.stat strong{color:#26354a}
-.savegrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.savegrid button{border:0;border-radius:8px;padding:7px;color:white;font-weight:950;font-size:10px}.savegrid .bidder{background:var(--bidder)}.savegrid .client{background:var(--client)}.savegrid .property{background:var(--property)}.savegrid .job{background:var(--navy)}
-.summary{font-size:11px;line-height:1.4}.summary p{margin:.45em 0}.cause{margin:7px 0 0;padding-left:14px}.cause li{margin:3px 0}
-.saved-note{font-size:10px;color:#687383;margin-top:7px}
-@media(max-width:1000px){.topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.right{position:static}.lower{grid-template-columns:1fr}.survey-grid{grid-template-columns:1fr}}
+:root{--navy:#14324a;--paper:#f4eee3;--panel:#fffaf1;--field:#fffdf8;--line:#d8c9b5;--ink:#263444;--muted:#77828d;--green:#2f8a57;--greenSoft:#dff2e5;--brown:#8a5b32;--brownSoft:#efe1d1;--purple:#7757a6;--purpleSoft:#e7def6;--gray:#4b5d70;--graySoft:#dfe8ee;--warn:#c88422;--red:#a7433a;--redSoft:#f7dedb;--shadow:0 10px 24px rgba(37,50,67,.09)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7f2ea,#ece4d7);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11px}button,select,input,textarea{font:inherit}button{cursor:pointer}.app{max-width:1360px;margin:0 auto;padding:0 8px 24px}
+.topbar{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:290px 1fr 310px;gap:10px;align-items:center;padding:9px 13px;background:var(--navy);color:#fff;border-radius:0 0 13px 13px;box-shadow:var(--shadow)}
+.kicker{letter-spacing:5px;font-size:9px;color:#cbd9d4;text-transform:uppercase}.brand{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:900}.logo{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#e9f3e8;color:var(--green);font-weight:950}
+.lensbar,.viewbar,.chips{display:flex;gap:4px;flex-wrap:wrap}.lensbar{justify-content:center}.pill,.lensbar button,.viewbar button,.chip{border:1px solid var(--line);background:#fffaf0;color:var(--ink);border-radius:999px;padding:4px 9px;font-weight:850;font-size:10px}.lensbar button.active[data-lens="PM"],.chip.install.active{background:var(--greenSoft);color:var(--green);border-color:var(--green)}.lensbar button.active[data-lens="Client"],.chip.access.active{background:var(--brownSoft);color:var(--brown);border-color:var(--brown)}.lensbar button.active[data-lens="Job"],.chip.blocked.active{background:var(--graySoft);color:var(--gray);border-color:#899aaa}.chip.property.active{background:var(--purpleSoft);color:var(--purple);border-color:var(--purple)}.viewbar button.active{background:#e8f4eb;color:var(--green);border-color:#a6cbb5}
+.header-stat{justify-self:end;width:100%;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:6px 8px;text-align:right}.header-stat strong{font-size:13px}.header-stat div:last-child{color:#d8e1e8;font-size:10px;margin-top:1px}
+.subbar{position:sticky;top:51px;z-index:45;display:grid;grid-template-columns:1.25fr .9fr .9fr .9fr .9fr 1fr;gap:8px;margin:7px 0 10px;padding:7px 11px;background:#fff8ec;border:1px solid var(--line);border-radius:11px;box-shadow:0 7px 15px rgba(37,50,67,.05);font-weight:760;color:#4b5566}.subbar strong{color:var(--ink)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 305px;gap:12px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:10px;box-shadow:0 7px 18px rgba(37,50,67,.06)}.title{letter-spacing:3.2px;text-transform:uppercase;font-weight:950;color:#8a8f99;font-size:9px;margin-bottom:8px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-bottom:8px}
+select,input,textarea{border:1px solid var(--line);border-radius:7px;background:var(--field);color:#4c5666;padding:5px 6px}select{font-size:10px;font-weight:850;min-width:125px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.statcard{border:1px solid var(--line);background:var(--field);border-radius:11px;padding:8px}.statcard b{display:block;font-size:15px;color:var(--navy);margin-bottom:2px}.statcard span{color:var(--muted);font-weight:800}
+.matrix-wrap{overflow:auto}.matrix{display:grid;grid-template-columns:105px repeat(7,minmax(54px,1fr));gap:3px;min-width:640px}.corner,.head,.rowhead,.cell{border:1px solid var(--line);border-radius:7px;min-height:25px;background:var(--field)}.head{display:grid;place-items:center;background:#f0e6d6;color:#667181;font-size:9px;font-weight:950}.rowhead{display:flex;align-items:center;justify-content:flex-end;text-align:right;padding:4px 6px;background:#fff9ee;font-weight:950;color:#334153}.cell{position:relative;display:grid;place-items:center;color:white;font-size:8px;font-weight:950}.cell.empty{color:#bac1c9;background:var(--field)}.cell.empty:before{content:"+";opacity:.35}.cell.install{background:var(--green);border-color:var(--green)}.cell.access{background:var(--brown);border-color:var(--brown)}.cell.property{background:var(--purple);border-color:var(--purple)}.cell.blocked{background:var(--redSoft);color:var(--red);border-color:#d49a95}.cell.selected{box-shadow:0 0 0 2px rgba(20,50,74,.34)}.cell.warn:after{content:"";position:absolute;inset:2px;border:2px solid rgba(200,132,34,.88);border-radius:5px;pointer-events:none}
+.legend{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.tag{border:1px solid var(--line);border-radius:999px;background:var(--field);padding:3px 7px;font-size:9px;font-weight:850;color:#596273}.tag.install{color:var(--green);border-color:#a6cbb5;background:#fbfffc}.tag.access{color:var(--brown);border-color:#cdb190;background:#fffaf5}.tag.property{color:var(--purple);border-color:#bca9db;background:#fdfbff}.tag.warn{color:var(--warn);border-color:#d6ae72;background:#fff4df}
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.editor{border-left:4px solid var(--green)}.editor.client{border-left-color:var(--brown)}.editor.property{border-left-color:var(--purple)}.editor.blocked{border-left-color:var(--red)}.editor-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:7px}.editor-title{font-weight:950;color:#334153}.formgrid{display:grid;grid-template-columns:72px 1fr;gap:5px;align-items:start;margin-top:8px}.formgrid label{font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:1.8px;color:#7d8492;padding-top:6px;text-align:right}textarea{min-height:48px;resize:vertical}.hint{font-size:10px;color:#737d89;line-height:1.35;margin:7px 0 0}
+.table{width:100%;border-collapse:separate;border-spacing:0 5px}.table th{text-align:left;color:#87909a;font-size:9px;text-transform:uppercase;letter-spacing:2px;padding:0 5px}.table td{background:var(--field);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 5px;font-weight:760}.table td:first-child{border-left:1px solid var(--line);border-radius:8px 0 0 8px}.table td:last-child{border-right:1px solid var(--line);border-radius:0 8px 8px 0}.status{border-radius:999px;padding:3px 6px;font-size:9px;font-weight:950;display:inline-block}.ready{background:var(--greenSoft);color:var(--green)}.pending{background:#fff4df;color:var(--warn)}.blockedStatus{background:var(--redSoft);color:var(--red)}
+.right{position:sticky;top:106px;align-self:start;display:flex;flex-direction:column;gap:10px}.readout{text-align:center}.readout-main{font-size:10px;letter-spacing:3px;font-weight:950;color:var(--green);text-transform:uppercase}.line{border-top:1px solid var(--line);margin:7px 0;padding-top:6px}.label{letter-spacing:2.5px;color:#7d8492;text-transform:uppercase;font-weight:950;font-size:9px}.value{font-weight:900;margin-top:2px;overflow-wrap:anywhere}.railrow{display:flex;justify-content:space-between;border-bottom:1px solid #e7dccb;padding:5px 0;font-weight:760}.railrow strong{color:#26354a}.savegrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:7px}.savegrid button{border:0;border-radius:8px;padding:7px;color:white;font-weight:950;font-size:10px}.savegrid .green{background:var(--green)}.savegrid .brown{background:var(--brown)}.savegrid .purple{background:var(--purple)}.savegrid .navy{background:var(--navy)}
+.summary{font-size:11px;line-height:1.4}.summary p{margin:.45em 0}.cause{margin:7px 0 0;padding-left:14px}.cause li{margin:3px 0}.saved-list{display:flex;flex-direction:column;gap:5px;margin-top:6px}.saved-list button{border:1px solid var(--line);background:var(--field);border-radius:8px;padding:6px;text-align:left;font-weight:800;font-size:10px}
+@media(max-width:1050px){.topbar{grid-template-columns:1fr}.subbar{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.right{position:static}.lower,.grid3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="app">
 <header class="topbar">
-  <div><div class="kicker">Branding Space</div><div class="brand"><span class="logo">LV</span>Job Builder V2</div></div>
-  <div class="lensbar"><button class="active" data-lens="Bidder">Bidder</button><button data-lens="Client">Client</button><button data-lens="Job">Job</button></div>
-  <div class="header-stat"><strong id="headerMode">Operations Board</strong><div id="headerStats">Labor x1.00 · PM x1.00 · Risk x1.00</div></div>
+  <div><div class="kicker">Remote PM Command Surface</div><div class="brand"><span class="logo">LV</span>Remote PM Cockpit</div></div>
+  <div class="lensbar"><button class="active" data-lens="PM">PM</button><button data-lens="Client">Client</button><button data-lens="Job">Job</button></div>
+  <div class="header-stat"><strong>Today’s Access</strong><div id="headerStats">0 blocked · 0 photos missing · 0 unresolved</div></div>
 </header>
-
 <section class="subbar">
-  <div><strong>JOB</strong> <span contenteditable>Tenant Retrofit 04</span></div>
-  <div><strong>TODAY</strong> <span id="today"></span></div>
-  <div><strong>PERIOD</strong> <span id="periodRead"></span></div>
-  <div><strong>RES</strong> <span id="resolutionRead">Daily</span></div>
-  <div><strong>MARKED</strong> <span id="markedTop">0</span></div>
-  <div><strong>LENS</strong> <span id="lensRead">Bidder</span></div>
+  <div><strong>JOB</strong> <span contenteditable>Garden + High Rise Deployment</span></div><div><strong>STATE</strong> Multi-state</div><div><strong>UNITS</strong> 144</div><div><strong>VIEW</strong> <span id="viewRead">Access</span></div><div><strong>SAVES</strong> <span id="saveCount">0</span></div><div><strong>LENS</strong> <span id="lensRead">PM</span></div>
 </section>
-
-<div class="layout">
-<main>
-  <section class="panel">
-    <div class="toolbar">
-      <div><div class="title">Operations Scheduling Board</div></div>
-      <div class="resbar"><button class="active" data-resolution="Daily">Daily</button><button data-resolution="Weekly">Weekly</button><button data-resolution="Monthly">Monthly</button><button data-resolution="Quarterly">Quarterly</button></div>
-      <select id="periodSelect"></select>
-    </div>
-    <div id="monthPicker"></div>
-    <div class="matrix-wrap"><div id="matrix" class="matrix"></div></div>
-    <div class="legend"><span class="tag bidder">Bidder scheduled work</span><span class="tag client">Client dependency</span><span class="tag property">Property condition</span><span class="tag warn">Amber = conflict</span></div>
-  </section>
-
-  <section class="lower">
-    <section class="panel editor" id="editorCard">
-      <div class="editor-head"><div><div class="title" style="margin-bottom:2px">Selected Schedule Cell</div><div class="editor-title" id="selectedTitle">Select a cell</div></div><button class="pill" id="clearCellBtn">Clear</button></div>
-      <div class="ownerbar"><button data-owner="bidder">Bidder</button><button data-owner="client">Client</button><button data-owner="property">Property</button><button data-owner="unassigned">Unassigned</button></div>
-      <div class="formgrid">
-        <label>Qty</label><input id="qtyInput" placeholder="crew / days / drops"/>
-        <label>Mod</label><input id="modInput" placeholder="after-hours, escort, long-lead"/>
-        <label>Notes</label><textarea id="noteInput" placeholder="Operational note attached to this time/workstream cell."></textarea>
-      </div>
-      <p class="hint">Operations starts blank. Schedule cells become meaningful only when you mark them.</p>
-    </section>
-
-    <section class="panel">
-      <div class="editor-head"><div><div class="title" style="margin-bottom:2px">Survey Intake Signals</div><div class="editor-title">Separated from operations</div></div><button class="pill" id="applyCommonBtn">Attach Signal</button></div>
-      <div class="survey-grid" id="surveySignals"></div>
-      <p class="hint">Survey truth informs the selected schedule cell; it does not automatically fill the operations calendar.</p>
-    </section>
-  </section>
+<div class="layout"><main>
+<section class="panel"><div class="toolbar"><div><div class="title">Remote PM Status Overview</div></div><div class="viewbar"><button class="active" data-view="Access">Access</button><button data-view="Photos">Photos</button><button data-view="IDF/Fiber">IDF/Fiber</button><button data-view="Client Update">Client Update</button></div><select><option>All buildings</option><option>High Rise A</option><option>Garden North</option></select></div><div class="grid3"><div class="statcard"><b id="readyUnits">0</b><span>Ready / complete units</span></div><div class="statcard"><b id="photoMissing">0</b><span>Photo deliverables missing</span></div><div class="statcard"><b id="blockedUnits">0</b><span>Blocked or unassigned</span></div></div></section>
+<section class="panel" style="margin-top:10px"><div class="toolbar"><div><div class="title">Two-Day Access / Operations Matrix</div></div><select><option>Current 2-day window</option><option>Next 2-day window</option><option>Week lookahead</option></select><button class="pill" id="addJotformBtn">Simulate Jotform Intake</button></div><div class="matrix-wrap"><div id="matrix" class="matrix"></div></div><div class="legend"><span class="tag access">Client access window</span><span class="tag install">Installer work</span><span class="tag property">Property/IDF condition</span><span class="tag warn">Amber = photo/status needed</span></div></section>
+<section class="lower"><section class="panel editor" id="editorCard"><div class="editor-head"><div><div class="title" style="margin-bottom:2px">Selected Unit / Workstream</div><div class="editor-title" id="selectedTitle">Select a cell</div></div><button class="pill" id="clearCellBtn">Clear</button></div><div class="chips"><button class="chip access" data-type="access">Access</button><button class="chip install" data-type="install">Install</button><button class="chip property" data-type="property">Property</button><button class="chip blocked" data-type="blocked">Blocked</button></div><div class="formgrid"><label>Unit</label><input id="unitInput" placeholder="A-1204 / G-22"/><label>IDF</label><input id="idfInput" placeholder="IDF-12 / IDF-GN2"/><label>SFP/Fiber</label><input id="fiberInput" placeholder="SFP tag / fiber pair / strand"/><label>Status</label><input id="statusInput" placeholder="installed, tested, activated"/><label>Photos</label><select id="photoInput"><option>Required</option><option>Received</option><option>Not required</option></select><label>Note</label><textarea id="noteInput" placeholder="Real-time installer/client/property note."></textarea></div><p class="hint">Forms/Jotform submissions should land here as unit-status updates, not as calendar decoration.</p></section>
+<section class="panel"><div class="editor-head"><div><div class="title" style="margin-bottom:2px">Unit Status Table</div><div class="editor-title">Remote deliverables</div></div><button class="pill" id="clientSummaryBtn">Client Summary</button></div><table class="table"><thead><tr><th>Unit</th><th>IDF</th><th>Status</th><th>Photos</th></tr></thead><tbody id="unitTable"></tbody></table></section></section>
 </main>
-
-<aside class="right">
-  <section class="panel readout">
-    <div class="readout-main">Selected</div>
-    <div class="readline"><div class="readlabel">Cell</div><div class="readvalue" id="selectedCellRead">—</div></div>
-    <div class="readline"><div class="readlabel">Owner</div><div class="readvalue" id="selectedOwnerRead">—</div></div>
-    <div class="readline"><div class="readlabel">Qty</div><div class="readvalue" id="selectedQtyRead">—</div></div>
-    <div class="readline"><div class="readlabel">Modifier</div><div class="readvalue" id="selectedModRead">—</div></div>
-  </section>
-
-  <section class="panel">
-    <div class="title" style="color:var(--bidder)">Right Rail Stats</div>
-    <div class="stat"><span>Labor</span><strong id="laborRead">x1.00</strong></div>
-    <div class="stat"><span>PM</span><strong id="pmRead">x1.00</strong></div>
-    <div class="stat"><span>Risk</span><strong id="riskRead">x1.00</strong></div>
-    <div class="stat"><span>Marked</span><strong id="markedRead">0</strong></div>
-    <div class="stat"><span>Unassigned</span><strong id="unassignedRead">0</strong></div>
-    <div class="savegrid"><button class="bidder" id="saveBidder">Bidder</button><button class="client" id="saveClient">Client</button><button class="property" id="saveProperty">Property</button><button class="job" id="saveJob">Total</button></div>
-    <div class="saved-note" id="savedNote">No perspective saved yet.</div>
-  </section>
-
-  <section class="panel summary">
-    <div class="title" style="color:var(--bidder)">Floating Summary</div>
-    <p id="summaryText"></p>
-    <ul class="cause" id="causeList"></ul>
-  </section>
-</aside>
-</div>
-</div>
-
+<aside class="right"><section class="panel readout"><div class="readout-main">Now Selected</div><div class="line"><div class="label">Cell</div><div class="value" id="selectedCellRead">—</div></div><div class="line"><div class="label">Unit</div><div class="value" id="selectedUnitRead">—</div></div><div class="line"><div class="label">IDF / Fiber</div><div class="value" id="selectedFiberRead">—</div></div><div class="line"><div class="label">Photo</div><div class="value" id="selectedPhotoRead">—</div></div></section><section class="panel"><div class="title" style="color:var(--green)">What Matters Now</div><div class="railrow"><span>Two-day access</span><strong id="accessRead">0</strong></div><div class="railrow"><span>Photos missing</span><strong id="photoRead">0</strong></div><div class="railrow"><span>IDF/Fiber exceptions</span><strong id="fiberRead">0</strong></div><div class="railrow"><span>Client-ready updates</span><strong id="clientRead">0</strong></div><div class="savegrid"><button class="green" id="saveOps">Save Ops</button><button class="brown" id="saveClient">Save Client</button><button class="purple" id="saveExceptions">Save Exceptions</button><button class="navy" id="saveTotal">Save Total</button></div></section><section class="panel summary"><div class="title" style="color:var(--green)">Floating Summary / Saves</div><p id="summaryText"></p><ul class="cause" id="causeList"></ul><div class="saved-list" id="savedList"></div></section></aside></div></div>
 <script>
-const monthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const dows=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-const now=new Date();
-const rows={
-  Daily:["OSP","MDF","IDF","Rough-in","Terminating","Installing","Activating","Testing"],
-  Weekly:["OSP","MDF","IDF","Rough-in","Terminating","Installing","Activating","Testing"],
-  Monthly:["Survey","Procurement","Rough","Backbone","Devices","Termination","Testing","Closeout"],
-  Quarterly:["Capital pacing","Lease turnover","Regional staging","Long-lead procurement","Multi-site deployment","Infrastructure upgrades","Documentation strategy","Turnover risk"]
-};
-const survey={
-  OSP:["locates","weather","utility coordination","long pull"], MDF:["rack space","grounding","power","cooling"], IDF:["backboard","patching","cleanup","migration"],
-  "Rough-in":["pathway","lift","hard lid","shared trades"], Terminating:["density","labeling","patch panels","rework"], Installing:["height","mounting","PoE","exterior"],
-  Activating:["client approval","network handoff","programming","commissioning"], Testing:["certification","OLTS","OTDR","owner witness"],
-  Survey:["site walk","photos","as-built review","pathway check"], Procurement:["lead time","client-furnished","submittal","approval"], Rough:["pathway","riser","crew stacking","access"],
-  Backbone:["fiber","splice","LIU","riser"], Devices:["WAP","camera","access control","AV/paging"], Termination:["patch panel","labeling","closet work","density"], Closeout:["redlines","photos","test reports","turnover"],
-  "Capital pacing":["budget gate","phasing","release"], "Lease turnover":["deadline","tenant move-in","punch"], "Regional staging":["multi-site","travel","storage"], "Long-lead procurement":["fiber","switches","racks","approval"],
-  "Multi-site deployment":["template","crew rotation","standardization"], "Infrastructure upgrades":["MDF","IDF","backbone","power"], "Documentation strategy":["as-builts","reports","binder"], "Turnover risk":["testing","signoff","witness","punch"]
-};
-const weights={bidder:{labor:.06,pm:.02,risk:.02},client:{labor:.01,pm:.07,risk:.06},property:{labor:.04,pm:.03,risk:.08},unassigned:{labor:.02,pm:.10,risk:.18}};
-let state={lens:"Bidder",res:"Daily",month:now.getMonth(),day:now.getDate(),selected:null,cells:{},saved:{Bidder:[],Client:[],Property:[],Job:[]}};
-function id(x){return document.getElementById(x)}
-function cap(s){return s? s.charAt(0).toUpperCase()+s.slice(1):"None"}
-function cols(){return state.res==="Monthly"?monthNames:state.res==="Quarterly"?["Q1","Q2","Q3","Q4"]:dows}
-function key(row,col){return [state.res,state.month,state.day,row,col].join("|")}
-function get(row,col){return state.cells[key(row,col)]||null}
-function set(row,col,data){if(!data||!data.owner)delete state.cells[key(row,col)];else state.cells[key(row,col)]={row,col,...data}}
-function setupPeriod(){const sel=id("periodSelect");sel.innerHTML="";if(state.res==="Quarterly"){["Current year","Next year","Two-year view"].forEach((v,i)=>sel.add(new Option(v,i)));sel.value=0}else{monthNames.forEach((m,i)=>sel.add(new Option(`${m} ${now.getFullYear()}`,i)));sel.value=state.month}sel.onchange=()=>{state.month=Number(sel.value)||0;state.day=1;state.selected=null;render()}}
-function renderMonth(){const h=id("monthPicker");h.innerHTML="";if(state.res!=="Daily"){h.style.display="none";return}h.style.display="grid";h.className="month-card";dows.forEach(d=>{const e=document.createElement("div");e.className="dow";e.textContent=d;h.appendChild(e)});const first=(new Date(now.getFullYear(),state.month,1).getDay()+6)%7,days=new Date(now.getFullYear(),state.month+1,0).getDate();for(let i=0;i<first;i++){const b=document.createElement("button");b.className="day blank";h.appendChild(b)}for(let d=1;d<=days;d++){const b=document.createElement("button");b.className="day";b.textContent=d;if(state.month===now.getMonth()&&d===now.getDate())b.classList.add("today");if(d===state.day)b.classList.add("active");b.onclick=()=>{state.day=d;state.selected=null;render()};h.appendChild(b)}}
-function conflict(row,col,d){return d&&(d.owner==="unassigned"||/conflict|compressed|after-hours|escort/i.test((d.mod||"")+" "+(d.notes||"")))}
-function renderMatrix(){const m=id("matrix"),cs=cols(),rs=rows[state.res];m.style.setProperty("--cols",cs.length);m.innerHTML="";const corner=document.createElement("div");corner.className="corner";m.appendChild(corner);cs.forEach(c=>{const h=document.createElement("div");h.className="head";h.textContent=c;m.appendChild(h)});rs.forEach(row=>{const rh=document.createElement("button");rh.className="rowhead";rh.textContent=row;rh.onclick=()=>selectCell(row,cs[0]);m.appendChild(rh);cs.forEach(col=>{const d=get(row,col),cell=document.createElement("button");cell.className="cell "+(d?d.owner:"empty");if(state.selected&&state.selected.row===row&&state.selected.col===col)cell.classList.add("selected");if(conflict(row,col,d))cell.classList.add("conflict");cell.textContent=d?(d.owner==="unassigned"?"?":"●"):"";cell.onclick=()=>selectCell(row,col);m.appendChild(cell)})})}
-function selectCell(row,col){state.selected={row,col};const d=get(row,col)||{owner:"bidder",qty:"",mod:"",notes:""};id("selectedTitle").textContent=`${row} / ${col}`;id("qtyInput").value=d.qty||"";id("modInput").value=d.mod||"";id("noteInput").value=d.notes||"";setOwner(d.owner||"bidder");renderSignals(row);renderMatrix();updateReadout();updateStats()}
-function setOwner(owner){document.querySelectorAll(".ownerbar button").forEach(b=>b.classList.toggle("active",b.dataset.owner===owner));id("editorCard").className="panel editor "+owner}
-function activeOwner(){const b=document.querySelector(".ownerbar button.active");return b?b.dataset.owner:"bidder"}
-function saveEditor(){if(!state.selected)return;set(state.selected.row,state.selected.col,{owner:activeOwner(),qty:id("qtyInput").value.trim(),mod:id("modInput").value.trim(),notes:id("noteInput").value.trim()});renderMatrix();updateReadout();updateStats()}
-function clearCell(){if(!state.selected)return;set(state.selected.row,state.selected.col,null);id("qtyInput").value="";id("modInput").value="";id("noteInput").value="";renderMatrix();updateReadout();updateStats()}
-function renderSignals(row){const host=id("surveySignals");host.innerHTML="";(survey[row]||["pathway","access","labor","closeout"]).forEach((s,i)=>{const owner=["bidder","client","property","unassigned"][i%4];const box=document.createElement("button");box.className="survey-item chip "+owner;box.innerHTML=`<b>${s}</b><span>${cap(owner)} signal</span>`;box.onclick=()=>{id("modInput").value=s;setOwner(owner);saveEditor()};host.appendChild(box)})}
-function attachSignal(){if(!state.selected)return;const first=(survey[state.selected.row]||["standard"])[0];id("modInput").value=first;id("noteInput").value="Survey signal attached to this operations cell.";saveEditor()}
-function updateReadout(){if(!state.selected){id("selectedCellRead").textContent="—";id("selectedOwnerRead").textContent="—";id("selectedQtyRead").textContent="—";id("selectedModRead").textContent="—";return}const d=get(state.selected.row,state.selected.col)||{};id("selectedCellRead").textContent=`${state.selected.row} / ${state.selected.col}`;id("selectedOwnerRead").textContent=cap(d.owner);id("selectedQtyRead").textContent=d.qty||"—";id("selectedModRead").textContent=d.mod||"—"}
-function updateStats(){let labor=1,pm=1,risk=1,marked=0,unassigned=0,conflicts=0,causes=[];Object.values(state.cells).forEach(d=>{marked++;const w=weights[d.owner]||weights.bidder;labor+=w.labor;pm+=w.pm;risk+=w.risk;if(d.owner==="unassigned"){unassigned++;causes.push(`${d.row} / ${d.col} is unassigned.`)}if(conflict(d.row,d.col,d)){conflicts++;pm+=.015;risk+=.025}if(d.mod)causes.push(`${d.row} carries signal: ${d.mod}.`)});if(state.res==="Daily")labor+=.02;if(state.res==="Weekly"){labor+=.02;pm+=.02}if(state.res==="Monthly")pm+=.03;if(state.res==="Quarterly")risk+=.04;if(state.lens==="Bidder")labor+=.02;if(state.lens==="Client")pm+=.03;if(state.lens==="Job")risk+=.03;id("laborRead").textContent="x"+labor.toFixed(2);id("pmRead").textContent="x"+pm.toFixed(2);id("riskRead").textContent="x"+risk.toFixed(2);id("markedRead").textContent=marked;id("markedTop").textContent=marked;id("unassignedRead").textContent=unassigned;id("headerStats").textContent=`Labor x${labor.toFixed(2)} · PM x${pm.toFixed(2)} · Risk x${risk.toFixed(2)}`;const lens=state.lens==="Bidder"?"Bidder lens: controllable labor and production.":state.lens==="Client"?"Client lens: approvals, dependencies, carried scope.":"Job lens: total operational truth and unresolved burden.";id("summaryText").textContent=`${lens} Operations board has ${marked} scheduled mark(s). Survey signals are attached only to selected cells.`;id("causeList").innerHTML=causes.slice(0,6).map(c=>`<li>${c}</li>`).join("")}
-function periodText(){id("periodRead").textContent=state.res==="Daily"?`${monthNames[state.month]} ${state.day}, ${now.getFullYear()}`:state.res==="Weekly"?`${monthNames[state.month]} weekly`:state.res==="Monthly"?`${now.getFullYear()} year`:"Quarterly horizon";id("resolutionRead").textContent=state.res;id("headerMode").textContent="Operations Board";id("lensRead").textContent=state.lens}
-function render(){setupPeriod();renderMonth();renderMatrix();periodText();updateReadout();updateStats()}
-document.querySelectorAll(".lensbar button").forEach(b=>b.onclick=()=>{state.lens=b.dataset.lens;document.querySelectorAll(".lensbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");periodText();updateStats()});
-document.querySelectorAll(".resbar button").forEach(b=>b.onclick=()=>{state.res=b.dataset.resolution;state.selected=null;document.querySelectorAll(".resbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()});
-document.querySelectorAll(".ownerbar button").forEach(b=>b.onclick=()=>{setOwner(b.dataset.owner);saveEditor()});
-["qtyInput","modInput","noteInput"].forEach(n=>id(n).addEventListener("input",saveEditor));
-id("clearCellBtn").onclick=clearCell;id("applyCommonBtn").onclick=attachSignal;
-function savePerspective(which){state.saved[which].push({time:new Date().toISOString(),cells:JSON.parse(JSON.stringify(state.cells)),lens:state.lens,res:state.res});id("savedNote").textContent=`Saved ${which} perspective (${state.saved[which].length}).`}
-id("saveBidder").onclick=()=>savePerspective("Bidder");id("saveClient").onclick=()=>savePerspective("Client");id("saveProperty").onclick=()=>savePerspective("Property");id("saveJob").onclick=()=>savePerspective("Job");
-id("today").textContent=now.toLocaleDateString(undefined,{month:"short",day:"2-digit",year:"numeric"});
-render();
+const cols=["Day 1 AM","Day 1 PM","Day 1 Eve","Day 2 AM","Day 2 PM","Day 2 Eve","Follow-up"], rows=["Access","OSP","MDF","IDF","Rough-in","Install","Activate","Test/Photos"];
+let state={lens:"PM",selected:null,cells:{},saved:[]};
+[{unit:"A-1204",idf:"IDF-12",fiber:"SFP-A12-04 / Pair 22",status:"Installed",photo:"Received",row:"Install",col:"Day 1 PM",type:"install",note:"Installer photo received."},{unit:"A-1210",idf:"IDF-12",fiber:"SFP-A12-10 / Pair 28",status:"Needs access",photo:"Required",row:"Access",col:"Day 1 AM",type:"access",note:"Client two-day window."},{unit:"GN-22",idf:"IDF-GN2",fiber:"SFP-GN2-22 / Strand 7",status:"IDF pending",photo:"Required",row:"IDF",col:"Day 2 AM",type:"property",note:"Patch panel labeling needed."},{unit:"B-806",idf:"IDF-08",fiber:"SFP-B08-06 / Pair 14",status:"Blocked",photo:"Required",row:"Test/Photos",col:"Follow-up",type:"blocked",note:"Testing blocked; missing activation photo."}].forEach(u=>state.cells[u.row+"|"+u.col]=u);
+function id(x){return document.getElementById(x)}function key(r,c){return r+"|"+c}function get(r,c){return state.cells[key(r,c)]}function set(r,c,d){if(!d||!d.type)delete state.cells[key(r,c)];else state.cells[key(r,c)]={row:r,col:c,...d}}
+function renderMatrix(){const m=id("matrix");m.innerHTML='<div class="corner"></div>'+cols.map(c=>`<div class="head">${c}</div>`).join("");rows.forEach(r=>{m.innerHTML+=`<button class="rowhead">${r}</button>`;cols.forEach(c=>{const d=get(r,c);let cls="cell "+(d?d.type:"empty");if(state.selected&&state.selected.row===r&&state.selected.col===c)cls+=" selected";if(d&&(d.photo==="Required"||/blocked|pending|missing/i.test(d.status+" "+d.note)))cls+=" warn";m.innerHTML+=`<button class="${cls}" data-r="${r}" data-c="${c}">${d?(d.type==="blocked"?"!":"●"):""}</button>`})});document.querySelectorAll(".cell,.rowhead").forEach(b=>b.onclick=()=>selectCell(b.dataset.r||b.textContent, b.dataset.c||cols[0]))}
+function selectCell(r,c){state.selected={row:r,col:c};const d=get(r,c)||{type:"install",unit:"",idf:"",fiber:"",status:"",photo:"Required",note:""};id("selectedTitle").textContent=r+" / "+c;["unit","idf","fiber","status","note"].forEach(k=>id(k+"Input").value=d[k]||"");id("photoInput").value=d.photo||"Required";setType(d.type);renderMatrix();updateReadout();updateStats()}
+function setType(t){document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.type===t));id("editorCard").className="panel editor "+(t==="access"?"client":t==="property"?"property":t==="blocked"?"blocked":"")}
+function activeType(){return document.querySelector(".chip.active")?.dataset.type||"install"}
+function saveEditor(){if(!state.selected)return;set(state.selected.row,state.selected.col,{type:activeType(),unit:id("unitInput").value.trim(),idf:id("idfInput").value.trim(),fiber:id("fiberInput").value.trim(),status:id("statusInput").value.trim(),photo:id("photoInput").value,note:id("noteInput").value.trim()});renderMatrix();renderTable();updateReadout();updateStats()}
+function clearCell(){if(!state.selected)return;set(state.selected.row,state.selected.col,null);renderMatrix();renderTable();updateReadout();updateStats()}
+function renderTable(){id("unitTable").innerHTML=Object.values(state.cells).filter(d=>d.unit).slice(0,8).map(d=>{let cls=/blocked/i.test(d.status)?"blockedStatus":/pending|needs/i.test(d.status)?"pending":"ready";return `<tr><td>${d.unit}</td><td>${d.idf||"—"}</td><td><span class="status ${cls}">${d.status||"Open"}</span></td><td>${d.photo||"—"}</td></tr>`}).join("")}
+function updateReadout(){if(!state.selected)return;const d=get(state.selected.row,state.selected.col)||{};id("selectedCellRead").textContent=state.selected.row+" / "+state.selected.col;id("selectedUnitRead").textContent=d.unit||"—";id("selectedFiberRead").textContent=[d.idf,d.fiber].filter(Boolean).join(" · ")||"—";id("selectedPhotoRead").textContent=d.photo||"—"}
+function updateStats(){const vals=Object.values(state.cells),photos=vals.filter(d=>d.photo==="Required").length,blocked=vals.filter(d=>d.type==="blocked"||/blocked|pending|missing/i.test(d.status+" "+d.note)).length,access=vals.filter(d=>d.type==="access").length,fiber=vals.filter(d=>/idf|sfp|fiber|strand|pair|patch/i.test(d.idf+" "+d.fiber+" "+d.note)&&(/pending|missing|blocked/i.test(d.status+" "+d.note)||d.type==="property")).length,complete=vals.filter(d=>/installed|tested|activated|complete/i.test(d.status)).length;id("readyUnits").textContent=complete;id("photoMissing").textContent=photos;id("blockedUnits").textContent=blocked;id("accessRead").textContent=access;id("photoRead").textContent=photos;id("fiberRead").textContent=fiber;id("clientRead").textContent=vals.filter(d=>d.unit&&d.status).length;id("headerStats").textContent=`${blocked} blocked · ${photos} photos missing · ${fiber} IDF/fiber exceptions`;id("summaryText").textContent=state.lens==="Client"?`Client view: ${vals.filter(d=>d.unit&&d.status).length} concise status updates are ready, with ${photos} photo deliverable(s) still required.`:state.lens==="Job"?`Job view: ${vals.length} active cells, ${blocked} blockers, ${fiber} IDF/fiber exception(s), and ${photos} missing photo deliverable(s).`:`PM view: focus the next touch on ${blocked?"blocked units and missing proof":"install flow and real-time proof collection"}.`;id("causeList").innerHTML=[photos?`${photos} unit/photo deliverable(s) require field proof.`:"",blocked?`${blocked} blocked/pending condition(s) need PM attention.`:"",fiber?`${fiber} IDF/fiber/SFP exception(s) need tracking.`:""].filter(Boolean).map(c=>`<li>${c}</li>`).join("")}
+function saveView(name){state.saved.unshift({name,time:new Date().toLocaleTimeString(),cells:JSON.parse(JSON.stringify(state.cells)),lens:state.lens});id("saveCount").textContent=state.saved.length;id("savedList").innerHTML=state.saved.slice(0,5).map((s,i)=>`<button data-i="${i}">${s.name} · ${s.time}</button>`).join("");document.querySelectorAll("#savedList button").forEach(b=>b.onclick=()=>{const s=state.saved[b.dataset.i];state.cells=JSON.parse(JSON.stringify(s.cells));state.lens=s.lens;render()})}
+function simulate(){const n=Object.keys(state.cells).length+1,r=["Access","Install","Test/Photos","IDF"][n%4],c=cols[n%cols.length],t=n%4===0?"property":n%3===0?"blocked":n%2===0?"install":"access";set(r,c,{type:t,unit:`NEW-${100+n}`,idf:`IDF-${n%12+1}`,fiber:`SFP-${n} / Pair ${n+20}`,status:n%3===0?"Blocked":"Jotform update",photo:"Required",note:"Simulated real-time form submission."});render()}
+function render(){renderMatrix();renderTable();updateReadout();updateStats()}
+document.querySelectorAll(".lensbar button").forEach(b=>b.onclick=()=>{state.lens=b.dataset.lens;document.querySelectorAll(".lensbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");id("lensRead").textContent=state.lens;updateStats()});document.querySelectorAll(".viewbar button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".viewbar button").forEach(x=>x.classList.remove("active"));b.classList.add("active");id("viewRead").textContent=b.dataset.view;updateStats()});document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{setType(b.dataset.type);saveEditor()});["unitInput","idfInput","fiberInput","statusInput","photoInput","noteInput"].forEach(n=>id(n).addEventListener("input",saveEditor));id("photoInput").addEventListener("change",saveEditor);id("clearCellBtn").onclick=clearCell;id("addJotformBtn").onclick=simulate;id("clientSummaryBtn").onclick=()=>saveView("Client Summary");id("saveOps").onclick=()=>saveView("Ops");id("saveClient").onclick=()=>saveView("Client");id("saveExceptions").onclick=()=>saveView("Exceptions");id("saveTotal").onclick=()=>saveView("Total");
+render();selectCell("Test/Photos","Follow-up");
 </script>
-</body>
-</html>
+</body></html>
