@@ -1,8 +1,1 @@
-{
-  "name": "lv-job-builder-execute-pass",
-  "version": "0.3.0",
-  "private": true,
-  "scripts": {
-    "build": "echo \"Using prebuilt dist\""
-  }
-}
+{"name":"lv-job-builder-correlation-engine","version":"0.4.0","private":true,"scripts":{"build":"echo \"Using prebuilt dist\""}}
